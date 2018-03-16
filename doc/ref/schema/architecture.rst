@@ -83,6 +83,19 @@ The following is the list of fundamental atoms defined in module
 
 .. _ref_schema_architechture_concepts:
 
+.. eschema-block:: concept
+    :summary:
+        One sentence quick summary.
+    :modifiers: abstract, extending
+    :nested-blocks: link
+
+.. eschema-block:: link
+    :summary:
+        One sentence quick summary.
+    :modifiers: abstract, extending, mapping, required
+    :nested-blocks: linkproperty
+
+
 Concepts
 ~~~~~~~~
 

@@ -4,6 +4,15 @@
 With block
 ==========
 
+.. eql-keyword:: WITH
+
+    Blah, blah :eqlkw:`MODULE`, :eqlkw:`CARDINALITY`,
+    :eqlop:`TURNSTILE` can be used...
+
+.. eql-keyword:: MODULE
+
+.. eql-keyword:: CARDINALITY
+
 The ``WITH`` block in EdgeQL is used to define scope and aliases.
 
 Specifying a module

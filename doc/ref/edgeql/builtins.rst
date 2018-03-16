@@ -12,7 +12,7 @@ module name to refer to these functions.
 Polymorphic functions
 ---------------------
 
-.. function:: len(any) -> int
+.. eql-function:: len(any) -> int
 
     Polymorphic function that can take ``str``, ``bytes`` or any
     ``array`` as input.
@@ -34,7 +34,9 @@ Array functions
 
 .. _ref_edgeql_builtins_array_agg:
 
-.. function:: array_agg(any) -> any
+.. eql-function:: array_agg(any) -> any
+    :summary:
+        One sentence quick summary.
 
     Return the array made from all of the input set elements. The
     ordering of the input set will be preserved if specified.
@@ -48,7 +50,7 @@ Array functions
         # returns a string array containing all User names sorted
         # alphabetically
 
-.. function:: array_contains(array<any>, any) -> bool
+.. eql-function:: array_contains(array<any>, any) -> bool
 
     Return true if the array contains the specified value.
 
@@ -60,7 +62,7 @@ Array functions
         SELECT array_contains(['foo', 'bar'], 'baz');
         # returns FALSE
 
-.. function:: array_enumerate(array<any>) -> SET OF tuple<any, int>
+.. eql-function:: array_enumerate(array<any>) -> SET OF tuple<any, int>
 
     Return a set of tuples where the first element is an array value
     and the second element is the index of that value for all values
@@ -77,7 +79,7 @@ Array functions
         guaranteed.
 
 
-.. function:: array_unpack(array<any>) -> any
+.. eql-function:: array_unpack(array<any>) -> any
 
     Return array elements as a set.
 
@@ -100,7 +102,7 @@ String functions
         This whole section will need more explanation and details with
         rules, flags, etc.
 
-.. function:: lower(str) -> str
+.. eql-function:: lower(str) -> str
 
     Return a copy of the string where all the characters are converted
     to lowercase.
@@ -111,21 +113,21 @@ String functions
         # returns 'some fancy title'
 
 
-.. function:: re_match(str, str) -> SET OF array<str>
+.. eql-function:: re_match(str, str) -> SET OF array<str>
 
     Given an input string and a regular expression string find the
     first match for the regular expression within the string. Return
     the set of all matches, each match represented by an
     ``array<str>`` of matched groups.
 
-.. function:: re_match_all(str, str) -> SET OF array<str>
+.. eql-function:: re_match_all(str, str) -> SET OF array<str>
 
     Given an input string and a regular expression string repeatedly
     match the regular expression within the string. Return the set of
     all matches, each match represented by an ``array<str>`` of
     matched groups.
 
-.. function:: re_test(str, str) -> bool
+.. eql-function:: re_test(str, str) -> bool
 
     Given an input string and a regular expression string test whether
     there is a match for the regular expression within the string.
@@ -135,7 +137,7 @@ String functions
 Set aggregate functions
 -----------------------
 
-.. function:: count(any) -> int
+.. eql-function:: count(any) -> int
 
     Return the number of elements in a set.
 
@@ -147,7 +149,7 @@ Set aggregate functions
         SELECT count(User);
         # returns the number of User objects in the DB
 
-.. function:: sum(number) -> number
+.. eql-function:: sum(number) -> number
 
     Return the sum of the set of numbers. The numbers have to be
     either ``int`` or ``float``.
@@ -167,15 +169,15 @@ Here's a list of aggregate functions covered in other sections:
 Date/time functions
 -------------------
 
-.. function:: current_date() -> date
+.. eql-function:: current_date() -> date
 
     Return the current server date.
 
-.. function:: current_datetime() -> datetime
+.. eql-function:: current_datetime() -> datetime
 
     Return the current server date and time.
 
-.. function:: current_time() -> time
+.. eql-function:: current_time() -> time
 
     Return the current server time.
 
@@ -183,11 +185,11 @@ Date/time functions
 Random/UUID functions
 ---------------------
 
-.. function:: random() -> float
+.. eql-function:: random() -> float
 
     Return a pseudo-random number in the range `[0, 1)`.
 
-.. function:: uuid_generate_v1mc() -> uuid
+.. eql-function:: uuid_generate_v1mc() -> uuid
 
     Return a version 1 UUID using a random multicast MAC address
     instead of the real MAC address of the computer.

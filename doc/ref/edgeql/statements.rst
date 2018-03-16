@@ -32,8 +32,61 @@ clause is a function that takes a set as input and produces a set as
 output and each such function is applied to the output of the previous
 clause.
 
-Select
-------
+.. eql-statement:: SELECT
+    :haswith:
+    :input: any
+
+    .. eql-clause:: FILTER
+        :template: $op1 FILTER $op2
+        :op1: any
+        :op2: SET OF any
+        :result: any
+
+        filter the computed set
+
+    .. eql-clause:: ORDER
+        :template: $op1 ORDER $op2
+        :op1: any
+        :op2: SET OF any
+        :result: any
+
+        define ordering of the filtered set
+
+    .. eql-clause:: OFFSET
+        :template: $op1 OFFSET $op2
+        :op1: SET OF any
+        :op2: SET OF int
+        :result: any
+
+        slice the filtered/ordered set
+
+    .. eql-clause:: LIMIT
+        :template: $op1 LIMIT $op2
+        :op1: SET OF any
+        :op2: SET OF int
+        :result: any
+
+        slice the filtered/ordered set
+
+    .. eql-description::
+
+        WITH ...
+
+        SELECT
+            any  # compute a set of things
+
+        # optional clause
+        FILTER
+            <exrp>  # filter the computed set
+
+        # optional clause
+        ORDER BY
+            <expr>  # define ordering of the filtered set
+
+        # optional clause
+        OFFSET/LIMIT
+            <expr>  # slice the filtered/ordered set
+
 
 A ``SELECT`` statement returns a set of objects. By default it is
 assumed to be a set of arbitrary cardinality. In case of various kinds
@@ -46,11 +99,11 @@ The data flow of a ``SELECT`` block can be conceptualized like this:
     WITH MODULE example
 
     SELECT
-        <expr>  # compute a set of things
+        any  # compute a set of things
 
     # optional clause
     FILTER
-        <expr>  # filter the computed set
+        SET OF any  # filter the computed set
 
     # optional clause
     ORDER BY
@@ -144,118 +197,176 @@ partitions.
 
 The data flow of a ``GROUP`` block can be conceptualized like this:
 
-.. code-block:: pseudo-eql
 
-    WITH MODULE example
+.. eql-statement:: GROUP
+    :summary:
+        One sentence quick summary.
+    :haswith:
+    :input: any
 
-    GROUP
-        <alias0> := <expr>  # define a set to partition
+    .. eql-clause:: USING
 
-    USING
+        define parameters to use for grouping
 
-        <alias1> := <expr>,     # define parameters to use for
-        <alias2> := <expr>,     # grouping
-        ...
-        <aliasN> := <expr>
+    .. eql-clause:: BY
 
-    BY
-        <alias1>, ... <aliasN>  # specify which parameters will
-                                # be used to partition the set
+        use aliases from USING
 
-    UNION
-        <expr>  # map every grouped set onto a result set,
-                # merging them all with a UNION ALL (or UNION for
-                # Objects)
+    .. eql-clause:: INTO
 
-    INTO
-        <sub_alias> # provide an alias to refer to the subsets
-                    # in expressions
+        define an alias to refer to each grouped set
 
-    # optional clause
-    FILTER
-        <expr>  # filter the returned set of values
+    .. eql-clause:: UNION
 
-    # optional clause
-    ORDER BY
-        <expr>  # define ordering of the filtered set
+        map every grouped set onto a result set,
+        merging them all with a UNION ALL (or UNION for
+        Objects)
 
-    # optional clause
-    OFFSET/LIMIT
-        <expr>  # slice the filtered/ordered set
+    .. eql-clause:: FILTER
+        :template: $op1 FILTER $op2
+        :op1: any
+        :op2: SET OF any
+        :result: any
 
-Notice that defining aliases in ``GROUP`` and ``USING`` clauses is
-mandatory. Only the names defined in ``USING`` clause are legal in the
-``BY`` clause. Also the names defined in ``GROUP`` and ``USING``
-clauses allow to unambiguously refer to the specific grouping subset
-and the relevant grouping parameter values respectively in the
-``UNION`` clause.
+        filter the computed set
 
-Consider the following example of a query that gets some statistics
-about Issues, namely what's the total number of issues and time spent
-per owner:
+    .. eql-clause:: ORDER
+        :template: $op1 ORDER $op2
+        :op1: any
+        :op2: SET OF any
+        :result: any
 
-.. code-block:: eql
+        define ordering of the filtered set
 
-    WITH MODULE example
-    GROUP Issue
-    USING Owner := Issue.owner
-    BY Owner
-    INTO I
-    UNION (
-        owner := Owner,
-        total_issues := count(I),
-        total_time := sum(I.time_spent_log.spent_time)
-    );
+    .. eql-clause:: OFFSET
+        :template: $op1 OFFSET $op2
+        :op1: SET OF any
+        :op2: SET OF any
+        :result: any
 
-Although, this particular query may rewritten without using ``GROUP``,
-but as a ``SELECT`` it is a useful example to illustrate how ``GROUP``
-works.
+        slice the filtered/ordered set
 
-If there's a need to only look at statistics that end up over a
-certain threshold of total time spent, a ``FILTER`` can be used in
-conjunction with an alias of the ``SELECT`` clause result:
+    .. eql-clause:: LIMIT
+        :template: $op1 LIMIT $op2
+        :op1: SET OF any
+        :op2: SET OF any
+        :result: any
 
-.. code-block:: eql
+        slice the filtered/ordered set
 
-    WITH MODULE example
-    GROUP Issue
-    USING Owner := Issue.owner
-    BY Owner
-    INTO I
-    UNION _stats = (
-        owner := Owner,
-        total_issues := count(I),
-        total_time := sum(I.time_spent_log.spent_time)
-    )
-    FILTER _stats.total_time > 10;
+    .. eql-usage::
 
-The choice of result alias is arbitrary, same as for the ``WITH``
-block. The alias defined here exists in the scope of the ``UNION``
-block and can be used to apply ``FILTER``, ``ORDER BY``, ``OFFSET``
-and ``LIMIT`` clauses.
+        WITH MODULE example
 
-If there's a need to filter the *input* set of Issues, then this can
-be done by using a ``SELECT`` expression at the subject clause of the
-``GROUP``:
+        GROUP
+            <alias0> := <expr>  # define a set to partition
 
-.. code-block:: eql
+        USING
 
-    WITH MODULE example
-    GROUP
-        I := (
-            SELECT Issue
-            # in this GROUP only consider issues with watchers
-            FILTER EXISTS Issue.watchers
+            <alias1> := <expr>,     # define parameters to use for
+            <alias2> := <expr>,     # grouping
+            ...
+            <aliasN> := <expr>
+
+        BY
+            <alias1>, ... <aliasN>  # specify which parameters will
+                                    # be used to partition the set
+
+        INTO
+            <sub_alias> # provide an alias to refer to the subsets
+                        # in expressions
+
+        UNION
+            <expr>  # map every grouped set onto a result set,
+                    # merging them all with a UNION ALL (or UNION for
+                    # Objects)
+
+        # optional clause
+        FILTER
+            <expr>  # filter the returned set of values
+
+        # optional clause
+        ORDER BY
+            <expr>  # define ordering of the filtered set
+
+        # optional clause
+        OFFSET/LIMIT
+            <expr>  # slice the filtered/ordered set
+
+
+    Notice that defining aliases in ``GROUP`` and ``USING`` clauses is
+    mandatory. Only the names defined in :eqlclause:`GROUP:USING`
+    clause are legal in the ``BY`` clause. Also the names defined in
+    ``GROUP`` and ``USING`` clauses allow to unambiguously refer to
+    the specific grouping subset and the relevant grouping parameter
+    values respectively in the ``UNION`` clause.
+
+    Consider the following example of a query that gets some statistics
+    about Issues, namely what's the total number of issues and time spent
+    per owner:
+
+    .. code-block:: eql
+
+        WITH MODULE example
+        GROUP Issue
+        USING Owner := Issue.owner
+        BY Owner
+        INTO I
+        UNION (
+            owner := Owner,
+            total_issues := count(I),
+            total_time := sum(I.time_spent_log.spent_time)
+        );
+
+    Although, this particular query may rewritten without using ``GROUP``,
+    but as a ``SELECT`` it is a useful example to illustrate how ``GROUP``
+    works.
+
+    If there's a need to only look at statistics that end up over a
+    certain threshold of total time spent, a ``FILTER`` can be used in
+    conjunction with an alias of the ``SELECT`` clause result:
+
+    .. code-block:: eql
+
+        WITH MODULE example
+        GROUP Issue
+        USING Owner := Issue.owner
+        BY Owner
+        INTO I
+        UNION _stats = (
+            owner := Owner,
+            total_issues := count(I),
+            total_time := sum(I.time_spent_log.spent_time)
         )
-    USING Owner := I.owner
-    BY Owner
-    INTO I
-    UNION _stats = (
-        owner := Owner,
-        total_issues := count(I),
-        total_time := sum(I.time_spent_log.spent_time)
-    )
-    FILTER _stats.total_time > 10;
+        FILTER _stats.total_time > 10;
+
+    The choice of result alias is arbitrary, same as for the ``WITH``
+    block. The alias defined here exists in the scope of the ``UNION``
+    block and can be used to apply ``FILTER``, ``ORDER BY``, ``OFFSET``
+    and ``LIMIT`` clauses.
+
+    If there's a need to filter the *input* set of Issues, then this can
+    be done by using a ``SELECT`` expression at the subject clause of the
+    ``GROUP``:
+
+    .. code-block:: eql
+
+        WITH MODULE example
+        GROUP
+            I := (
+                SELECT Issue
+                # in this GROUP only consider issues with watchers
+                FILTER EXISTS Issue.watchers
+            )
+        USING Owner := I.owner
+        BY Owner
+        INTO I
+        UNION _stats = (
+            owner := Owner,
+            total_issues := count(I),
+            total_time := sum(I.time_spent_log.spent_time)
+        )
+        FILTER _stats.total_time > 10;
 
 
 For

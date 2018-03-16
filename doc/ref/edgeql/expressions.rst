@@ -125,6 +125,11 @@ Basic set operators:
 
 - DISTINCT
 
+    .. eql-operator:: DISTINCT
+        :template: DISTINCT $op1
+        :op1: SET OF any
+        :result: any
+
     ``DISTINCT`` is a set operator that returns a new set where no
     member is equal to any other member. Considering that any two
     objects are equal if and only if they have the same identity (that
@@ -133,6 +138,8 @@ Basic set operators:
     (or any other non-object, such as an array or tuple).
 
 - UNION ALL
+
+    .. eql-operator:: (SET OF any) UNION (SET OF any) -> any
 
     ``UNION ALL`` is only valid for sets of atoms. It performs the set
     union where atoms are compared by *identity* (in all other cases
@@ -173,6 +180,8 @@ Basic set operators:
 
 - EXISTS
 
+    .. eql-operator:: EXISTS (SET OF any) -> bool
+
     ``EXISTS`` is a set operator that returns a singleton set
     ``{TRUE}`` if the input set is not ``{}`` and returns
     ``{FALSE}`` otherwise.
@@ -186,6 +195,18 @@ Basic set operators:
 
 - IF..ELSE
 
+    .. eql-operator:: IFELSE
+        :display: IF..ELSE
+        :template: $op1 IF $op2 ELSE $op3
+        :op1: SET OF any
+        :op2: bool
+        :op3: SET OF any
+        :result: any
+
+    .. eql-operator:: (SET OF any) IF (bool) ELSE (SET OF any) -> any
+
+    :eqlop:`IFELSE`
+
     It's worth noting that ``IF..ELSE`` is a kind of syntax sugar for
     the following expression:
 
@@ -197,14 +218,18 @@ Basic set operators:
             UNION
             (SELECT b FILTER NOT cond);
 
-    .. XXX is it really? what about UNION ALL version?
-
     One of the consequences of this is that if the ``cond`` expression
     is ``{}``, the whole choice expression evaluates to ``{}``.
 
 .. _ref_edgeql_expressions_coalesce:
 
 - Coalescing
+
+    .. eql-operator:: COALESCE
+        :template: $op1 ?? $op2
+        :op1: OPTIONAL any
+        :op2: SET OF any
+        :result: any
 
     Coalescing ``a ?? b`` is, in fact, perfectly equivalent to:
 
@@ -255,6 +280,41 @@ Element operations are largely represented by various operators. Most
 of these operators require their operands to be of the same
 :ref:`type<ref_edgeql_types>`.
 
+.. eql-operator:: PLUS
+    :summary:
+        One sentence quick summary.
+    :display: +
+    :template: $op1 + $op2
+    :op1: numeric, str, bytes
+    :op2: numeric, str, bytes
+    :result: numeric, str, bytes
+
+    Valid operands are: :term:`int`, :eqltype:`numeric`, ...
+
+.. eql-operator:: MINUS
+    :display: -
+    :template: $op1 + $op2
+    :op1: int, float
+    :op2: int, float
+    :result: int, float
+
+.. eql-operator:: UPLUS
+    :display: +
+    :template: + $op1
+    :op1: int, float
+    :result: int, float
+
+.. eql-operator:: TURNSTILE
+    :display: :=
+    :template: alias := $op1
+    :op1: any
+
+    Description of ``:=`` here...
+
+:eqlop:`PLUS`
+
+``+``
+
 - boolean operators ``OR``, ``AND``, ``NOT``
 
 - value equality operators ``=`` and ``!=``
@@ -264,7 +324,7 @@ of these operators require their operands to be of the same
 - string matching operators ``LIKE`` and ``ILIKE`` that work exactly the
   same way as in SQL
 
-- set membership operators ``IN`` and ``NOT IN`` that test whether the
+- set membership operators :eqlop:`IN` ``IN`` and ``NOT IN`` that test whether the
   left operand is an element in the right operand, for each element of
   the left operand
 

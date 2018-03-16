@@ -78,6 +78,57 @@ Since *atoms* are actually defined in the schema, atomic values also
 have a ``__class__`` link that can be accessed to retrieve the
 information about the *atom*, much like for objects and *concepts*.
 
+
+:eqltype:`array[int]`
+
+
+.. edb-type:: int16
+    :summary:
+        One sentence quick summary.
+
+.. edb-type:: int32
+
+.. edb-type:: int64
+
+.. edb-type:: float32
+
+.. edb-type:: float64
+
+.. edb-type:: float
+
+.. edb-type:: numeric
+    :summary:
+        One sentence quick summary.
+
+.. edb-type:: bool
+
+.. edb-type:: str
+
+.. edb-type:: bytes
+
+.. edb-type:: json
+
+.. edb-type:: uuid
+
+.. edb-type:: date
+
+.. edb-type:: time
+
+.. edb-type:: datetime
+
+.. edb-type:: timedelta
+
+.. edb-type:: array
+
+.. edb-type:: map
+
+.. edb-type:: tuple
+
+.. edb-type:: timedelta
+
+    A big description of objects, etc.
+
+
 Arrays
 ~~~~~~
 
