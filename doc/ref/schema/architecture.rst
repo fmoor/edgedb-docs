@@ -5,7 +5,7 @@ Schema architecture
 
 EdgeDB data schema is defined by a set of declarative documents.
 
-Here's how the concepts mentioned in the overview can be defined in a
+Here's how the concepts mentioned in the overview can be defined in an
 EdgeDB schema:
 
 .. code-block:: eschema
@@ -13,15 +13,17 @@ EdgeDB schema:
     concept City:
         required link name to str
         required link country to Country:
-            mapping := '*1'  # any given city only belongs to one country,
-                             # but many cities can belong to the same
-                             # country
+            mapping := '*1'
+            # any given city only belongs to one country,
+            # but many cities can belong to the same
+            # country
 
     concept Country:
         required link name to str
         required link capital to City:
-            mapping := '11'  # there can only be one capital per country
-                             # and vice versa
+            mapping := '11'
+            # there can only be one capital per country
+            # and vice versa
 
 
 EdgeDB schemas can define the following fundamental elements:
@@ -63,22 +65,8 @@ semantics and behaviour. All atoms are usually either directly or
 indirectly derived from one of the predefined fundamental types; it is
 also possible to define custom fundamental types.
 
-The following is the list of fundamental atoms defined in module
-``std``:
-
-* ``bool`` -- boolean data type
-* ``bytes`` -- raw bytes data type
-* ``date`` -- date data type
-* ``datetime`` -- date and time data type
-* ``decimal`` -- arbitrary-precision fixed-point decimal number
-* ``float`` -- IEEE 754 floating point number
-* ``int`` -- 8-byte integer data type
-* ``json`` -- JSON data type
-* ``sequence`` -- sequence datatype
-* ``str`` -- text data type
-* ``time`` -- time data type
-* ``timedelta`` -- time interval data type
-* ``uuid`` -- UUID data type
+Refer to the section on :ref:`Types<ref_edgeql_types>` for the full
+list of atoms.
 
 
 .. _ref_schema_architechture_concepts:
@@ -98,9 +86,10 @@ arbitrary number of links to other concepts or atoms.
     concept City:
         required link name to str
         required link country to Country:
-            mapping := '*1'  # any given city only belongs to one country,
-                             # but many cities can belong to the same
-                             # country
+            mapping := '*1'
+            # any given city only belongs to one country,
+            # but many cities can belong to the same
+            # country
 
 
 In the example above concept ``City`` defines two links: ``name`` as a
