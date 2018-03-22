@@ -725,7 +725,7 @@ Using shapes
 ------------
 
 :ref:`Shapes<ref_edgeql_shapes>` are the way of specifying structured
-object data. They are used to get a set of `objects`and their
+object data. They are used to get a set of `objects` and their
 relationships in a structured way. Shape specification can be added to
 any expression that denotes an object. Fundamentally, a shape
 specification does not alter the identity of the objects it is

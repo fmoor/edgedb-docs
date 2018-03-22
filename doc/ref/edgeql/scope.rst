@@ -292,8 +292,6 @@ name is 'High'. The common prefix makes it easy to write intuitive
 queries, by ensuring that the same sub-path always means the same
 thing. Consider a more complex query:
 
-.. need new example here, one that doesn't break clauses restrictions
-
 .. code-block:: eql
 
     WITH MODULE example
