@@ -12,10 +12,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-from edgedb.lang.edgeql.pygments import EdgeQLLexer
-from edgedb.lang.graphql.pygments import GraphQLLexer
-from edgedb.lang.schema.pygments import EdgeSchemaLexer
-
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -23,12 +19,6 @@ from edgedb.lang.schema.pygments import EdgeSchemaLexer
 # sys.path.insert(0, os.path.abspath('.'))
 
 # -- General configuration ------------------------------------------------
-
-def setup(sphinx):
-    sphinx.add_lexer("eschema", EdgeSchemaLexer())
-    sphinx.add_lexer("eql", EdgeQLLexer())
-    sphinx.add_lexer("pseudo-eql", EdgeQLLexer())
-    sphinx.add_lexer("graphql", GraphQLLexer())
 
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -43,6 +33,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinxcontrib.aafig',
     'sphinxcontrib.srclinks',
+    'edgedb.sphinxext',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

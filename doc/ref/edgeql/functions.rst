@@ -57,7 +57,15 @@ Array functions
 
 .. _ref_edgeql_functions_array_agg:
 
-.. function:: array_agg(SET OF any) -> any
+.. eql:function:: std::array_agg(SET OF any, $a: any) -> array<any>
+    :summary:
+        Return the array made from all of the input set elements.
+
+    :param $1: input set
+    :paramtype $1: SET OF any
+
+    :return: array made of input set elements
+    :returntype: array<any>
 
     Return the array made from all of the input set elements. The
     ordering of the input set will be preserved if specified.
@@ -70,6 +78,7 @@ Array functions
         SELECT array_agg(User.name ORDER BY User.name);
         # returns a string array containing all User names sorted
         # alphabetically
+
 
 .. function:: array_contains(array<any>, any) -> bool
 
