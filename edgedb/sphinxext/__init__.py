@@ -8,13 +8,9 @@ Functions
 ---------
 
 To declare a function use a ".. eql:function::" directive.  A few
-fields must be defined:
+things must be defined:
 
-* Full function signature with a full quialified name must be specified.
-
-* :summary: is a one-sentence description of a function.
-  Note: there needs to be an empty new line after  the ``:summary:``
-  field in order for Sphinx to parse the directive.
+* Full function signature with a fully qualified name must be specified.
 
 * ":param $name: description:" a short description of the $name parameter.
   $name must match the the name of the parameter in function's signature.
@@ -30,12 +26,13 @@ fields must be defined:
   :paramtype: but lack parameter names.  They must be used to document
   the return value of the function.
 
+* A few paragraphs and code samples.  The first paragraph must
+  be a single sentence no longer than 79 characters describing the
+  function.
+
 Example::
 
     .. eql:function:: std::array_agg(SET OF any, $a: any) -> array<any>
-        :summary:
-            Return the array made from all of the input set elements.
-
         :param $1: input set
         :paramtype $1: SET OF any
 
@@ -45,8 +42,10 @@ Example::
         :return: array made of input set elements
         :returntype: array<any>
 
-        Return the array made from all of the input set elements. The
-        ordering of the input set will be preserved if specified.
+        Return the array made from all of the input set elements.
+
+        The ordering of the input set will be preserved if specified.
+
 
 A function can be referenced from anywhere in the documentation by using
 a ":eql:func:" role.  For instance:
@@ -68,7 +67,6 @@ from edgedb.lang.edgeql import ast as ql_ast
 from edgedb.lang.edgeql import codegen as ql_gen
 
 from docutils import nodes as d_nodes
-from docutils.parsers.rst import directives as d_directives
 
 from sphinx import addnodes as s_nodes
 from sphinx import directives as s_directives
@@ -164,11 +162,48 @@ class DirectiveParseError(Exception):
         super().__init__(msg)
 
 
-class EQLFunctionDirective(s_directives.ObjectDescription):
+class BaseEQLDirective(s_directives.ObjectDescription):
 
-    option_spec = {
-        'summary': d_directives.unchanged_required
-    }
+    def run(self):
+        indexnode, node = super().run()
+
+        desc_cnt = None
+        for child in node.children:
+            if isinstance(child, s_nodes.desc_content):
+                desc_cnt = child
+                break
+        if desc_cnt is None or not desc_cnt.children:
+            raise DirectiveParseError(
+                self, 'the directive must include a description')
+
+        first_node = desc_cnt.children[0]
+        if isinstance(first_node, d_nodes.field_list):
+            if len(desc_cnt.children) < 2:
+                raise DirectiveParseError(
+                    self, 'the directive must include a description')
+
+            first_node = desc_cnt.children[1]
+
+        if not isinstance(first_node, d_nodes.paragraph):
+            raise DirectiveParseError(
+                self,
+                'there must be a short text paragraph after directive fields')
+
+        summary = first_node.astext().strip()
+        summary = ' '.join(
+            line.strip() for line in summary.split() if line.strip())
+
+        if len(summary) > 79:
+            raise DirectiveParseError(
+                self,
+                f'First paragraph is expected to be shorter than 80 '
+                f'characters, got {len(summary)}: {summary!r}')
+
+        node['summary'] = summary
+        return [indexnode, node]
+
+
+class EQLFunctionDirective(BaseEQLDirective):
 
     doc_field_types = [
         EQLTypedField(
@@ -216,7 +251,7 @@ class EQLFunctionDirective(s_directives.ObjectDescription):
         signode += s_nodes.desc_name(fullname, fullname)
 
         params = s_nodes.desc_parameterlist()
-        for idx, param in enumerate(astnode.args, 1):
+        for idx, param in enumerate(astnode.args):
             name = param.name
             if not name:
                 name = f'${idx}'
@@ -233,28 +268,20 @@ class EQLFunctionDirective(s_directives.ObjectDescription):
         return fullname
 
     def add_target_and_index(self, name, sig, signode):
-        if name not in self.state.document.ids:
-            signode['names'].append(name)
-            signode['ids'].append(name)
-            signode['first'] = (not self.names)
-            self.state.document.note_explicit_target(signode)
-
-            objects = self.env.domaindata['eql']['objects']
-            if name in objects:
-                raise DirectiveParseError(
-                    self, f'duplicate function {name} description')
-            objects[name] = (self.env.docname, self.objtype)
-
-    def run(self):
-        if 'summary' not in self.options:
+        if name in self.state.document.ids:
             raise DirectiveParseError(
-                self,
-                f'cannot parse {self.name} directive: '
-                f'"summary" option is required')
+                self, f'duplicate function {name} description')
 
-        index_node, node = super().run()
-        node['summary'] = self.options['summary']
-        return [index_node, node]
+        signode['names'].append(name)
+        signode['ids'].append(name)
+        signode['first'] = (not self.names)
+        self.state.document.note_explicit_target(signode)
+
+        objects = self.env.domaindata['eql']['objects']
+        if name in objects:
+            raise DirectiveParseError(
+                self, f'duplicate function {name} description')
+        objects[name] = (self.env.docname, self.objtype)
 
 
 class EdgeQLDomain(s_domains.Domain):
@@ -291,8 +318,10 @@ class EdgeQLDomain(s_domains.Domain):
                     self,
                     f'cannot resolve :eql:{type}: targeting {target!r}')
 
-            return s_nodes_utils.make_refnode(
+            node = s_nodes_utils.make_refnode(
                 builder, fromdocname, docname, target, contnode, None)
+            node['eql-type'] = obj_type
+            return node
 
         return super().resolve_xref(
             env, fromdocname, builder, type, target, node, contnode)

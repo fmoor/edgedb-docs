@@ -13,7 +13,7 @@ function is also empty.
 
 Aggregate functions are *set functions* mapping arbitrary sets onto
 singletons. Examples of aggregate functions include built-ins such as
-``count`` and ``array_agg``.
+``count`` and :eql:func:`array_agg <std::array_agg>`.
 
 .. code-block:: eql
 
@@ -58,8 +58,6 @@ Array functions
 .. _ref_edgeql_functions_array_agg:
 
 .. eql:function:: std::array_agg(SET OF any, $a: any) -> array<any>
-    :summary:
-        Return the array made from all of the input set elements.
 
     :param $1: input set
     :paramtype $1: SET OF any
@@ -67,8 +65,9 @@ Array functions
     :return: array made of input set elements
     :returntype: array<any>
 
-    Return the array made from all of the input set elements. The
-    ordering of the input set will be preserved if specified.
+    Return the array made from all of the input set elements.
+
+    The ordering of the input set will be preserved if specified.
 
     .. code-block:: eql
 
