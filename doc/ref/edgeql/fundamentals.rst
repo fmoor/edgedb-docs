@@ -356,6 +356,10 @@ The ``DETACHED`` keyword creates a whole new scope, parallel to the
 statement in which it appears, nested directly in the schema-level
 scope.
 
+Defining an alias via ``:=`` operator (whether in the ``WITH`` block
+or elsewhere) puts the expression to the right of ``:=`` in a new sub-
+scope.
+
 .. code-block:: eql
 
     # select first and last name for each user
@@ -374,16 +378,17 @@ scope.
 
 One way to interpret any query is to follow these steps:
 
-1) Lexically substitute any aliases recursively until no aliases are used.
-
-2) Find all ``DETACHED`` expressions and treat them as entirely
+1) Find all ``DETACHED`` expressions and treat them as entirely
    separate from anything else within the statement. One way to think
    of this is to imagine that there's actually a schema-level view
    defined for each of the ``DETACHED`` expressions.
 
-3) Resolve whether each particular function will be evaluated element-
+2) Resolve whether each particular function will be evaluated element-
    wise or not based on the ``SET OF`` scoping rules.
 
+3) Treat every alias on the right side of ``:=`` as if it were a view
+   defined in the schema to represent the set given by the left-hand-
+   side expression.
 
 .. _ref_edgeql_fundamentals_path:
 
@@ -658,10 +663,7 @@ way, but rather provides a guideline for serialization.
 
 Shapes define the *relationships structure* of the data that is
 retrieved from the DB. Thus shapes themselves are a lexical
-specification used with valid expressions denoting objects. There's no
-need to explicitly include ``id`` in the shape specification because
-it is always implicitly included since the shape is always based on an
-object.
+specification used with valid expressions denoting objects.
 
 Shapes allow retrieving a set of objects as a `forest`, where each
 base object is the root of a `tree`. Technically, this set of trees is

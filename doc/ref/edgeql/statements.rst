@@ -12,7 +12,7 @@ specific input (DB state).
 
 Statements consist of building blocks called `clauses`. Each `clause`
 can be represented as an equivalent set function of a certain
-signature. Understanding how :ref:`how functions
+signature. Understanding :ref:`how functions
 work<ref_edgeql_fundamentals_function>` helps in understanding
 `clauses`. A statement is effectively a data pipeline made out of
 `clauses`. Unlike functions and operators `clauses` cannot be
@@ -825,10 +825,10 @@ With block
 
     .. XXX: not just for aliases! e.g. WITH CARDINALITY
 
-    All aliases can be seen as a shorthand, performing a purely
-    mechanical lexical symbol substitution. They are used as
-    convenient syntax sugar rather than altering the semantics of
-    a given query.
+    In case of aliased expressions, those expressions are evaluated in
+    the lexical scope they appear in, not the scope where their alias
+    is used. This means that refactoring queries using aliases must be
+    done with care so as not to alter the query semantics.
 
 Specifying a module
 +++++++++++++++++++
@@ -926,9 +926,17 @@ the cardinality is provably ``'1'``.
 Expressions
 +++++++++++
 
+It is possible to define an alias for some expression. The aliased set
+behaves as a completely independent set of a given name. The contents
+of the set are determined by the expression at the point where the
+alias is defined. In terms of scope, the aliased expression in the
+``WITH`` block is in a sibling scope to the rest of the query.
+
 It may be useful to factor out a common sub-expression from a larger
 complex query. This can be done by assigning the sub-expression a new
-symbol in the ``WITH`` block.
+symbol in the ``WITH`` block. However, care must be taken to ensure
+that this refactoring doesn't alter the meaning of the expression due
+to scope change.
 
 .. code-block:: eql
 
@@ -949,17 +957,44 @@ symbol in the ``WITH`` block.
         comments := U.<owner[IS Comment]
     };
 
+An example of incorrect refactoring would be:
+
+.. code-block:: eql
+
+    # This query gets a set of tuples of
+    # issues and their owners.
+    WITH
+        MODULE example
+    SELECT (Issue, Issue.owner);
+
+    # This query gets a set of tuples that
+    # result from a cartesian product of all issues
+    # with all owners. This is because `Issue` and `U`
+    # are considered independent sets.
+    WITH
+        MODULE example,
+        U := Issue.owner
+    SELECT (Issue, U);
+
 
 Detached
 ++++++++
 
 It is possible to specify an aliased view in the ``WITH`` block using
 ``DETACHED`` expression. A ``DETACHED`` expression can be interpreted
-as if a schema-level view had been defined for that expression.
-Declaring ``DETACHED`` expressions in the ``WITH`` block creates a way
-to use aliases to refer to different instances of the same `concept`
-in a query. For example, the following query will find all users who
+as if a schema-level view had been defined for that expression. All
+``DETACHED`` expressions completely ignore the current scope. In
+principle, a ``DETACHED`` expression in the top-level ``WITH`` block
+is equivalent to a regular aliased expression.
+
+For example, the following query will find all users who
 own the same number of issues as someone else:
+
+.. todo::
+
+    Need a better DETACHED example, with nested sub-queries and
+    possibly motivated by keeping the symbols closer to their place if
+    usage.
 
 .. code-block:: eql
 
@@ -978,10 +1013,6 @@ own the same number of issues as someone else:
             SELECT U2.<owner[IS Issue]
             FILTER U2 != User
         ));
-
-The use of ``DETACHED`` is not limited to `concepts`, however. It can
-be used to transform any arbitrary expression into an equivalent of a
-schema-defined view.
 
 
 Transactions

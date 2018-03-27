@@ -11,9 +11,11 @@ lexically.
 
 The :ref:`with block<ref_edgeql_with>` is nested in the scope defined
 by the statement. Any symbols defined in it are only visible within
-that particular statement. ``WITH`` block aliases can be lexically
-replaced with the expressions they stand for without changing the
-overall meaning.
+that particular statement. ``WITH`` block aliases are themselves in
+the parent scope w.r.t. the rest of the statement. However, the
+expressions used to define the aliases are each in their own sub-
+scope. This means they are in sibling scopes w.r.t. each other and the
+rest of the statement.
 
 The following diagrams show how scopes are nested. For convenience the
 scopes have been labeled with a number indicating nesting depth.
@@ -22,44 +24,101 @@ the indexing.
 
 .. code-block:: eql
 
-    WITH MODULE example
-    SELECT Issue {
-        watchers: {
-            name
+    WITH
+        MODULE example
+    SELECT
+        Issue {
+            watchers: {
+                name
+            }
         }
-    }
     FILTER
         Issue.watchers.name = 'Alice';
 
 .. aafig::
     :textual:
 
-    +-- (0)--------------------------------+
-    | "WITH MODULE example"                |
-    | "SELECT Issue {"                     |
-    | +-- (1a)---------------------------+ |
-    | | "watchers: {"                    | |
-    | | +-- (2)------------------------+ | |
-    | | | "name"                       | | |
-    | | +------------------------------+ | |
-    | | "}"                              | |
-    | +----------------------------------+ |
-    | "}"                                  |
-    | "FILTER"                             |
-    | +-- (1b)---------------------------+ |
-    | | "Issue.watchers.name = 'Alice';" | |
-    | +----------------------------------+ |
-    +--------------------------------------+
+    +-- (0)------------------------------------+
+    |   "WITH"                                 |
+    |     "MODULE example"                     |
+    | +-- (1)--------------------------------+ |
+    | | "SELECT"                             | |
+    | |   "Issue {"                          | |
+    | | +-- (2a)---------------------------+ | |
+    | | |   "watchers: {"                  | | |
+    | | | +-- (3)------------------------+ | | |
+    | | | |   "name"                     | | | |
+    | | | +------------------------------+ | | |
+    | | |   "}"                            | | |
+    | | +----------------------------------+ | |
+    | |   "}"                                | |
+    | | "FILTER"                             | |
+    | | +-- (2b)---------------------------+ | |
+    | | | "Issue.watchers.name = 'Alice';" | | |
+    | | +----------------------------------+ | |
+    | +--------------------------------------+ |
+    +------------------------------------------+
 
 The scope breakdown of the above query makes it easy to see that the
 ``FILTER`` cannot affect the ``watchers`` sub-shape because they are
-in parallel scopes (`1b,0` vs `1a,0`). On the other hand, the common
-prefix ``Issue`` from scope `0` means the same thing in the ``FILTER``
-as well as in the main part of the query.
+in parallel scopes (`2b,1,0` vs `2a,1,0`). On the other hand, the
+common prefix ``Issue`` from scope `1,0` means the same thing in the
+``FILTER`` as well as in the main part of the query.
 
 .. code-block:: eql
 
-    WITH MODULE example
+    WITH
+        MODULE example,
+        U := User
+    SELECT
+        User {
+            first_name,
+            last_name
+        }
+    FILTER
+        U != User AND
+        User.first_name = U.first_name;
+
+.. aafig::
+    :textual:
+
+    +-- (0)-------------------------------------+
+    |   "WITH"                                  |
+    |     "MODULE example,"                     |
+    |     "U :="                                |
+    | +-- (1a)--------------------------------+ |
+    | |     "User"                            | |
+    | +---------------------------------------+ |
+    |                                           |
+    | +-- (1b)--------------------------------+ |
+    | | "SELECT"                              | |
+    | |   "User {"                            | |
+    | | +-- (2a)----------------------------+ | |
+    | | |   "first_name,"                   | | |
+    | | +-----------------------------------+ | |
+    | |                                       | |
+    | | +-- (2b)----------------------------+ | |
+    | | |   "last_name"                     | | |
+    | | +-----------------------------------+ | |
+    | |   "}"                                 | |
+    | | "FILTER"                              | |
+    | | +-- (2c)----------------------------+ | |
+    | | | "U != User AND"                   | | |
+    | | | "User.first_name = U.first_name;" | | |
+    | | +-----------------------------------+ | |
+    | +---------------------------------------+ |
+    +-------------------------------------------+
+
+The above query illustrates how scoping rules work out for aliases
+defined in the ``WITH`` block. The query retrieves all users that have
+the same ``first_name`` as someone else. The ``User`` that's part of
+the definition of ``U`` is in a sibling scope to the ``User`` in the
+main query.
+
+.. code-block:: eql
+
+    WITH
+        MODULE example
     SELECT (
         Issue.number,
         count(Issue.watchers)
@@ -68,56 +127,77 @@ as well as in the main part of the query.
 .. aafig::
     :textual:
 
-    +-- (0)-----------------------+
-    | "WITH MODULE example"       |
-    | "SELECT ("                  |
-    |   "Issue.number,"           |
-    | +-- (1)-------------------+ |
-    | | "count(Issue.watchers)" | |
-    | +-------------------------+ |
-    | ");"                        |
-    +-----------------------------+
+    +-- (0)---------------------------+
+    |   "WITH"                        |
+    |     "MODULE example"            |
+    | +-- (1)-----------------------+ |
+    | | "SELECT ("                  | |
+    | |   "Issue.number,"           | |
+    | | +-- (2)-------------------+ | |
+    | | | "count(Issue.watchers)" | | |
+    | | +-------------------------+ | |
+    | | ");"                        | |
+    | +-----------------------------+ |
+    +---------------------------------+
 
 In the above example the aggregate function ``count`` creates a sub-
-scope for its argument. However, like before, the common prefix
-``Issue`` from scope `0` is shared between ``Issue.number`` and
-``Issue.watchers``. Therefore the ``count`` will be applied to
+scope `2,1,0` for its argument. However, like before, the common
+prefix ``Issue`` from scope `1,0` is shared between ``Issue.number``
+and ``Issue.watchers``. Therefore the ``count`` will be applied to
 watchers of each issue separately.
 
 .. code-block:: eql
 
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT (
         (SELECT Issue.number),
         count(Issue.watchers)
     );
 
+    "WITH"
+      "MODULE example"
+
+    "SELECT ("
+
+      "(SELECT Issue.number),"
+
+
+
+      "count(Issue.watchers)"
+
+    ");"
+
 .. aafig::
     :textual:
 
-    +-- (0)------------------------+
-    | "WITH MODULE example"        |
-    | "SELECT ("                   |
-    | +-- (1a)-------------------+ |
-    | | "(SELECT Issue.number)," | |
-    | +--------------------------+ |
-    |                              |
-    | +-- (1b)-------------------+ |
-    | | "count(Issue.watchers)"  | |
-    | +--------------------------+ |
-    | ");"                         |
-    +------------------------------+
+    +-- (0)----------------------------+
+    |   "WITH"                         |
+    |     "MODULE example"             |
+    | +-- (1)------------------------+ |
+    | | "SELECT ("                   | |
+    | | +-- (2a)-------------------+ | |
+    | | | "(SELECT Issue.number)," | | |
+    | | +--------------------------+ | |
+    | |                              | |
+    | | +-- (2)b-------------------+ | |
+    | | | "count(Issue.watchers)"  | | |
+    | | +--------------------------+ | |
+    | | ");"                         | |
+    | +------------------------------+ |
+    +----------------------------------+
 
 The last example is similar to the one before that, but
 ``Issue.number`` is wrapped in a ``SELECT`` sub-query. This means that
-it has its own scope (`1a,0`) parallel to the scope created by
-``count`` (`1b,0`). The net effect is that the ``count`` argument is
+it has its own scope (`2a,1,0`) parallel to the scope created by
+``count`` (`2b,1,0`). The net effect is that the ``count`` argument is
 completely independent of the ``Issue.number`` of the sub-query and
 effectively means "all issue watchers in the DB".
 
 .. code-block:: eql
 
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT (
         User IN Issue.watchers,
         count(Issue.watchers)
@@ -126,20 +206,22 @@ effectively means "all issue watchers in the DB".
 .. aafig::
     :textual:
 
-    +-- (0)-----------------------+
-    | "WITH MODULE example"       |
-    | "SELECT ("                  |
-    |   "User "                   |
-    |   "IN "                     |
-    | +-- (1a)------------------+ |
-    | | "Issue.watchers,"       | |
-    | +-------------------------+ |
-    |                             |
-    | +-- (1b)------------------+ |
-    | | "count(Issue.watchers)" | |
-    | +-------------------------+ |
-    | ");"                        |
-    +-----------------------------+
+    +-- (0)---------------------------+
+    |   "WITH"                        |
+    |     "MODULE example"            |
+    | +-- (1)-----------------------+ |
+    | | "SELECT ("                  | |
+    | |   "User IN"                 | |
+    | | +-- (2a)------------------+ | |
+    | | |   "Issue.watchers,"     | | |
+    | | +-------------------------+ | |
+    | |                             | |
+    | | +-- (2b)------------------+ | |
+    | | | "count(Issue.watchers)" | | |
+    | | +-------------------------+ | |
+    | | ");"                        | |
+    | +-----------------------------+ |
+    +---------------------------------+
 
 To illustrate the peculiar signature of ``IN`` operator it can be put
 in a tuple next to an aggregate function, such as ``count``. The
@@ -152,26 +234,29 @@ Last but not least, this is how the scopes in a complex query may apply:
 
 .. code-block:: eql
 
-    WITH MODULE example
-    SELECT User {
-        name,
-        <owner: Issue {
-            number,
-            status: {
-                name
-            },
-            priority: {
-                name
+    WITH
+        MODULE example
+    SELECT
+        User {
+            name,
+            <owner: Issue {
+                number,
+                status: {
+                    name
+                },
+                priority: {
+                    name
+                }
             }
         }
-    }
     FILTER
         User.name LIKE 'A%'
         AND
         User.<owner[IS Issue].status.name = 'Open'
         AND
         User.<owner[IS Issue].priority.name = 'High'
-    ORDER BY User.name
+    ORDER BY
+        User.name
     LIMIT 3;
 
 .. aafig::
@@ -180,7 +265,8 @@ Last but not least, this is how the scopes in a complex query may apply:
     :textual:
 
     +-- (0)----------------------------------+
-    |   "WITH MODULE example"                |
+    |   "WITH"                               |
+    |     "MODULE example"                   |
     | +-- (1a)-----------------------------+ |
     | | "SELECT User {"                    | |
     | | +-- (2a)-----------------------+   | |
@@ -246,14 +332,16 @@ prefix in two paths in the same scope is considered to refer to the
 .. code-block:: eql
 
     # tuple query
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT (
         Issue.status.name,
         Issue.priority.name
     );
 
     # shape query
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT Issue {
         status: {
             name
@@ -278,8 +366,10 @@ is used, as long as it is in the same scope. For example:
 
 .. code-block:: eql
 
-    WITH MODULE example
-    SELECT Issue
+    WITH
+        MODULE example
+    SELECT
+        Issue
     FILTER
         Issue.status.name = 'Open'
         AND
@@ -294,7 +384,8 @@ thing. Consider a more complex query:
 
 .. code-block:: eql
 
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT User {
         name
     }
@@ -325,7 +416,8 @@ interpretation, consider the following query:
 
 .. code-block:: eql
 
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT User {
         name
     }
@@ -350,7 +442,8 @@ is illegal because ``len(User.name)`` is a set:
 
 .. code-block:: eql
 
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT User {
         name
     }
@@ -364,7 +457,8 @@ scope:
 
 .. code-block:: eql
 
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT res := User {
         name
     }
@@ -383,12 +477,16 @@ rule and aggregate functions. Consider the following:
 .. code-block:: eql
 
     # count all the issues
-    WITH MODULE example
-    SELECT count(Issue);
+    WITH
+        MODULE example
+    SELECT
+        count(Issue);
 
     # provide an array of all issue numbers
-    WITH MODULE example
-    SELECT array_agg(Issue.number);
+    WITH
+        MODULE example
+    SELECT
+        array_agg(Issue.number);
 
 So far so good, but what if we wanted to combine statistical data
 about total issues with some data from each individual ``Issue``? For
@@ -399,14 +497,18 @@ schema, though) and what we want is a result of the form "Open issue
 
 .. code-block:: eql
 
-    # The naive way of combining the result of count with a
-    # specific Issue does not work.
+    # The naive way of combining the result
+    # of count with a specific Issue does not work.
     #
     # This will be a set of strings of the form:
     #   "Open issue <number> / 1"
-    WITH MODULE example
-    SELECT 'Open issue ' + Issue.number + ' / ' + <str>count(Issue)
-    FILTER Issue.status.name = 'Open';
+    WITH
+        MODULE example
+    SELECT
+        'Open issue ' + Issue.number +
+        ' / ' + <str>count(Issue)
+    FILTER
+        Issue.status.name = 'Open';
 
 Due to the fact that ``Issue`` and ``Issue.number`` exist in the same
 scope, the :ref:`longest common prefix<ref_edgeql_scope_prefix>`
@@ -419,13 +521,19 @@ The way to fix that is to define another set as ``Issue`` in the
 
 .. code-block:: eql
 
-    # the alias I2 functions as if it were a schema-level view
+    # The alias I2 functions as if it
+    # were a schema-level view, even though
+    # DETACHED keyword is not used. This is
+    # due to the fact that in the scope it
+    # appears in, is itself schema-level.
     WITH
         MODULE example,
-        I2 := DETACHED Issue
+        I2 := Issue
     SELECT
-        'Open issue ' + Issue.number + ' / ' + <str>count(I2)
-    FILTER Issue.status.name = 'Open';
+        'Open issue ' + Issue.number +
+        ' / ' + <str>count(I2)
+    FILTER
+        Issue.status.name = 'Open';
 
 Here's an example of an aggregate function that specifically takes
 advantage of only being applied to the set restricted by the common
@@ -433,12 +541,15 @@ prefix:
 
 .. code-block:: eql
 
-    # Each result will only have the watchers of a given open issue.
-    WITH MODULE example
+    # Each result will only have the watchers
+    # of a given open issue.
+    WITH
+        MODULE example
     SELECT
         'Issue ' + Issue.number + ' watched by: ' +
             <str>array_agg(Issue.watchers.name)
-    FILTER Issue.status.name = 'Open';
+    FILTER
+        Issue.status.name = 'Open';
 
 
 .. _ref_edgeql_scope_clauses:
@@ -481,7 +592,8 @@ sense for an admin account, for example):
 
 .. code-block:: eql
 
-    WITH MODULE example
+    WITH
+        MODULE example
     SELECT User {
         id,
         name,
@@ -505,7 +617,9 @@ sense for an admin account, for example):
             SELECT count(Issue)
             FILTER Issue.status.name = 'Open'
         )
-    } FILTER User.name = 'Alice Smith';
+    }
+    FILTER
+        User.name = 'Alice Smith';
 
 In the above example there are two sub-queries referring to ``Issue``.
 Because those sub-queries are not nested in each other, they are
