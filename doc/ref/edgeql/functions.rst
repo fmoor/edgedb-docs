@@ -13,7 +13,7 @@ function is also empty.
 
 Aggregate functions are *set functions* mapping arbitrary sets onto
 singletons. Examples of aggregate functions include built-ins such as
-``count`` and :eql:func:`array_agg <std::array_agg>`.
+``count`` and :eql:func:`array_agg`.
 
 .. code-block:: eql
 
@@ -35,13 +35,20 @@ module name to refer to these functions.
 Polymorphic functions
 ---------------------
 
-.. function:: len(any) -> int
+.. eql:function:: std::len(any) -> numeric
 
-    Polymorphic function that can take ``str``, ``bytes`` or any
-    ``array`` as input.
+    :param $0: input
+    :paramtype $0: str or bytes or array
+
+    :return: "length" of input
+    :returntype: numeric
+
+    A polymorphic function to calculate a "length" of its first
+    argument.
 
     Return the number of characters in a ``str``, or the number of
-    bytes in ``bytes``, or the number of elements in an ``array``.
+    bytes in :eql:type:`bytes`, or the number of elements in an
+    ``array``.
 
     .. code-block:: eql
 
@@ -59,8 +66,8 @@ Array functions
 
 .. eql:function:: std::array_agg(SET OF any, $a: any) -> array<any>
 
-    :param $1: input set
-    :paramtype $1: SET OF any
+    :param $0: input set
+    :paramtype $0: SET OF any
 
     :return: array made of input set elements
     :returntype: array<any>
@@ -77,7 +84,6 @@ Array functions
         SELECT array_agg(User.name ORDER BY User.name);
         # returns a string array containing all User names sorted
         # alphabetically
-
 
 .. function:: array_contains(array<any>, any) -> bool
 

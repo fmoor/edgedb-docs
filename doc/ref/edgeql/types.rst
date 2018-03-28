@@ -78,6 +78,17 @@ Since *atoms* are actually defined in the schema, atomic values also
 have a ``__class__`` link that can be accessed to retrieve the
 information about the *atom*, much like for objects and *concepts*.
 
+
+.. eql:type:: std::bytes
+
+    A sequence of bytes.
+
+
+.. eql:type:: std::numeric
+
+    A big int.
+
+
 Arrays
 ~~~~~~
 

@@ -30,7 +30,7 @@ things must be defined:
   be a single sentence no longer than 79 characters describing the
   function.
 
-Example::
+Example:
 
     .. eql:function:: std::array_agg(SET OF any, $a: any) -> array<any>
         :param $1: input set
@@ -50,8 +50,23 @@ Example::
 A function can be referenced from anywhere in the documentation by using
 a ":eql:func:" role.  For instance:
 
+* ":eql:func:`array_agg`";
 * ":eql:func:`std::array_agg`";
-* or, "look at this :eql:func:`fancy function <std::array_agg>`".
+* or, "look at this :eql:func:`fancy function <array_agg>`".
+
+
+Types
+-----
+
+To declare a type use a ".. eql:type::" directive.  It doesn't have any
+fields at the moment, just description.  Example:
+
+    .. eql:type:: std::bytes
+
+        A sequence of bytes.
+
+To reference a type use a ":eql:type:" role: ":eql:type:`bytes`" or
+":eql:type:`std::bytes`".
 
 """
 
@@ -80,7 +95,7 @@ class EQLField(s_docfields.Field):
 
     def make_field(self, *args, **kwargs):
         node = super().make_field(*args, **kwargs)
-        node['name'] = self.name
+        node['eql-name'] = self.name
         return node
 
     def make_xrefs(self, rolename, domain, target, innernode=d_nodes.emphasis,
@@ -146,14 +161,15 @@ class EQLTypedField(EQLField):
         fieldbody = d_nodes.field_body('', body)
 
         node = d_nodes.field('', fieldname, fieldbody)
-        node['name'] = self.name
-        node['paramname'] = fieldarg
+        node['eql-name'] = self.name
+        node['eql-paramname'] = fieldarg
         if typename:
-            node['paramtype'] = typename
+            node['eql-paramtype'] = typename
         return node
 
 
 class DirectiveParseError(Exception):
+
     def __init__(self, directive, msg, *, cause=None):
         fn, lineno = directive.state_machine.get_source_and_line()
         msg = f'{msg} in {fn}:{lineno}'
@@ -162,11 +178,13 @@ class DirectiveParseError(Exception):
         super().__init__(msg)
 
 
+class DomainError(Exception):
+    pass
+
+
 class BaseEQLDirective(s_directives.ObjectDescription):
 
-    def run(self):
-        indexnode, node = super().run()
-
+    def _validate_and_extract_summary(self, node):
         desc_cnt = None
         for child in node.children:
             if isinstance(child, s_nodes.desc_content):
@@ -200,7 +218,74 @@ class BaseEQLDirective(s_directives.ObjectDescription):
                 f'characters, got {len(summary)}: {summary!r}')
 
         node['summary'] = summary
+
+    def _validate_fields(self, node):
+        desc_cnt = None
+        for child in node.children:
+            if isinstance(child, s_nodes.desc_content):
+                desc_cnt = child
+                break
+        if desc_cnt is None or not desc_cnt.children:
+            raise DirectiveParseError(
+                self, 'the directive must include a description')
+
+        fields = None
+        first_node = desc_cnt.children[0]
+        if isinstance(first_node, d_nodes.field_list):
+            fields = first_node
+
+        for child in desc_cnt.children[1:]:
+            if isinstance(child, d_nodes.field_list):
+                raise DirectiveParseError(
+                    self, f'fields must be specified before all other content')
+
+        if fields:
+            for field in fields:
+                if 'eql-name' not in field:
+                    raise DirectiveParseError(
+                        self,
+                        f'found unknown field {field.children[0].astext()!r}')
+
+    def run(self):
+        indexnode, node = super().run()
+        self._validate_fields(node)
+        self._validate_and_extract_summary(node)
         return [indexnode, node]
+
+    def add_target_and_index(self, name, sig, signode):
+        if name in self.state.document.ids:
+            raise DirectiveParseError(
+                self, f'duplicate {self.objtype} {name} description')
+
+        signode['names'].append(name)
+        signode['ids'].append(name)
+        signode['first'] = (not self.names)
+        self.state.document.note_explicit_target(signode)
+
+        objects = self.env.domaindata['eql']['objects']
+        if name in objects:
+            raise DirectiveParseError(
+                self, f'duplicate function {name} description')
+        objects[name] = (self.env.docname, self.objtype)
+
+
+class EQLTypeDirective(BaseEQLDirective):
+
+    def handle_signature(self, sig, signode):
+        if '::' not in sig:
+            raise DirectiveParseError(
+                self, f'eql:type must include a namespace')
+
+        mod, name = sig.strip().split('::')
+
+        signode['eql-module'] = mod
+        signode['eql-name'] = name
+        signode['eql-fullname'] = fullname = f'{mod}::{name}'
+
+        signode += s_nodes.desc_annotation('type', 'type')
+        signode += d_nodes.Text(' ')
+        signode += s_nodes.desc_name(fullname, fullname)
+        return sig
 
 
 class EQLFunctionDirective(BaseEQLDirective):
@@ -248,6 +333,8 @@ class EQLFunctionDirective(BaseEQLDirective):
         signode['eql-name'] = funcname
         signode['eql-fullname'] = fullname = f'{modname}::{funcname}'
 
+        signode += s_nodes.desc_annotation('function', 'function')
+        signode += d_nodes.Text(' ')
         signode += s_nodes.desc_name(fullname, fullname)
 
         params = s_nodes.desc_parameterlist()
@@ -267,22 +354,6 @@ class EQLFunctionDirective(BaseEQLDirective):
 
         return fullname
 
-    def add_target_and_index(self, name, sig, signode):
-        if name in self.state.document.ids:
-            raise DirectiveParseError(
-                self, f'duplicate function {name} description')
-
-        signode['names'].append(name)
-        signode['ids'].append(name)
-        signode['first'] = (not self.names)
-        self.state.document.note_explicit_target(signode)
-
-        objects = self.env.domaindata['eql']['objects']
-        if name in objects:
-            raise DirectiveParseError(
-                self, f'duplicate function {name} description')
-        objects[name] = (self.env.docname, self.objtype)
-
 
 class EdgeQLDomain(s_domains.Domain):
 
@@ -291,14 +362,22 @@ class EdgeQLDomain(s_domains.Domain):
 
     object_types = {
         'function': s_domains.ObjType('function', 'func'),
+        'type': s_domains.ObjType('type', 'type'),
+    }
+
+    _role_to_object_type = {
+        role: tn
+        for tn, td in object_types.items() for role in td.roles
     }
 
     directives = {
         'function': EQLFunctionDirective,
+        'type': EQLTypeDirective,
     }
 
     roles = {
         'func': s_roles.XRefRole(),
+        'type': s_roles.XRefRole(),
     }
 
     initial_data = {
@@ -309,22 +388,32 @@ class EdgeQLDomain(s_domains.Domain):
                      type, target, node, contnode):
 
         objects = self.data['objects']
+        expected_type = self._role_to_object_type[type]
 
-        if node['reftype'] == 'func':
+        try:
             try:
                 docname, obj_type = objects[target]
             except KeyError:
-                raise DirectiveParseError(
-                    self,
+                if '::' not in target:
+                    target = f'std::{target}'
+                    docname, obj_type = objects[target]
+        except KeyError:
+            if node['refexplicit']:
+                raise DomainError(
                     f'cannot resolve :eql:{type}: targeting {target!r}')
+            else:
+                return
 
-            node = s_nodes_utils.make_refnode(
-                builder, fromdocname, docname, target, contnode, None)
-            node['eql-type'] = obj_type
-            return node
+        if obj_type != expected_type:
+            raise DomainError(
+                f'cannot resolve :eql:{type}: targeting {target!r}: '
+                f'the type of referred object {expected_type!r} '
+                f'does not match the reftype')
 
-        return super().resolve_xref(
-            env, fromdocname, builder, type, target, node, contnode)
+        node = s_nodes_utils.make_refnode(
+            builder, fromdocname, docname, target, contnode, None)
+        node['eql-type'] = obj_type
+        return node
 
     def clear_doc(self, docname):
         for fullname, (fn, _l) in list(self.data['objects'].items()):
