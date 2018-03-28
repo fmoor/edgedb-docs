@@ -7,3 +7,6 @@ insert_final_newline = true
 [*.{py,pyx,pxd,pxi,yml,h,rst}]
 indent_size = 4
 indent_style = space
+
+[Makefile]
+indent_style = tab

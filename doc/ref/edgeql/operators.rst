@@ -319,9 +319,9 @@ Element operations
 
 .. eql:operator:: PLUS: A + B
 
-    :optype A: int or str or bytes
-    :optype B: int or str or bytes
-    :returntype: int or str or bytes
+    :optype A: numeric or str or bytes
+    :optype B: numeric or str or bytes
+    :returntype: numeric or str or bytes
 
     Arithmetic addition.
 
