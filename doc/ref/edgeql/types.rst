@@ -3,105 +3,142 @@
 Types
 =====
 
-Objects and classes
--------------------
+EdgeDB types are divided into 3 groups: scalar types, object types and
+collection types. Object types and collection types represent
+different ways of structurally composing other types. Scalar types are
+the most basic building blocks.
 
-Every object in EdgeDB has a class. The information about the object's
-class is reachable through a special link ``__class__``. It can be
-used to retrieve the class name, for example.
+* `Scalar types`_
 
-.. code-block:: eql
+    The most basic types.
 
-    # retrieve the class name for the concept User
-    SELECT example::User.__class__.name LIMIT 1;
+* `Object types`_
 
-    # get all the Text objects together with the name of the specific
-    # class they belong to
-    WITH MODULE example
-    SELECT Text {
-        body,
-        __class__: {
-            name
-        }
-    };
+    Object types are used to semantically group data.
 
-To determine if an object is of a specific class, the operator ``IS``
-can be used. The left operand is the object to be tested and the right
-operand is the name of the class to test against.
+* Collection types
 
-.. code-block:: eql
-
-    WITH MODULE example
-    SELECT Text {
-        body
-    }
-    FILTER Text IS Issue;
-
-    # this query is equivalent to the one above
-    WITH MODULE example
-    SELECT Issue {
-        body
-    };
-
-It is also possible to specify several classes as the right operand,
-in which case the result is ``True`` if the left operand matches at
-least one of the classes on the right.
-
-.. code-block:: eql
-
-    # get all comments and issues (but not log entries)
-    WITH MODULE example
-    SELECT Text {
-        body
-    }
-    FILTER Text IS (Comment, Issue);
-
-According to the example schema both ``Issue`` and ``Comment`` are
-:ref:`derived<ref_schema_architechture_inheritance>` from ``Text``.
-There's ``LogEntry`` that's also derived from ``Text``, but it
-will be filtered out by the query above.
+    Collection types are used to package data based on usage. There
+    are 4 kinds of collection types: Arrays_, Maps_, Tuples_, JSON_.
 
 
-.. _ref_edgeql_types_nonobjects:
+Scalar types
+------------
 
-Non-objects
------------
+Scalar types are the most basic types. Instances are collectively
+known as *scalars*.
 
-There are several types of non-objects in EdgeDB: atomic values,
-arrays and tuples.
+.. eql:type:: std::numeric
 
+    Any number of arbitrary precision.
 
-Atomic values
-~~~~~~~~~~~~~
+    This type is compatible with: :eql:type:`int16`,
+    :eql:type:`int32`, :eql:type:`int64`,
+    :eql:type:`float32`, and :eql:type:`float64`.
 
-Since *atoms* are actually defined in the schema, atomic values also
-have a ``__class__`` link that can be accessed to retrieve the
-information about the *atom*, much like for objects and *concepts*.
+.. eql:type:: std::int16
 
+    A 16-bit signed integer.
 
-.. eql:keyword:: SET-OF
+.. eql:type:: std::int32
 
-    TODO: Describe what ``SET OF`` is.
-    A link to :eql:type:`array of \<int\> <array<int>>`.
+    A 32-bit signed integer.
 
-.. eql:type:: std::any
+.. eql:type:: std::int64
 
-    Pseudo-type: can only be used to annotate parameters of
-    functions.
+    A 64-bit signed integer.
 
-.. eql:type:: std::array
+.. eql:type:: std::float32
 
-    Array.
+    A variable precision, inexact number.
+
+    Minimal guaranteed precision is at least 6 decimal digits.
+
+.. eql:type:: std::float64
+
+    A variable precision, inexact number.
+
+    Minimal guaranteed precision is at least 15 decimal digits.
+
+.. eql:type:: std::bool
+
+    A boolean type with possible values of ``TRUE`` and ``FALSE``.
 
 .. eql:type:: std::bytes
 
     A sequence of bytes.
 
+.. eql:type:: std::str
 
-.. eql:type:: std::numeric
+    A unicode string of text.
 
-    A big int.
+.. eql:type:: std::uuid
 
+    Universally Unique Identifiers (UUID).
+
+    For formal definition see RFC 4122, ISO/IEC 9834-8:2005.
+
+.. eql:type:: std::datetime
+
+    A type representing date, time, and time zone.
+
+.. eql:type:: std::date
+
+    A type representing date and time zone.
+
+.. eql:type:: std::time
+
+    A type representing time and time zone.
+
+.. eql:type:: std::timedelta
+
+    A type representing a relative time interval.
+
+    The time interval can be specified in terms of microseconds,
+    milliseconds, seconds, minutes, hours, days, weeks, months, years,
+    decades, centuries, millennia.
+
+.. eql:type:: std::sequence
+
+    Autoincrementing sequence of :eql:type:`int32`.
+
+
+Object types
+------------
+
+Object types represent relationships between types. They use ``links``
+to semantically group other data types.
+
+.. eql:type:: std::Object
+
+    Base type which every object type implicitly extends.
+
+For example:
+
+.. code-block:: eschema
+
+    concept User:
+        required link name to str
+        link email to str
+
+The above example defines an object type ``User``. This type has two
+links: ``name`` and ``email``. Both of the links are
+:eql:type:`strings<str>`. Link ``name`` is *required*, whereas
+``email`` is *optional*.
+
+Object types make up the core of EdgeDB. Various queries allow to
+retrieve the data stored in EdgeDB by exploring the relationships
+defined as object types. Collectively the object types define the
+semantic structure of the data in EdgeDB.
+
+
+Collection types
+----------------
+
+Collection types represent various ways of packaging data. Typically
+they do not represent any semantic relationship, but rather are used
+for structural grouping. Often collection types are used to package
+data in a certain way for serializing.
 
 Arrays
 ~~~~~~
@@ -110,6 +147,13 @@ Arrays are homogeneous ordered collections. Something can be an array
 element if and only if it can be a set element. At the moment only
 one-dimensional arrays are supported in EdgeDB. Array indexing starts
 at 0.
+
+.. eql:type:: std::array
+
+    Arrays are homogeneous ordered collections.
+
+    Array declaration must include the type of the elements. For
+    example: ``array<int>``, ``array<User>``, etc.
 
 Arrays support indexing and slicing operators:
 
@@ -149,14 +193,24 @@ function:
     );
 
 
-Associative arrays
-~~~~~~~~~~~~~~~~~~
+Maps
+~~~~
 
-Associative arrays are indexed homogeneous collections, where the
-indexes are arbitrary but must be all of the same type. Values don't
-have to be the same type as indexes, but they must still be the same
-type as each other. No specific ordering of a map is assumed or
-guaranteed, thus slicing operators are not available for them.
+Maps (or associative arrays) are indexed homogeneous collections,
+where the indexes are arbitrary but must be all of the same type.
+Values don't have to be the same type as indexes, but they must still
+be the same type as each other. No specific ordering of a map is
+assumed or guaranteed, thus slicing operators are not available for
+them.
+
+.. eql:type:: std::map
+
+    Maps are indexed homogeneous collections.
+
+    Map declaration must include the types of keys and values. For
+    example: ``map<int, str>``, ``map<str, User>``, etc.
+
+Examples of map usage:
 
 .. code-block:: eql
 
@@ -177,11 +231,19 @@ guaranteed, thus slicing operators are not available for them.
 Tuples
 ~~~~~~
 
-Tuples are heterogeneous opaque entities, composed of objects or
-non-objects and have implicit ordering of their components. Something
-can be a tuple element if and only if it can be a set element. Two
-tuples are equal if all of their components are equal and in the same
-order.
+Tuples are heterogeneous opaque entities. Their components can be of
+nay types and have implicit ordering. Two tuples are equal if all of
+their components are equal and in the same order.
+
+.. eql:type:: std::tuple
+
+    Tuples are ordered heterogeneous collections.
+
+    Tuple declaration must include the types of their components. For
+    example: ``tuple<int, int>``, ``tuple<int, int, str>``,
+    ``tuple<str, User>``, ``tuple<bool, tuple<User, int>>``, etc.
+
+Examples of map usage:
 
 .. code-block:: eql
 
@@ -214,8 +276,8 @@ order.
 Tuple elements can be *named*, however this does not in any way affect
 the ordering of these elements within the tuple. The names are used
 for convenience to make it easier to refer to different elements as
-well as in tuple serialization. Unlike for maps identifiers only valid
-identifiers can be used to name tuple elements.
+well as in tuple serialization. Unlike for maps only valid identifiers
+can be used to name tuple elements.
 
 .. code-block:: eql
 
@@ -275,6 +337,37 @@ It is possible to nest arrays and tuples within each other:
         ),
     ];
 
+JSON
+~~~~
+
+JSON type allows storing structured, but unvalidated data. Unlike
+other collection types this type does not require declaring the
+internal structure. As such, no specific guaranteed about JSON data
+can be given.
+
+.. eql:type:: std::json
+
+    Arbitrary structured data.
+
+
+Meta-types
+----------
+
+There are some additional concepts related to typing that come up in
+function signatures.
+
+.. eql:keyword:: SET-OF
+
+    Denotes that the argument must be treated a whole set.
+
+    See :ref:`parameter types<ref_edgeql_fundamentals_function>` for
+    more details.
+
+.. eql:type:: std::any
+
+    Pseudo-type denoting that the argument can be of any type.
+
+
 Array or tuple creation
 -----------------------
 
@@ -329,9 +422,8 @@ as follows:
     # cast an array of integers into an array of str
     SELECT <array<str>>[1, 2 , 3];
 
-    # suppose that all the issue numbers are actually valid integers
-    # despite being defined as str
-    SELECT <int>example::Issue.number;
+    # cast an issue number into a string
+    SELECT <str>example::Issue.number;
 
 Casts also work for converting tuples or declaring different tuple
 element names for convenience.
@@ -364,48 +456,3 @@ set ``{}``, which can be required for purposes of type disambiguation.
             # the type of the computable must be defined
         body,
     };
-
-
-Class filtering in paths
-------------------------
-
-It is possible to restrict any path (or path-like expression) to only
-a subset of all of the possible objects that it describes by
-restricting the class of the target objects by using ``[IS Concept]``.
-For example, consider the path that starts with ``User`` and follows
-the ``owner`` link backwards. There are potentially many
-``OwnedObjects`` that is can refer to, so in order to only get
-``Issues`` owned by a user the path filter can be used:
-
-.. code-block:: eql
-
-    WITH MODULE example
-    SELECT User.<owner[IS Issue]
-    FILTER User.name = 'Alice';
-
-This feature makes it possible to traverse links in paths in any
-direction conveniently without the use of a more bulky ``FILTER``
-clause.
-
-The same filtering operator can be used when it is necessary to refer
-to the attributes that exist only in the descendant classes (like
-``number``, that only those ``Text`` objects that are actually
-``Issues`` would have). The expression ``Text[IS Issue]`` evaluates to
-an empty set if for all ``Text`` objects that are not of class
-``Issue`` and it evaluates to the object itself if it is an ``Issue``.
-Importantly this syntactical construct allows to refer to links that
-only exist on Issue.
-
-.. code-block:: eql
-
-    WITH MODULE example
-    SELECT Text {
-        body,
-        Issue.number
-    }
-    FILTER
-        # material implication
-        # "if text is an issue, then it must have specific number"
-        Text IS NOT Issue
-        OR
-        Text[IS Issue].number = '42';
