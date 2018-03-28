@@ -5,9 +5,6 @@
 EdgeQL
 ======
 
-EdgeQL is the text query language similar to OQL_.  Others sources of
-inspiration include Lorel_ and UnQL_.
-
 
 .. toctree::
     :maxdepth: 3
@@ -23,8 +20,3 @@ inspiration include Lorel_ and UnQL_.
     introspection
     lexical
     hazmat
-
-
-.. _OQL: http://en.wikipedia.org/wiki/Object_Query_Language
-.. _Lorel: http://infolab.stanford.edu/lore/pubs/lorel96.pdf
-.. _UnQL: http://portal.acm.org/citation.cfm?id=765224
