@@ -82,6 +82,16 @@ information about the *atom*, much like for objects and *concepts*.
 .. eql:keyword:: SET-OF
 
     TODO: Describe what ``SET OF`` is.
+    A link to :eql:type:`array of \<int\> <array<int>>`.
+
+.. eql:type:: std::any
+
+    Pseudo-type: can only be used to annotate parameters of
+    functions.
+
+.. eql:type:: std::array
+
+    Array.
 
 .. eql:type:: std::bytes
 

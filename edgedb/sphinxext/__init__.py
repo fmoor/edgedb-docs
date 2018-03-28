@@ -161,9 +161,13 @@ fields at the moment, just description.  Example:
 
         A sequence of bytes.
 
-To reference a type use a ":eql:type:" role: ":eql:type:`bytes`" or
-":eql:type:`std::bytes`".
+To reference a type use a ":eql:type:" role, e.g.:
 
+- :eql:type:`bytes`
+- :eql:type:`std::bytes`
+- :eql:type:`SET OF any`
+- :eql:type:`SET OF array\<any\>`
+- :eql:type:`array of \<int\> <array<int>>`
 
 Keywords
 --------
@@ -222,10 +226,23 @@ class EQLField(s_docfields.Field):
 
     def make_xref(self, rolename, domain, target,
                   innernode=d_nodes.emphasis, contnode=None, env=None):
-        node = super().make_xref(
-            rolename, domain, target, innernode, contnode, env)
-        node['eql-auto-link'] = True
-        return node
+
+        if not rolename:
+            return contnode or innernode(target, target)
+
+        title = target
+        if domain == 'eql' and rolename == 'type':
+            target = EQLTypeXRef.filter_target(target)
+
+        refnode = s_nodes.pending_xref('', refdomain=domain,
+                                       refexplicit=title != target,
+                                       reftype=rolename, reftarget=target)
+        refnode += contnode or innernode(title, title)
+        if env:
+            env.domains[domain].process_field_xref(refnode)
+
+        refnode['eql-auto-link'] = True
+        return refnode
 
     def make_xrefs(self, rolename, domain, target, innernode=d_nodes.emphasis,
                    contnode=None, env=None):
@@ -744,6 +761,21 @@ class EQLFunctionDirective(BaseEQLDirective):
         return fullname
 
 
+class EQLTypeXRef(s_roles.XRefRole):
+
+    @staticmethod
+    def filter_target(target):
+        new_target = re.sub(r'(?i)^\s*SET\s+OF\s+', '', target)
+        if '<' in new_target:
+            new_target, _ = new_target.split('<', 1)
+        return new_target
+
+    def process_link(self, env, refnode, has_explicit_title, title, target):
+        target = self.filter_target(target)
+        return super().process_link(
+            env, refnode, has_explicit_title, title, target)
+
+
 class EdgeQLDomain(s_domains.Domain):
 
     name = "eql"
@@ -775,7 +807,7 @@ class EdgeQLDomain(s_domains.Domain):
 
     roles = {
         'func': s_roles.XRefRole(),
-        'type': s_roles.XRefRole(),
+        'type': EQLTypeXRef(),
         'kw': s_roles.XRefRole(),
         'op': s_roles.XRefRole(),
         'stmt': s_roles.XRefRole(),
