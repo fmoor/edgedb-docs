@@ -153,6 +153,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
             blah
 
         Testing :eql:func:`XXX <test>` ref.
+        Testing :eql:func:`test` ref.
         '''
 
         out = self.build(src, format='xml')
@@ -188,7 +189,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
                 reference[@eql-type="function" and @refid="std::test"] /
                 literal / text()
             '''),
-            ['XXX'])
+            ['XXX', 'test()'])
 
     def test_eql_func_2(self):
         src = '''

@@ -776,6 +776,15 @@ class EQLTypeXRef(s_roles.XRefRole):
             env, refnode, has_explicit_title, title, target)
 
 
+class EQLFunctionXRef(s_roles.XRefRole):
+
+    def process_link(self, env, refnode, has_explicit_title, title, target):
+        if not has_explicit_title:
+            title += '()'
+        return super().process_link(
+            env, refnode, has_explicit_title, title, target)
+
+
 class EdgeQLDomain(s_domains.Domain):
 
     name = "eql"
@@ -806,7 +815,7 @@ class EdgeQLDomain(s_domains.Domain):
     }
 
     roles = {
-        'func': s_roles.XRefRole(),
+        'func': EQLFunctionXRef(),
         'type': EQLTypeXRef(),
         'kw': s_roles.XRefRole(),
         'op': s_roles.XRefRole(),
