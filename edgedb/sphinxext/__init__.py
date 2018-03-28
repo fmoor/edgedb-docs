@@ -33,6 +33,7 @@ things must be defined:
 Example:
 
     .. eql:function:: std::array_agg(SET OF any, $a: any) -> array<any>
+
         :param $1: input set
         :paramtype $1: SET OF any
 
@@ -63,10 +64,11 @@ Use ".. eql:operator::" directive to declare an operator.  Supported fields:
 * ":optype NAME: TYPE" -- operand type.
 
 The first argument of the directive must be a string in the following
-format: "OPERATOR_ID: OPERATOR_SIGNATURE".  For instance, for a "+"
+format: "OPERATOR_ID: OPERATOR SIGNATURE".  For instance, for a "+"
 operator it would be "PLUS: A + B":
 
     .. eql:operator:: PLUS: A + B
+
         :optype A: int or str or bytes
         :optype B: any
         :resulttype: any
@@ -75,6 +77,78 @@ operator it would be "PLUS: A + B":
 
 To reference an operator use the :eql:op: role along with OPERATOR_ID:
 ":eql:op:`plus`" or ":eql:op:`+ <plus>`".  Operator ID is case-insensitive.
+
+
+Statements
+----------
+
+Use ".. eql:statement:" directive to declare a statement, along with
+".. eql:clause:" to describe individual clauses, and ".. eql:synopsis:"
+to showcase the syntax.
+
+A :haswith: flag should be used if the statement supports a WITH block.
+
+Example:
+
+    .. eql:statement:: SELECT
+
+        :haswith:
+
+        SELECT is used to select stuff.
+
+
+        .. eql:synopsis::
+
+            [WITH [MODULE name]]
+            SELECT expr
+            FILTER expr
+
+
+        .. eql:clause:: FILTER: A FILTER B
+
+            :paramtype A: any
+            :paramtype B: SET OF any
+            :returntype: any
+
+            FILTER should be used to filter stuff.
+
+
+        More paragraphs describing intricacies of SELECT go here...
+
+        More paragraphs describing intricacies of SELECT go here...
+
+        More paragraphs describing intricacies of SELECT go here...
+
+Notes:
+
+* If a statement consists of a few keywords they should be separated
+  by a dash:
+
+    .. eql:statement:: CREATE-FUNCTION
+
+* To reference a statement use the ":eql:stmt:" role.  For instance:
+
+  - :eql:stmt:`SELECT`
+  - :eql:stmt:`my fav statement <SELECT>`
+  - :eql:stmt:`select`
+  - :eql:stmt:`CREATE-FUNCTION`
+  - :eql:stmt:`create function <CREATE-FUNCTION>`
+
+* Nested "eql:clause" directives are similar to "eql:operator".
+  The first argument of the directive should be in the following format:
+  "CLAUSE_ID: CLAUSE SIGNATURE", for instance
+  ".. eql:clause:: FILTER: A FILTER B".
+
+* To reference a clause use the ":eql:clause:" role.  The target should
+  be in the form of "STATEMENT_ID:CLAUSE_ID", e.g. for the above
+  SELECT example we could do:
+
+  - :eql:clause:`SELECT:FILTER`
+  - :eql:clause:`FILTER clause <SELECT:FILTER>`
+
+* Synopsis section, denoted with ".. eql:synopsis::" should follow the
+  format used in PostgreSQL documentation:
+  https://www.postgresql.org/docs/10/static/sql-select.html
 
 
 Types
@@ -100,8 +174,15 @@ To describe a keyword use a ".. eql:keyword::" directive.  Example:
 
         The ``WITH`` block in EdgeQL is used to define aliases.
 
+If a keyword is compound use dash to separate keywords:
+
+
+    .. eql:keyword:: SET-OF
+
 To reference a keyword use a ":eql:kw:" role.  For instance:
-":eql:kw:`WITH block <with>`"
+
+* :eql:kw:`WITH block <with>`
+* :eql:kw:`SET OF <SET-OF>`
 
 """
 
@@ -117,11 +198,13 @@ from edgedb.lang.edgeql import ast as ql_ast
 from edgedb.lang.edgeql import codegen as ql_gen
 
 from docutils import nodes as d_nodes
+from docutils.parsers.rst import directives as d_directives
 
 from sphinx import addnodes as s_nodes
 from sphinx import directives as s_directives
 from sphinx import domains as s_domains
 from sphinx import roles as s_roles
+from sphinx.directives import code as s_code
 from sphinx.util import docfields as s_docfields
 from sphinx.util import nodes as s_nodes_utils
 
@@ -135,6 +218,13 @@ class EQLField(s_docfields.Field):
     def make_field(self, *args, **kwargs):
         node = super().make_field(*args, **kwargs)
         node['eql-name'] = self.name
+        return node
+
+    def make_xref(self, rolename, domain, target,
+                  innernode=d_nodes.emphasis, contnode=None, env=None):
+        node = super().make_xref(
+            rolename, domain, target, innernode, contnode, env)
+        node['eql-auto-link'] = True
         return node
 
     def make_xrefs(self, rolename, domain, target, innernode=d_nodes.emphasis,
@@ -414,15 +504,128 @@ class EQLKeywordDirective(BaseEQLDirective):
         signode['eql-name'] = sig
         signode['eql-fullname'] = sig
 
+        display = sig.replace('-', ' ')
         signode += s_nodes.desc_annotation('keyword', 'keyword')
         signode += d_nodes.Text(' ')
-        signode += s_nodes.desc_name(sig, sig)
+        signode += s_nodes.desc_name(display, display)
 
         return sig
 
     def add_target_and_index(self, name, sig, signode):
         return super().add_target_and_index(
             f'keyword::{name.lower()}', sig, signode)
+
+
+class EQLStatementDirective(BaseEQLDirective):
+
+    option_spec = BaseEQLDirective.option_spec.copy()
+    option_spec.update({
+        'haswith': d_directives.flag,
+    })
+
+    def handle_signature(self, sig, signode):
+        signode['eql-name'] = sig
+        signode['eql-fullname'] = sig
+
+        display = sig.replace('-', ' ')
+        signode += s_nodes.desc_annotation('statement', 'statement')
+        signode += d_nodes.Text(' ')
+        signode += s_nodes.desc_name(display, display)
+
+        return sig
+
+    def add_target_and_index(self, name, sig, signode):
+        return super().add_target_and_index(
+            f'statement::{name.lower()}', sig, signode)
+
+    def before_content(self):
+        if 'eql:statement' in self.env.ref_context:
+            raise DirectiveParseError(
+                self,
+                ':eql:statement: directives cannot be nested')
+
+        self.env.ref_context['eql:statement'] = self.names[-1]
+
+    def after_content(self):
+        del self.env.ref_context['eql:statement']
+
+
+class EQLStatementClauseDirective(BaseEQLDirective):
+
+    doc_field_types = [
+        EQLTypedField(
+            'parameter',
+            label='Parameter',
+            names=('paramtype',),
+            typerolename='type'),
+
+        EQLTypedField(
+            'returntype',
+            label='Return',
+            has_arg=False,
+            names=('returntype',),
+            typerolename='type'),
+    ]
+
+    def run(self):
+        env = self.state.document.settings.env
+
+        if 'eql:statement' not in env.ref_context:
+            raise DirectiveParseError(
+                self,
+                ':eql:clause: directive must be nested in a :eql:statement:')
+
+        return super().run()
+
+    def handle_signature(self, sig, signode):
+        try:
+            name, sig = sig.split(':', 1)
+        except Exception as ex:
+            raise DirectiveParseError(
+                self,
+                f':eql:clause signature must match "NAME: SIGNATURE" '
+                f'template',
+                cause=ex)
+
+        name = name.strip().lower()
+        sig = sig.strip()
+        if not name or not sig:
+            raise DirectiveParseError(
+                self, f'invalid :eql:clause: signature')
+
+        signode['eql-name'] = name
+        signode['eql-fullname'] = name
+        signode['eql-signature'] = sig
+
+        signode += s_nodes.desc_annotation('clause', 'clause')
+        signode += d_nodes.Text(' ')
+        signode += s_nodes.desc_name(sig, sig)
+
+        return name
+
+    def add_target_and_index(self, name, sig, signode):
+        stmt = self.env.ref_context['eql:statement'].lower()
+        refname = f'clause::{stmt}::{name}'
+        return super().add_target_and_index(refname, sig, signode)
+
+
+class EQLStatementSynopsisDirective(s_code.CodeBlock):
+
+    has_content = True
+    optional_arguments = 0
+    required_arguments = 0
+    option_spec = {}
+
+    def run(self):
+        env = self.state.document.settings.env
+
+        if 'eql:statement' not in env.ref_context:
+            raise DirectiveParseError(
+                self,
+                ':eql:synopsis: directive must be nested in a :eql:statement:')
+
+        self.arguments = ['pseudo-eql']
+        return super().run()
 
 
 class EQLOperatorDirective(BaseEQLDirective):
@@ -551,6 +754,8 @@ class EdgeQLDomain(s_domains.Domain):
         'type': s_domains.ObjType('type', 'type'),
         'keyword': s_domains.ObjType('keyword', 'kw'),
         'operator': s_domains.ObjType('operator', 'op'),
+        'statement': s_domains.ObjType('statement', 'stmt'),
+        'clause': s_domains.ObjType('clause', 'clause'),
     }
 
     _role_to_object_type = {
@@ -563,6 +768,9 @@ class EdgeQLDomain(s_domains.Domain):
         'type': EQLTypeDirective,
         'keyword': EQLKeywordDirective,
         'operator': EQLOperatorDirective,
+        'statement': EQLStatementDirective,
+        'clause': EQLStatementClauseDirective,
+        'synopsis': EQLStatementSynopsisDirective,
     }
 
     roles = {
@@ -570,6 +778,8 @@ class EdgeQLDomain(s_domains.Domain):
         'type': s_roles.XRefRole(),
         'kw': s_roles.XRefRole(),
         'op': s_roles.XRefRole(),
+        'stmt': s_roles.XRefRole(),
+        'clause': s_roles.XRefRole(),
     }
 
     initial_data = {
@@ -587,16 +797,28 @@ class EdgeQLDomain(s_domains.Domain):
             target = f'keyword::{target}'
         elif expected_type == 'operator':
             target = f'operator::{target}'
+        elif expected_type == 'statement':
+            target = f'statement::{target}'
+        elif expected_type == 'clause':
+            if ':' not in target:
+                raise DomainError(
+                    f'cannot resolve :eql:{type}: targeting {target!r}: '
+                    f'target must be in form of STATEMENT:CLAUSE')
+            stmt, cl = target.split(':')
+            target = f'clause::{stmt}::{cl}'
 
         try:
             try:
                 docname, obj_type = objects[target]
             except KeyError:
                 if '::' not in target:
-                    target = f'std::{target}'
-                    docname, obj_type = objects[target]
+                    new_target = f'std::{target}'
+                    docname, obj_type = objects[new_target]
+                    target = new_target
+                else:
+                    raise
         except KeyError:
-            if node['refexplicit']:
+            if not node.get('eql-auto-link'):
                 raise DomainError(
                     f'cannot resolve :eql:{type}: targeting {target!r}')
             else:

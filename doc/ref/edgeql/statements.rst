@@ -39,6 +39,67 @@ possible to just use short names (e.g. ``User``).
 Select
 ------
 
+.. eql:statement:: SELECT
+    :haswith:
+
+    A ``SELECT`` statement returns a set of objects.
+
+    .. eql:synopsis::
+
+        WITH MODULE example
+
+        # select clause
+        SELECT
+            <expr>  # compute a set of things
+
+        # optional clause
+        FILTER
+            <expr>  # filter the computed set
+
+        # optional clause
+        ORDER BY
+            <expr>  # define ordering of the filtered set
+
+        # optional clause
+        OFFSET
+            <expr>  # slice the filtered/ordered set
+
+        # optional clause
+        LIMIT
+            <expr>  # slice the filtered/ordered set
+
+    The first clause is ``SELECT``. It indicates that ``FILTER``, ``ORDER
+    BY``, ``OFFSET``, or ``LIMIT`` clauses may follow an expression, i.e.
+    it makes an expression into a ``SELECT`` statement. Without any of the
+    optional clauses a ``(SELECT Expr)`` is completely equivalent to
+    ``Expr`` for any expression ``Expr``.
+
+    .. eql:clause:: FILTER: A FILTER B
+
+        :paramtype A: any
+        :paramtype B: SET OF any
+        :returntype: any
+
+        The ``FILTER`` clause ...
+
+        The ``FILTER`` clause cannot affect anything aggregate-like in the
+        preceding ``SELECT`` clause. This is due to how ``FILTER`` clause
+        works. It can be conceptualized as a function like ``filter($input,
+        SET OF $cond)``, where the ``$input`` represents the value of the
+        preceding clause, while the ``$cond`` represents the filtering
+        condition expression. Consider the following:
+
+        .. code-block:: eql
+
+            WITH MODULE example
+            SELECT count(User)
+            FILTER User.name LIKE 'Alice%';
+
+
+See also :eql:stmt:`SELECT`.
+See also :eql:clause:`FILTER <select:filter>`.
+
+
 A ``SELECT`` statement returns a set of objects. The data flow of a
 ``SELECT`` block can be conceptualized like this:
 

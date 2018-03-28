@@ -79,6 +79,10 @@ have a ``__class__`` link that can be accessed to retrieve the
 information about the *atom*, much like for objects and *concepts*.
 
 
+.. eql:keyword:: SET-OF
+
+    TODO: Describe what ``SET OF`` is.
+
 .. eql:type:: std::bytes
 
     A sequence of bytes.

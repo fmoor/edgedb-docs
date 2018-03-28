@@ -552,8 +552,8 @@ The general structure of a simple EdgeQL query::
     [OFFSET expression]
     [LIMIT expression] ;
 
-``SELECT``, ``FILTER``, ``ORDER BY``, ``OFFSET`` and ``LIMIT`` clauses
-are explained in more details in the
+:eql:stmt:`SELECT`, ``FILTER``, ``ORDER BY``, ``OFFSET`` and ``LIMIT``
+clauses are explained in more details in the
 :ref:`Statements<ref_edgeql_statements>` section. ``WITH`` is a
 convenience clause that optionally :ref:`assigns aliases<ref_edgeql_with>`
 being used in the query. In particular the most common use of the
