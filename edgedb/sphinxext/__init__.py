@@ -55,6 +55,28 @@ a ":eql:func:" role.  For instance:
 * or, "look at this :eql:func:`fancy function <array_agg>`".
 
 
+Operators
+---------
+
+Use ".. eql:operator::" directive to declare an operator.  Supported fields:
+
+* ":optype NAME: TYPE" -- operand type.
+
+The first argument of the directive must be a string in the following
+format: "OPERATOR_ID: OPERATOR_SIGNATURE".  For instance, for a "+"
+operator it would be "PLUS: A + B":
+
+    .. eql:operator:: PLUS: A + B
+        :optype A: int or str or bytes
+        :optype B: any
+        :resulttype: any
+
+        Arithmetic addition.
+
+To reference an operator use the :eql:op: role along with OPERATOR_ID:
+":eql:op:`plus`" or ":eql:op:`+ <plus>`".  Operator ID is case-insensitive.
+
+
 Types
 -----
 
@@ -106,6 +128,10 @@ from sphinx.util import nodes as s_nodes_utils
 
 class EQLField(s_docfields.Field):
 
+    def __init__(self, name, names=(), label=None, has_arg=False,
+                 rolename=None, bodyrolename=None):
+        super().__init__(name, names, label, has_arg, rolename, bodyrolename)
+
     def make_field(self, *args, **kwargs):
         node = super().make_field(*args, **kwargs)
         node['eql-name'] = self.name
@@ -135,10 +161,43 @@ class EQLField(s_docfields.Field):
 
 class EQLTypedField(EQLField):
 
+    def __init__(self, name, names=(), label=None, rolename=None,
+                 *, typerolename, has_arg=True):
+        super().__init__(name, names, label, has_arg, rolename, None)
+        self.typerolename = typerolename
+
+    def make_field(self, types, domain, item, env=None):
+        fieldarg, fieldtype = item
+
+        body = d_nodes.paragraph()
+        if fieldarg:
+            body.extend(self.make_xrefs(self.rolename, domain, fieldarg,
+                                        s_nodes.literal_strong, env=env))
+
+            body += d_nodes.Text('--')
+
+        typename = u''.join(n.astext() for n in fieldtype)
+        body.extend(
+            self.make_xrefs(self.typerolename, domain, typename,
+                            s_nodes.literal_emphasis, env=env))
+
+        fieldname = d_nodes.field_name('', self.label)
+        fieldbody = d_nodes.field_body('', body)
+
+        node = d_nodes.field('', fieldname, fieldbody)
+        node['eql-name'] = self.name
+        node['eql-opname'] = fieldarg
+        if typename:
+            node['eql-optype'] = typename
+        return node
+
+
+class EQLTypedParamField(EQLField):
+
     is_typed = True
 
     def __init__(self, name, names=(), label=None, rolename=None,
-                 typerolename=None, typenames=(), has_arg=True):
+                 *, has_arg=True, typerolename, typenames):
         super().__init__(name, names, label, has_arg, rolename)
         self.typenames = typenames
         self.typerolename = typerolename
@@ -232,6 +291,26 @@ class BaseEQLDirective(s_directives.ObjectDescription):
 
         node['summary'] = summary
 
+    def _find_field_desc(self, field_node: d_nodes.field):
+        fieldname = field_node.children[0].astext()
+
+        if ' ' in fieldname:
+            fieldtype, fieldarg = fieldname.split(' ', 1)
+            fieldarg = fieldarg.strip()
+            if not fieldarg:
+                fieldarg = None
+        else:
+            fieldtype = fieldname
+            fieldarg = None
+
+        fieldtype = fieldtype.lower().strip()
+
+        for fielddesc in self.doc_field_types:
+            if fielddesc.name == fieldtype:
+                return fieldtype, fielddesc, fieldarg
+
+        return fieldtype, None, fieldarg
+
     def _validate_fields(self, node):
         desc_cnt = None
         for child in node.children:
@@ -254,10 +333,36 @@ class BaseEQLDirective(s_directives.ObjectDescription):
 
         if fields:
             for field in fields:
-                if 'eql-name' not in field:
-                    raise DirectiveParseError(
-                        self,
-                        f'found unknown field {field.children[0].astext()!r}')
+                if 'eql-name' in field:
+                    continue
+
+                # Since there is *no* validation or sane error reporting
+                # in Sphinx, attempt to do it here.
+
+                fname, fdesc, farg = self._find_field_desc(field)
+                msg = f'found unknown field {fname!r}'
+
+                if fdesc is None:
+                    msg += (
+                        f'\n\nPossible reason: field {fname!r} '
+                        f'is not supported by the directive; '
+                        f'is there a typo?\n\n'
+                    )
+                else:
+                    if farg and not fdesc.has_arg:
+                        msg += (
+                            f'\n\nPossible reason: field {fname!r} '
+                            f'is specified with an argument {farg!r}, but '
+                            f'the directive expects it without one.\n\n'
+                        )
+                    elif not farg and fdesc.has_arg:
+                        msg += (
+                            f'\n\nPossible reason: field {fname!r} '
+                            f'expects an argument but did not receive it;'
+                            f'check your ReST source.\n\n'
+                        )
+
+                raise DirectiveParseError(self, msg)
 
     def run(self):
         indexnode, node = super().run()
@@ -320,17 +425,65 @@ class EQLKeywordDirective(BaseEQLDirective):
             f'keyword::{name.lower()}', sig, signode)
 
 
-class EQLFunctionDirective(BaseEQLDirective):
+class EQLOperatorDirective(BaseEQLDirective):
 
     doc_field_types = [
         EQLTypedField(
+            'operand',
+            label='Operand',
+            names=('optype',),
+            typerolename='type'),
+
+        EQLTypedField(
+            'returntype',
+            label='Return',
+            has_arg=False,
+            names=('returntype',),
+            typerolename='type'),
+    ]
+
+    def handle_signature(self, sig, signode):
+        try:
+            name, sig = sig.split(':', 1)
+        except Exception as ex:
+            raise DirectiveParseError(
+                self,
+                f':eql:operator signature must match "NAME: SIGNATURE" '
+                f'template',
+                cause=ex)
+
+        name = name.strip().lower()
+        sig = sig.strip()
+        if not name or not sig:
+            raise DirectiveParseError(
+                self, f'invalid :eql:operator: signature')
+
+        signode['eql-name'] = name
+        signode['eql-fullname'] = name
+        signode['eql-signature'] = sig
+
+        signode += s_nodes.desc_annotation('operator', 'operator')
+        signode += d_nodes.Text(' ')
+        signode += s_nodes.desc_name(sig, sig)
+
+        return name
+
+    def add_target_and_index(self, name, sig, signode):
+        return super().add_target_and_index(
+            f'operator::{name}', sig, signode)
+
+
+class EQLFunctionDirective(BaseEQLDirective):
+
+    doc_field_types = [
+        EQLTypedParamField(
             'parameter',
             label='Parameter',
             names=('param',),
             typerolename='type',
             typenames=('paramtype',)),
 
-        EQLTypedField(
+        EQLTypedParamField(
             'return',
             label='Return',
             names=('return',),
@@ -364,6 +517,7 @@ class EQLFunctionDirective(BaseEQLDirective):
         signode['eql-module'] = modname
         signode['eql-name'] = funcname
         signode['eql-fullname'] = fullname = f'{modname}::{funcname}'
+        signode['eql-signature'] = sig
 
         signode += s_nodes.desc_annotation('function', 'function')
         signode += d_nodes.Text(' ')
@@ -396,6 +550,7 @@ class EdgeQLDomain(s_domains.Domain):
         'function': s_domains.ObjType('function', 'func'),
         'type': s_domains.ObjType('type', 'type'),
         'keyword': s_domains.ObjType('keyword', 'kw'),
+        'operator': s_domains.ObjType('operator', 'op'),
     }
 
     _role_to_object_type = {
@@ -407,12 +562,14 @@ class EdgeQLDomain(s_domains.Domain):
         'function': EQLFunctionDirective,
         'type': EQLTypeDirective,
         'keyword': EQLKeywordDirective,
+        'operator': EQLOperatorDirective,
     }
 
     roles = {
         'func': s_roles.XRefRole(),
         'type': s_roles.XRefRole(),
         'kw': s_roles.XRefRole(),
+        'op': s_roles.XRefRole(),
     }
 
     initial_data = {
@@ -428,6 +585,8 @@ class EdgeQLDomain(s_domains.Domain):
         target = target.lower()
         if expected_type == 'keyword':
             target = f'keyword::{target}'
+        elif expected_type == 'operator':
+            target = f'operator::{target}'
 
         try:
             try:

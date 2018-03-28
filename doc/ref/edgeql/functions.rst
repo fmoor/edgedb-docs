@@ -64,7 +64,7 @@ Array functions
 
 .. _ref_edgeql_functions_array_agg:
 
-.. eql:function:: std::array_agg(SET OF any, $a: any) -> array<any>
+.. eql:function:: std::array_agg(SET OF any) -> array<any>
 
     :param $0: input set
     :paramtype $0: SET OF any

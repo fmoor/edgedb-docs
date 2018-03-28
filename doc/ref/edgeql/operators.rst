@@ -317,6 +317,15 @@ Basic set operators:
 Element operations
 ------------------
 
+.. eql:operator:: PLUS: A + B
+
+    :optype A: int or str or bytes
+    :optype B: int or str or bytes
+    :returntype: int or str or bytes
+
+    Arithmetic addition.
+
+
 Element operators are those that treat all of their operands as
 element-wise. Most of these operators require their operands to be of
 the same :ref:`type<ref_edgeql_types>`.
@@ -327,8 +336,8 @@ the same :ref:`type<ref_edgeql_types>`.
 
 - comparison operators ``<``, ``>``, ``<=``, ``>=``
 
-- arithmetic operators ``+``, ``-``, ``*``, ``/``, ``%`` (modulo),
-  ``^`` (power)
+- arithmetic operators :eql:op:`+ <plus>`, ``-``, ``*``, ``/``,
+  ``%`` (modulo), ``^`` (power)
 
 - string matching operators ``LIKE`` and ``ILIKE`` that work exactly the
   same way as in SQL
