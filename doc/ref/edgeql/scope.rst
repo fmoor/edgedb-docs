@@ -155,19 +155,6 @@ watchers of each issue separately.
         count(Issue.watchers)
     );
 
-    "WITH"
-      "MODULE example"
-
-    "SELECT ("
-
-      "(SELECT Issue.number),"
-
-
-
-      "count(Issue.watchers)"
-
-    ");"
-
 .. aafig::
     :textual:
 
@@ -239,15 +226,16 @@ Last but not least, this is how the scopes in a complex query may apply:
     SELECT
         User {
             name,
-            <owner: Issue {
-                number,
-                status: {
-                    name
-                },
-                priority: {
-                    name
-                }
-            }
+            owned := (SELECT
+                User.<owner[IS Issue] {
+                    number,
+                    status: {
+                        name
+                    },
+                    priority: {
+                        name
+                    }
+                })
         }
     FILTER
         User.name LIKE 'A%'
@@ -264,6 +252,8 @@ Last but not least, this is how the scopes in a complex query may apply:
     :scale: 150
     :textual:
 
+
+
     +-- (0)----------------------------------+
     |   "WITH"                               |
     |     "MODULE example"                   |
@@ -274,7 +264,8 @@ Last but not least, this is how the scopes in a complex query may apply:
     | | +------------------------------+   | |
     | |                                    | |
     | | +-- (2b)-----------------------+   | |
-    | | | "<owner: Issue {"            |   | |
+    | | | "owned:  (SELECT"            |   | |
+    | | | "User.<owner[IS Issue] {"    |   | |
     | | | +-- (3a)--------+            |   | |
     | | | | "number,"     |            |   | |
     | | | +---------------+            |   | |
@@ -294,7 +285,7 @@ Last but not least, this is how the scopes in a complex query may apply:
     | | | | +-----------+ |            |   | |
     | | | | "}"           |            |   | |
     | | | +---------------+            |   | |
-    | | | "}"                          |   | |
+    | | | "})"                         |   | |
     | | +------------------------------+   | |
     | | "}"                                | |
     | |                                    | |

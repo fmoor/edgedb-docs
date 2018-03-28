@@ -146,10 +146,12 @@ Consider an example using the ``FILTER`` optional clause:
     WITH MODULE example
     SELECT User {
         name,
-        <owner: Issue {
-            number,
-            body
-        }
+        owned := (SELECT
+            User.<owner[IS Issue] {
+                number,
+                body
+            }
+        )
     }
     FILTER User.name LIKE 'Alice%';
 
@@ -167,10 +169,12 @@ available.
     WITH MODULE example
     SELECT User {
         name,
-        <owner: Issue {
-            number,
-            body
-        }
+        owned := (SELECT
+            User.<owner[IS Issue] {
+                number,
+                body
+            }
+        )
     }
     FILTER User.name LIKE 'Alice%'
     LIMIT 1;
@@ -850,19 +854,23 @@ The following queries are exactly equivalent:
     WITH MODULE example
     SELECT User {
         name,
-        <owner: Issue {
-            number,
-            body
-        }
+        owned := (SELECT
+            User.<owner[IS Issue] {
+                number,
+                body
+            }
+        )
     }
     FILTER User.name LIKE 'Alice%';
 
     SELECT example::User {
         name,
-        <owner: example::Issue {
-            number,
-            body
-        }
+        owned := (SELECT
+            example::User.<owner[IS example::Issue] {
+                number,
+                body
+            }
+        )
     }
     FILTER example::User.name LIKE 'Alice%';
 

@@ -21,6 +21,10 @@ the most basic building blocks.
     Collection types are used to package data based on usage. There
     are 4 kinds of collection types: Arrays_, Maps_, Tuples_, JSON_.
 
+* Meta-types_
+
+    Special type annotation used for function signatures.
+
 
 Scalar types
 ------------

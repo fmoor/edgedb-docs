@@ -511,7 +511,7 @@ retrieve all the ``Comments`` to ``Issues`` created by ``SystemUsers``:
     .. code-block:: eql
 
         WITH MODULE some_module
-        SELECT A.(another_module::foo).bar;
+        SELECT A.foo.bar;
 
 Link properties
 +++++++++++++++
@@ -786,25 +786,25 @@ shape query can be used:
     WITH MODULE example
     SELECT User {
         name,
-        <owner: Issue {
-            name,
-            body,
-            status: {
-                name
+        owned := (SELECT
+            User.<owner[IS Issue] {
+                number,
+                body,
+                status: {
+                    name
+                }
             }
-        }
+        )
     };
 
-The entry ``<owner`` indicates an inbound link named ``owner`` should
-be followed to its origin. The shape of the origin for owner must be
-that of an ``Issue`` (this is similar to ``User.<owner[IS Issue]``
-:ref:`path<ref_edgeql_scope>`). By default links referred to in shapes
-are considered to be outbound (like link ``status`` for the concept
-``Issue``). Since the link ``owner`` on ``Issue`` is ``*1`` (by
-default), when it is followed in the other direction is functions as a
-``1*``. So ``<owner`` points to a `set` of multiple issues sharing a
-particular owner. For each issue the sub-shape for the ``status`` link
-will be retrieved containing just the ``name``.
+By default only outbound links may be referred to in shapes directly
+(like link ``status`` for the concept ``Issue``). Thus a computable
+``owned`` is used to include data by following the inbound link
+``owner`` to its origin. Since the link ``owner`` on ``Issue`` is
+``*1`` (by default), when it is followed in the other direction is
+functions as a ``1*``. So ``<owner`` points to a `set` of multiple
+issues sharing a particular owner. For each issue the sub-shape for
+the ``status`` link will be retrieved containing just the ``name``.
 
 Note that the the sub-shape does not mandate that only the users that
 *own* at least one ``Issue`` are returned, merely that *if* they have
@@ -812,7 +812,7 @@ some issues the names and bodies of these issues should be included in
 the returned value. The query effectively says 'please return the set
 of *all* users and provide this specific information for each of them
 if available'. This is one of the important differences between
-`shape` specification and a :ref:`path<ref_edgeql_scope>`.
+`shape` specification and a :ref:`path<ref_edgeql_fundamentals_path>`.
 
 Shape annotation is preserved only by operations that preserve the
 type (rather than specify a type or the result explicitly). In general
