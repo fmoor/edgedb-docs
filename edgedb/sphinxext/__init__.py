@@ -68,6 +68,19 @@ fields at the moment, just description.  Example:
 To reference a type use a ":eql:type:" role: ":eql:type:`bytes`" or
 ":eql:type:`std::bytes`".
 
+
+Keywords
+--------
+
+To describe a keyword use a ".. eql:keyword::" directive.  Example:
+
+    .. eql:keyword:: WITH
+
+        The ``WITH`` block in EdgeQL is used to define aliases.
+
+To reference a keyword use a ":eql:kw:" role.  For instance:
+":eql:kw:`WITH block <with>`"
+
 """
 
 
@@ -263,6 +276,8 @@ class BaseEQLDirective(s_directives.ObjectDescription):
         self.state.document.note_explicit_target(signode)
 
         objects = self.env.domaindata['eql']['objects']
+
+        name = name.lower()
         if name in objects:
             raise DirectiveParseError(
                 self, f'duplicate function {name} description')
@@ -286,6 +301,23 @@ class EQLTypeDirective(BaseEQLDirective):
         signode += d_nodes.Text(' ')
         signode += s_nodes.desc_name(fullname, fullname)
         return sig
+
+
+class EQLKeywordDirective(BaseEQLDirective):
+
+    def handle_signature(self, sig, signode):
+        signode['eql-name'] = sig
+        signode['eql-fullname'] = sig
+
+        signode += s_nodes.desc_annotation('keyword', 'keyword')
+        signode += d_nodes.Text(' ')
+        signode += s_nodes.desc_name(sig, sig)
+
+        return sig
+
+    def add_target_and_index(self, name, sig, signode):
+        return super().add_target_and_index(
+            f'keyword::{name.lower()}', sig, signode)
 
 
 class EQLFunctionDirective(BaseEQLDirective):
@@ -363,6 +395,7 @@ class EdgeQLDomain(s_domains.Domain):
     object_types = {
         'function': s_domains.ObjType('function', 'func'),
         'type': s_domains.ObjType('type', 'type'),
+        'keyword': s_domains.ObjType('keyword', 'kw'),
     }
 
     _role_to_object_type = {
@@ -373,11 +406,13 @@ class EdgeQLDomain(s_domains.Domain):
     directives = {
         'function': EQLFunctionDirective,
         'type': EQLTypeDirective,
+        'keyword': EQLKeywordDirective,
     }
 
     roles = {
         'func': s_roles.XRefRole(),
         'type': s_roles.XRefRole(),
+        'kw': s_roles.XRefRole(),
     }
 
     initial_data = {
@@ -389,6 +424,10 @@ class EdgeQLDomain(s_domains.Domain):
 
         objects = self.data['objects']
         expected_type = self._role_to_object_type[type]
+
+        target = target.lower()
+        if expected_type == 'keyword':
+            target = f'keyword::{target}'
 
         try:
             try:

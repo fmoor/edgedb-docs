@@ -758,13 +758,23 @@ query the DB.
 With block
 ----------
 
-The ``WITH`` block in EdgeQL is used to define aliases. All aliases
-can be seen as a shorthand, performing a purely mechanical lexical
-symbol substitution. They are used as convenient syntax sugar rather
-than altering the semantics of a given query.
+.. eql:keyword:: WITH
+
+    The ``WITH`` block in EdgeQL is used to define aliases.
+
+    .. XXX: not just for aliases! e.g. WITH CARDINALITY
+
+    All aliases can be seen as a shorthand, performing a purely
+    mechanical lexical symbol substitution. They are used as
+    convenient syntax sugar rather than altering the semantics of
+    a given query.
 
 Specifying a module
 +++++++++++++++++++
+
+.. eql:keyword:: MODULE
+
+    Used inside a :eql:kw:`WITH block <with>` to specify module names.
 
 One of the more basic and common uses of the ``WITH`` block is to
 specify the default module that is used in a query. ``WITH MODULE
