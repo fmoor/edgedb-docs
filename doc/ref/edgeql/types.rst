@@ -190,7 +190,7 @@ never ``{}``:
     At the moment only one-dimensional arrays are supported in EdgeDB.
 
     Array declaration must include the type of the elements. For
-    example: ``array<int>``, ``array<User>``, etc.
+    example: :eql:type:`array\<int64\>`, :eql:type:`array\<User\>`, etc.
 
     Arrays support indexing and slicing operators:
 
@@ -235,7 +235,7 @@ never ``{}``:
     Maps are indexed homogeneous collections.
 
     Map declaration must include the types of keys and values. For
-    example: ``map<int, str>``, ``map<str, User>``, etc.
+    example: :eql:type:`map\<int, str\>`, :eql:type:`map\<str, User\>`, etc.
 
     Maps are indexed homogeneous collections, where the indexes are
     arbitrary but must be all of the same type.  Values don't have to
@@ -270,8 +270,9 @@ never ``{}``:
     order.
 
     Tuple type declaration must include the types of their components.
-    For example: ``tuple<int, int>``, ``tuple<int, int, str>``,
-    ``tuple<str, User>``, ``tuple<bool, tuple<User, int>>``, etc.
+    For example: :eql:type:`tuple\<int, int\>`,
+    :eql:type:`tuple\<int, int, str\>`, :eql:type:`tuple\<str, User\>`,
+    :eql:type:`tuple\<bool, tuple\<User, int\>\>`, etc.
 
     Examples of map usage:
 

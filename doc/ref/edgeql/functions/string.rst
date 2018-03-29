@@ -31,15 +31,15 @@ String functions
     :param $1: regular expression
     :paramtype $1: str
 
-    :return: first matched groups as ``array<str>``
+    :return: first matched groups as :eql:type:`array\<str\>`
     :returntype: array<str>
 
     Find the first regular expression match in a string.
 
     Given an input string and a regular expression string find the
     first match for the regular expression within the string. Return
-    the match, each match represented by an ``array<str>`` of matched
-    groups.
+    the match, each match represented by an :eql:type:`array\<str\>`
+    of matched groups.
 
 .. eql:function:: std::re_match_all(str, str) -> SET OF array<str>
 
@@ -48,15 +48,15 @@ String functions
     :param $1: regular expression
     :paramtype $1: str
 
-    :return: set of all matched groups as ``array<str>``
+    :return: set of all matched groups as :eql:type:`array\<str\>`
     :returntype: SET OF array<str>
 
     Find all regular expression matches in a string.
 
     Given an input string and a regular expression string repeatedly
     match the regular expression within the string. Return the set of
-    all matches, each match represented by an ``array<str>`` of
-    matched groups.
+    all matches, each match represented by an :eql:type:`array\<str\>`
+    of matched groups.
 
 .. eql:function:: std::re_test(str, str) -> bool
 
