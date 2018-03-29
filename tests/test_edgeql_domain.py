@@ -299,6 +299,30 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
                 'fields must be specified before all other content'):
             self.build(src)
 
+    def test_eql_func_7(self):
+        src = '''
+        .. eql:function:: std::test(OPTIONAL str, SET OF str, str) \\
+                            -> SET OF str
+
+            blah
+
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('//desc_parameter / text()'),
+            ['OPTIONAL str', 'SET OF str', 'str'])
+
+        self.assertEqual(
+            x.xpath('//desc_returns / text()'),
+            ['SET OF str'])
+
+        self.assertEqual(
+            x.xpath('//desc_signature/@eql-signature'),
+            ['std::test(OPTIONAL str, SET OF str, str) -> SET OF str'])
+
 
 class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 

@@ -201,6 +201,7 @@ from edgedb.lang.schema.pygments import EdgeSchemaLexer
 from edgedb.lang.edgeql.parser import parser as edgeql_parser
 from edgedb.lang.edgeql import ast as ql_ast
 from edgedb.lang.edgeql import codegen as ql_gen
+from edgedb.lang.common import markup  # NoQA
 
 from docutils import nodes as d_nodes
 from docutils.parsers.rst import directives as d_directives
@@ -730,15 +731,27 @@ class EQLFunctionDirective(BaseEQLDirective):
 
         modname = astnode.name.module
         funcname = astnode.name.name
-
         if not modname:
             raise DirectiveParseError(
                 self, f'EdgeQL function declaration is missing namespace')
 
+        func_repr = ql_gen.EdgeQLSourceGenerator.to_source(astnode)
+        m = re.match(r'''(?xs)
+            ^
+            CREATE\sFUNCTION\s
+            (?P<f>.*?)
+            \sFROM\sSQL\sFUNCTION
+            .*$
+        ''', func_repr)
+        if not m or not m.group('f'):
+            raise DirectiveParseError(
+                self, f'could not recreate function signature from AST')
+        func_repr = m.group('f')
+
         signode['eql-module'] = modname
         signode['eql-name'] = funcname
         signode['eql-fullname'] = fullname = f'{modname}::{funcname}'
-        signode['eql-signature'] = sig
+        signode['eql-signature'] = func_repr
 
         signode += s_nodes.desc_annotation('function', 'function')
         signode += d_nodes.Text(' ')
@@ -757,6 +770,8 @@ class EQLFunctionDirective(BaseEQLDirective):
         signode += params
 
         ret_repr = ql_gen.EdgeQLSourceGenerator.to_source(astnode.returning)
+        if astnode.set_returning is ql_ast.SetQualifier.SET_OF:
+            ret_repr = f'SET OF {ret_repr}'
         signode += s_nodes.desc_returns(ret_repr, ret_repr)
 
         return fullname
