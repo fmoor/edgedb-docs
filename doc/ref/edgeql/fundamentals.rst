@@ -223,9 +223,8 @@ of the following ways:
 
   The output set is somehow dependent on the entire input set and
   cannot be produced by merging outputs in an element-wise fashion.
-  This is typical of
-  :ref:`aggregate functions<ref_edgeql_functions_count>`, such as
-  ``sum`` or ``count``.
+  This is typical of aggregate functions, such as :eql:func:`sum` or
+  :eql:func:`count`.
 
   .. code-block:: eschema
 

@@ -246,7 +246,7 @@ class EQLField(s_docfields.Field):
 
     def make_xrefs(self, rolename, domain, target, innernode=d_nodes.emphasis,
                    contnode=None, env=None):
-        delims = r'(\s*[\[\]\(\),](?:\s*or\s)?\s*|\s+or\s+)'
+        delims = r'(\s*[\[\]\(\)<>,](?:\s*or\s)?\s*|\s+or\s+|\s*SET\s+OF\s+)'
         delims_re = re.compile(delims)
         sub_targets = re.split(delims, target)
 

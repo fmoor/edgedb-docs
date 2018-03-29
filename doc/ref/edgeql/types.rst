@@ -38,7 +38,7 @@ known as *scalars*.
 
     Any number of arbitrary precision.
 
-    All of the following types can be casted to numeric:
+    All of the following types can be cast into numeric:
     :eql:type:`int16`, :eql:type:`int32`, :eql:type:`int64`,
     :eql:type:`float32`, and :eql:type:`float64`.
 

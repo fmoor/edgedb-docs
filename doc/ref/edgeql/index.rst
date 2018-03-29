@@ -14,7 +14,7 @@ EdgeQL
     statements
     operators
     types
-    functions
+    functions/index
     scope
     ddl
     introspection

@@ -162,8 +162,7 @@ expression (syntactically it's ``(<statement>)``):
 
 Basically, statements-as-expressions are treated similar to aggregates
 in terms of how they interact with what's outside of them. A parallel
-can be drawn between that and
-:ref:`array_agg<ref_edgeql_functions_array_agg>`, but instead of
+can be drawn between that and :eql:func:`array_agg`, but instead of
 producing an array, the result is still a *set*.
 
 
