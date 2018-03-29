@@ -137,11 +137,11 @@ main query.
     | +-----------------------------+ |
     +---------------------------------+
 
-In the above example the aggregate function ``count`` creates a sub-
-scope `2,1,0` for its argument. However, like before, the common
-prefix ``Issue`` from scope `1,0` is shared between ``Issue.number``
-and ``Issue.watchers``. Therefore the ``count`` will be applied to
-watchers of each issue separately.
+In the above example the aggregate function :eql:func:`count` creates
+a sub- scope `2,1,0` for its argument. However, like before, the
+common prefix ``Issue`` from scope `1,0` is shared between
+``Issue.number`` and ``Issue.watchers``. Therefore the :eql:func:`count`
+will be applied to watchers of each issue separately.
 
 .. code-block:: eql
 
@@ -173,9 +173,10 @@ watchers of each issue separately.
 The last example is similar to the one before that, but
 ``Issue.number`` is wrapped in a ``SELECT`` sub-query. This means that
 it has its own scope (`2a,1,0`) parallel to the scope created by
-``count`` (`2b,1,0`). The net effect is that the ``count`` argument is
-completely independent of the ``Issue.number`` of the sub-query and
-effectively means "all issue watchers in the DB".
+:eql:func:`count` (`2b,1,0`). The net effect is that the
+:eql:func:`count` argument is completely independent of the
+``Issue.number`` of the sub-query and effectively means "all issue
+watchers in the DB".
 
 .. code-block:: eql
 
@@ -206,11 +207,12 @@ effectively means "all issue watchers in the DB".
     +---------------------------------+
 
 To illustrate the peculiar signature of ``IN`` operator it can be put
-in a tuple next to an aggregate function, such as ``count``. The
-``IN`` operator's second operand creates its own sub-scope (because,
-intuitively, the membership is checked against the set as a whole).
-The example above shows that ``Issue.watchers`` exist independently in
-parallel scopes in ``IN`` operator and in ``count``.
+in a tuple next to an aggregate function, such as :eql:func:`count`.
+The ``IN`` operator's second operand creates its own sub-scope
+(because, intuitively, the membership is checked against the set as a
+whole). The example above shows that ``Issue.watchers`` exist
+independently in parallel scopes in ``IN`` operator and in
+:eql:func:`count`.
 
 Last but not least, this is how the scopes in a complex query may apply:
 
@@ -492,10 +494,10 @@ schema, though) and what we want is a result of the form "Open issue
         Issue.status.name = 'Open';
 
 Due to the fact that ``Issue`` and ``Issue.number`` exist in the same
-scope, the :ref:`longest common prefix<ref_edgeql_scope_prefix>`
-rule dictates that ``Issue`` must refer to the same object for both of
-these expressions. This means that ``count`` is always operating on a
-set of one ``Issue``.
+scope, the :ref:`longest common prefix<ref_edgeql_scope_prefix>` rule
+dictates that ``Issue`` must refer to the same object for both of
+these expressions. This means that :eql:func:`count` is always
+operating on a set of one ``Issue``.
 
 The way to fix that is to define another set as ``Issue`` in the
 ``WITH`` clause.

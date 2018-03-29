@@ -156,7 +156,7 @@ constructs is to treat them exactly like functions that simply turn
 their arguments into a set of collections.
 
 This means that the following code will create a set of tuples with
-the first element being ``Issue`` and the second a ``str``
+the first element being ``Issue`` and the second a :eql:type:`str`
 representing the ``Issue.priority.name``:
 
 .. code-block:: eql
@@ -172,8 +172,8 @@ or a :ref:`shape<ref_edgeql_shapes>` query should be used instead.
 
 On the other hand the following query will include *all* Issues,
 because the tuple elements are made from the set of Issues and the set
-produced by the aggregate function ``array_agg``, which is never
-``{}``:
+produced by the aggregate function :eql:func:`array_agg`, which is
+never ``{}``:
 
 .. code-block:: eql
 
@@ -216,11 +216,11 @@ produced by the aggregate function ``array_agg``, which is never
             arr[1:3];
         # this will return [2, 3]
 
-    Another way of creating an array is to use ``array_agg`` built-in,
-    which converts a set into an array. If the ordering is important
-    the ``ORDER`` clause must be specified for the set, otherwise no
-    specific ordering guarantee can be made for the ``array_agg``
-    aggregate function:
+    Another way of creating an array is to use :eql:func:`array_agg`
+    built-in, which converts a set into an array. If the ordering is
+    important the ``ORDER`` clause must be specified for the set,
+    otherwise no specific ordering guarantee can be made for the
+    :eql:func:`array_agg` aggregate function:
 
     .. code-block:: eql
 

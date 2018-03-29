@@ -259,7 +259,7 @@ Basic set operators:
         Technically, ``EXISTS`` behaves like a special built-in
         :ref:`aggregate function<ref_edgeql_functions_agg>`. It is
         sufficiently basic and a special case that it is an *operator*
-        unlike a built-in aggregate function ``count``.
+        unlike a built-in aggregate function :eql:func:`count`.
 
 - ``SET OF`` *A* IF *C* ELSE ``SET OF`` *B*
 

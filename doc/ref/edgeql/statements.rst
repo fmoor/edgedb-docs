@@ -228,9 +228,9 @@ The above can be conceptualized as:
     );
 
 In this form it is more apparent that ``User`` is a ``SET OF``
-argument (of ``count``), while ``User.name LIKE 'Alice%'`` is also a
-``SET OF`` argument (of ``filter``). So the symbol ``User`` in these
-two expressions exists in 2 parallel scopes. Contrast it with:
+argument (of :eql:func:`count`), while ``User.name LIKE 'Alice%'`` is
+also a ``SET OF`` argument (of ``filter``). So the symbol ``User`` in
+these two expressions exists in 2 parallel scopes. Contrast it with:
 
 .. code-block:: eql
 
@@ -272,10 +272,10 @@ The input set is partitioned using expressions in the ``USING`` and
 ``UNION`` clause is evaluated and merged with the rest of the results
 via a ``UNION``. There are various useful functions that require a set
 of values as their input - aggregate functions. Simple aggregate
-function examples include ``count``, ``sum``, ``array_agg``. All of
-these are functions that map a set of values onto a single value. A
-``GROUP`` statement allows to use aggregate functions to compute
-various properties of set partitions.
+function examples include :eql:func:`count`, :eql:func:`sum`,
+:eql:func:`array_agg`. All of these are functions that map a set of
+values onto a single value. A ``GROUP`` statement allows to use
+aggregate functions to compute various properties of set partitions.
 
 The data flow of a ``GROUP`` block can be conceptualized like this:
 

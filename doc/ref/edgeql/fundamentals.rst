@@ -275,10 +275,10 @@ Consider the following query:
     WITH MODULE example
     SELECT count(Issue.watchers);
 
-The function ``count`` normally treats the argument set as a whole, so
-the query above counts the total number of distinct issue watchers. To
-get a count of issue watchers on a per-issue basis, the following
-query is needed:
+The function :eql:func:`count` normally treats the argument set as a
+whole, so the query above counts the total number of distinct issue
+watchers. To get a count of issue watchers on a per-issue basis, the
+following query is needed:
 
 .. code-block:: eql
 
@@ -288,7 +288,7 @@ query is needed:
 Tuples behave like element-wise functions w.r.t. all of their
 elements. This means that the symbol ``Issue`` is treated as an
 element-wise argument in this context. This, in turn, means that it
-``count`` is evaluated separately for each element of ``Issue``. So
+:eql:func:`count` is evaluated separately for each element of ``Issue``. So
 the result is a set of tuples containing an issue and a watchers count for
 that specific issue much like the simpler example of :ref:`user
 name<ref_edgeql_fundamentals_same>`.
@@ -347,9 +347,9 @@ do not affect each other's semantics.
         count(User.email)
     );
 
-Due to parallel sub-scopes, both ``count`` expressions are evaluated
-on the input sets as a whole and not on a per-user basis like in a
-tuple.
+Due to parallel sub-scopes, both :eql:func:`count` expressions are
+evaluated on the input sets as a whole and not on a per-user basis
+like in a tuple.
 
 The ``DETACHED`` keyword creates a whole new scope, parallel to the
 statement in which it appears, nested directly in the schema-level
@@ -815,8 +815,9 @@ if available'. This is one of the important differences between
 
 Shape annotation is preserved only by operations that preserve the
 type (rather than specify a type or the result explicitly). In general
-terms, any operation that maps ``any`` onto ``any`` also preserves
-shapes, but operations that specify the types explicitly (such as
-``+``, which is polymorphic, but specifies ``int``, ``float``, or
-``str`` explicitly as the return type) effectively "remove" shape
-annotation from the result.
+terms, any operation that maps :eql:type:`any` onto :eql:type:`any`
+also preserves shapes, but operations that specify the types
+explicitly (such as ``+``, which is polymorphic, but specifies
+:eql:type:`int64`, :eql:type:`float64`, or :eql:type:`str` explicitly
+as the return type) effectively "remove" shape annotation from the
+result.
