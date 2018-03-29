@@ -1,15 +1,21 @@
-.. _contents:
+.. _index_toplevel:
 
 
-=============================
-EdgeDB documentation contents
-=============================
+====================
+EdgeDB documentation
+====================
 
-Full table of contents.  For a high level overview of all
-documentation, see :ref:`index_toplevel`.
+Welcome to the EdgeDB |version| documentation.
 
+
+.. !!! DO NOT CHANGE :maxdepth: egdedb.com/docs depends on it !!!
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 5
 
-    ref/index
+    datamodel/overview
+    schema/architecture
+    schema/evolution
+    edgeql/index
+    graphql/index
+    tutorial/basic
     dev/index
