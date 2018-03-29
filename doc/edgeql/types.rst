@@ -24,8 +24,8 @@ the most basic building blocks.
 
 * Meta-types_
 
-    :eql:kw:`SET-OF` and :eql:type:`any` type annotations used
-    for function signatures.
+    :eql:type:`SET-OF`, :eql:type:`OPTIONAL`, and :eql:type:`any`
+    type annotations used for function signatures.
 
 
 Scalar types
@@ -386,14 +386,23 @@ Meta-types
 ----------
 
 There are some additional concepts related to typing that come up in
-function signatures.
+function signatures. See :ref:`parameter types
+<ref_edgeql_fundamentals_function>` for more details.
 
-.. eql:keyword:: SET-OF
+
+.. eql:type:: SET-OF
 
     Denotes that the argument must be treated a whole set.
 
-    See :ref:`parameter types<ref_edgeql_fundamentals_function>` for
-    more details.
+
+.. eql:type:: OPTIONAL
+
+    Denotes an element-wise argument that has special handling if
+    missing.
+
+    If the argument is an empty set the function will still be
+    called with an ``{}`` (empty set) value.
+
 
 .. eql:type:: std::any
 

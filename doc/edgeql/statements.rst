@@ -97,7 +97,7 @@ Select
 
 
 See also :eql:stmt:`SELECT`.
-See also :eql:clause:`FILTER <select:filter>`.
+See also :eql:clause:`FILTER <SELECT:FILTER>`.
 
 
 A ``SELECT`` statement returns a set of objects. The data flow of a
@@ -839,7 +839,7 @@ Specifying a module
 
 .. eql:keyword:: MODULE
 
-    Used inside a :eql:kw:`WITH block <with>` to specify module names.
+    Used inside a :eql:kw:`WITH block <WITH>` to specify module names.
 
 One of the more basic and common uses of the ``WITH`` block is to
 specify the default module that is used in a query. ``WITH MODULE

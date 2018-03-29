@@ -498,7 +498,6 @@ class BaseEQLDirective(s_directives.ObjectDescription):
 
         objects = self.env.domaindata['eql']['objects']
 
-        name = name.lower()
         if name in objects:
             raise DirectiveParseError(
                 self, f'duplicate function {name} description')
@@ -508,11 +507,15 @@ class BaseEQLDirective(s_directives.ObjectDescription):
 class EQLTypeDirective(BaseEQLDirective):
 
     def handle_signature(self, sig, signode):
-        if '::' not in sig:
-            raise DirectiveParseError(
-                self, f'eql:type must include a namespace')
+        if '::' in sig:
+            mod, name = sig.strip().split('::')
+        else:
+            name = sig.strip()
+            mod = 'std'
 
-        mod, name = sig.strip().split('::')
+        display = name.replace('-', ' ')
+        if mod != 'std':
+            display = f'{mod}::{display}'
 
         signode['eql-module'] = mod
         signode['eql-name'] = name
@@ -520,8 +523,8 @@ class EQLTypeDirective(BaseEQLDirective):
 
         signode += s_nodes.desc_annotation('type', 'type')
         signode += d_nodes.Text(' ')
-        signode += s_nodes.desc_name(fullname, fullname)
-        return sig
+        signode += s_nodes.desc_name(display, display)
+        return fullname
 
 
 class EQLKeywordDirective(BaseEQLDirective):
@@ -539,7 +542,7 @@ class EQLKeywordDirective(BaseEQLDirective):
 
     def add_target_and_index(self, name, sig, signode):
         return super().add_target_and_index(
-            f'keyword::{name.lower()}', sig, signode)
+            f'keyword::{name}', sig, signode)
 
 
 class EQLStatementDirective(BaseEQLDirective):
@@ -562,7 +565,7 @@ class EQLStatementDirective(BaseEQLDirective):
 
     def add_target_and_index(self, name, sig, signode):
         return super().add_target_and_index(
-            f'statement::{name.lower()}', sig, signode)
+            f'statement::{name}', sig, signode)
 
     def before_content(self):
         if 'eql:statement' in self.env.ref_context:
@@ -613,7 +616,7 @@ class EQLStatementClauseDirective(BaseEQLDirective):
                 f'template',
                 cause=ex)
 
-        name = name.strip().lower()
+        name = name.strip()
         sig = sig.strip()
         if not name or not sig:
             raise DirectiveParseError(
@@ -630,7 +633,7 @@ class EQLStatementClauseDirective(BaseEQLDirective):
         return name
 
     def add_target_and_index(self, name, sig, signode):
-        stmt = self.env.ref_context['eql:statement'].lower()
+        stmt = self.env.ref_context['eql:statement']
         refname = f'clause::{stmt}::{name}'
         return super().add_target_and_index(refname, sig, signode)
 
@@ -681,7 +684,7 @@ class EQLOperatorDirective(BaseEQLDirective):
                 f'template',
                 cause=ex)
 
-        name = name.strip().lower()
+        name = name.strip()
         sig = sig.strip()
         if not name or not sig:
             raise DirectiveParseError(
@@ -794,12 +797,15 @@ class EQLTypeXRef(s_roles.XRefRole):
 
         if '<' in new_target:
             new_target, _ = new_target.split('<', 1)
+
         return new_target
 
     def process_link(self, env, refnode, has_explicit_title, title, target):
-        target = self.filter_target(target)
+        new_target = self.filter_target(target)
+        if not has_explicit_title:
+            title = target.replace('-', ' ')
         return super().process_link(
-            env, refnode, has_explicit_title, title, target)
+            env, refnode, has_explicit_title, title, new_target)
 
 
 class EQLFunctionXRef(s_roles.XRefRole):
@@ -859,7 +865,7 @@ class EdgeQLDomain(s_domains.Domain):
         objects = self.data['objects']
         expected_type = self._role_to_object_type[type]
 
-        target = target.lower()
+        target = target
         if expected_type == 'keyword':
             target = f'keyword::{target}'
         elif expected_type == 'operator':

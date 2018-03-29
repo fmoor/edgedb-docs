@@ -84,8 +84,16 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
             descr
         '''
 
-        with self.assert_fails('eql:type must include a namespace'):
-            self.build(src)
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //desc_signature
+                    [@eql-fullname="std::int"] /
+                    desc_name / text()
+            '''),
+            ['int'])
 
     def test_eql_type_2(self):
         src = '''
@@ -162,7 +170,7 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
 
     def test_eql_type_7(self):
         src = '''
-        .. eql:type:: std::int
+        .. eql:type:: int
 
             An integer.
 
@@ -182,6 +190,27 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
                 literal / text()
             '''),
             ['OPTIONAL  int', 'OPTIONAL int', 'SET  OF  int', 'SET OF int'])
+
+    def test_eql_type_8(self):
+        src = '''
+        .. eql:type:: SET-OF
+
+            An integer.
+
+        Testing :eql:type:`SET-OF`.
+        Testing :eql:type:`XXX <SET-OF>`.
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //paragraph /
+                reference[@eql-type="type"] /
+                literal / text()
+            '''),
+            ['SET OF', 'XXX'])
 
 
 class TestEqlFunction(unittest.TestCase, BaseDomainTest):
@@ -361,7 +390,7 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 
         some text
 
-        :eql:op:`XXX <plus>`
+        :eql:op:`XXX <PLUS>`
         '''
 
         out = self.build(src, format='xml')
@@ -369,7 +398,7 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 
         self.assertEqual(
             len(x.xpath('''
-                //desc_signature[@eql-name="plus" and @eql-signature="A + B"] /
+                //desc_signature[@eql-name="PLUS" and @eql-signature="A + B"] /
                 *[
                     (self::desc_annotation and text()="operator") or
                     (self::desc_name and text()="A + B")
@@ -383,7 +412,7 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
         self.assertEqual(
             x.xpath('''
                 //paragraph /
-                reference[@eql-type="operator" and @refid="operator::plus"] /
+                reference[@eql-type="operator" and @refid="operator::PLUS"] /
                 literal / text()
             '''),
             ['XXX'])
@@ -420,7 +449,7 @@ class TestEqlKeyword(unittest.TestCase, BaseDomainTest):
         self.assertEqual(
             x.xpath('''
                 //paragraph /
-                reference[@eql-type="keyword" and @refid="keyword::set-of"] /
+                reference[@eql-type="keyword" and @refid="keyword::SET-OF"] /
                 literal / text()
             '''),
             ['XXX'])
@@ -481,7 +510,7 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
         self.assertEqual(
             x.xpath('''
                 //desc[@desctype="statement"] // desc[@desctype="clause"] /
-                desc_signature[@eql-fullname="filter"] / * / text()
+                desc_signature[@eql-fullname="FILTER"] / * / text()
             '''),
             ['clause', 'A FILTER B'])
 
@@ -496,7 +525,7 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
             x.xpath('''
                 //paragraph /
                 reference[@eql-type="statement" and
-                          @refid="statement::select"] /
+                          @refid="statement::SELECT"] /
                 literal / text()
             '''),
             ['SELECT'])
@@ -505,7 +534,7 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
             x.xpath('''
                 //paragraph /
                 reference[@eql-type="clause" and
-                          @refid="clause::select::filter"] /
+                          @refid="clause::SELECT::FILTER"] /
                 literal / text()
             '''),
             ['FLT'])

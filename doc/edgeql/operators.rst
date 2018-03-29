@@ -335,7 +335,7 @@ the same :ref:`type<ref_edgeql_types>`.
 
 - comparison operators ``<``, ``>``, ``<=``, ``>=``
 
-- arithmetic operators :eql:op:`+ <plus>`, ``-``, ``*``, ``/``,
+- arithmetic operators :eql:op:`+ <PLUS>`, ``-``, ``*``, ``/``,
   ``%`` (modulo), ``^`` (power)
 
 - string matching operators ``LIKE`` and ``ILIKE`` that work exactly the
