@@ -74,8 +74,8 @@ examples and details.
 All sets must also be homogeneous, i.e. all members of a set have to
 be of the same basic :ref:`type<ref_edgeql_types>`. Thus all sets are
 either composed of *objects*, *atomic values*, *arrays*, *maps*, or
-:ref:`tuples<ref_edgeql_types_tuples>`. It's worth noting that mixing
-objects representing different
+:eql:type:`tuples <tuple>`. It's worth noting that mixing objects
+representing different
 :ref:`concepts<ref_schema_architechture_concepts>` is fine
 since they are all derived from the same base ``Object``.
 

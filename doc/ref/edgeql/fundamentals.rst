@@ -645,7 +645,7 @@ issues owned by Alice Smith rather than the ``Issue`` objects.
 
 The above query will return a set of 2-tuples containing the values of issue
 ``name`` and ``body`` for all of the issues owned by Alice Smith.
-:ref:`Tuples<ref_edgeql_types_tuples>` can be used in other
+:eql:type:`tuples <tuple>` can be used in other
 expressions as a whole opaque entity or serialized for some external
 use. This construct is similar to selecting individual columns in SQL
 except that the column name is lost. If structural information is

@@ -363,6 +363,60 @@ the same :ref:`type<ref_edgeql_types>`.
     # returns [True, ..., True], one for every user
 
 
+.. _ref_edgeql_types_casts:
+
+Casts
+-----
+
+Sometimes it is necessary to convert data from one type to another.
+This is called *casting*. In order to *cast* one expression into a
+different type the expression is prefixed with the ``<new_type>``,
+as follows:
+
+.. code-block:: eql
+
+    # cast a string literal into an integer
+    SELECT <int>"42";
+
+    # cast an array of integers into an array of str
+    SELECT <array<str>>[1, 2 , 3];
+
+    # cast an issue number into a string
+    SELECT <str>example::Issue.number;
+
+Casts also work for converting tuples or declaring different tuple
+element names for convenience.
+
+.. code-block:: eql
+
+    SELECT <tuple<int, str>>(1, 3);
+    # returns [[1, '3']]
+
+    WITH
+        # a test tuple set, that could be a result of
+        # some other computation
+        stuff := (1, 'foo', 42)
+    SELECT (
+        # cast the tuple into something more convenient
+        <tuple<a: int, name: str, b: int>>stuff
+    ).name;  # access the 'name' element
+
+An important use of *casting* is in defining the type of an empty
+set ``{}``, which can be required for purposes of type disambiguation.
+
+.. code-block:: eql
+
+    WITH MODULE example
+    SELECT Text {
+        name :=
+            Text[IS Issue].name IF Text IS Issue ELSE
+            <str>{},
+            # the cast to str is necessary here, because
+            # the type of the computable must be defined
+        body,
+    };
+
+
 Operator Precedence
 -------------------
 
