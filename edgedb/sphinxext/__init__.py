@@ -168,6 +168,7 @@ To reference a type use a ":eql:type:" role, e.g.:
 - :eql:type:`SET OF any`
 - :eql:type:`SET OF array\<any\>`
 - :eql:type:`array of \<int\> <array<int>>`
+- :eql:type:`array\<int\>`
 
 Keywords
 --------

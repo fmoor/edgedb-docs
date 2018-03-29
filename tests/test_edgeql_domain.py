@@ -133,6 +133,33 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
         with self.assert_fails("shorter than 80 characters"):
             self.build(src)
 
+    def test_eql_type_6(self):
+        src = '''
+        .. eql:type:: std::int
+
+            An integer.
+
+        .. eql:type:: std::array
+
+            Array.
+
+        Testing :eql:type:`XXX <array<int>>` ref.
+        Testing :eql:type:`array\<int\>` ref.
+        Testing :eql:type:`array\<int64\> <array<int>>` ref.
+        Testing :eql:type:`array\<array\<int\>\>` ref.
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //paragraph /
+                reference[@eql-type="type"] /
+                literal / text()
+            '''),
+            ['XXX', 'array<int>', 'array<int64>', 'array<array<int>>'])
+
 
 class TestEqlFunction(unittest.TestCase, BaseDomainTest):
 
