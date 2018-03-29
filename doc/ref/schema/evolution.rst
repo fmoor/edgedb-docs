@@ -126,9 +126,7 @@ will require both migrations ``subject::v2`` and ``geo::v4`` and it
 will determine the order in which they need to be applied based on the
 declared dependencies.
 
-.. aafig::
-    :aspect: 60
-    :scale: 150
+::
 
         +-------+     +-------+     +-------+          +-------+
         |geo::v1+---->+geo::v2+---->+geo::v3+--------->+geo::v4|

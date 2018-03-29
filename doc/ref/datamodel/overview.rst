@@ -35,10 +35,7 @@ For example, a *City* can relate to a *Country* through the "capital"
 relationship, and *Country* relates to *City* through the "country"
 relationship.
 
-.. aafig::
-    :aspect: 60
-    :scale: 150
-    :textual:
+::
 
             +-------+{capital}+------+
             |                        |

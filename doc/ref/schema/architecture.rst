@@ -125,9 +125,7 @@ elements that can host pointers -- concepts and links -- are called
 
 So, the general element relationship diagram looks like this:
 
-.. aafig::
-    :aspect: 60
-    :scale: 150
+::
 
      +---------+                    +----------------+
      |         |                    |                |

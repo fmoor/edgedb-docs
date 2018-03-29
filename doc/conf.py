@@ -31,8 +31,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
-    'sphinxcontrib.aafig',
-    'sphinxcontrib.srclinks',
     'edgedb.sphinxext',
 ]
 

@@ -35,8 +35,7 @@ the indexing.
     FILTER
         Issue.watchers.name = 'Alice';
 
-.. aafig::
-    :textual:
+::
 
     +-- (0)------------------------------------+
     |   "WITH"                                 |
@@ -79,8 +78,7 @@ common prefix ``Issue`` from scope `1,0` means the same thing in the
         U != User AND
         User.first_name = U.first_name;
 
-.. aafig::
-    :textual:
+::
 
     +-- (0)-------------------------------------+
     |   "WITH"                                  |
@@ -124,8 +122,7 @@ main query.
         count(Issue.watchers)
     );
 
-.. aafig::
-    :textual:
+::
 
     +-- (0)---------------------------+
     |   "WITH"                        |
@@ -155,8 +152,7 @@ watchers of each issue separately.
         count(Issue.watchers)
     );
 
-.. aafig::
-    :textual:
+::
 
     +-- (0)----------------------------+
     |   "WITH"                         |
@@ -190,8 +186,7 @@ effectively means "all issue watchers in the DB".
         count(Issue.watchers)
     );
 
-.. aafig::
-    :textual:
+::
 
     +-- (0)---------------------------+
     |   "WITH"                        |
@@ -247,12 +242,7 @@ Last but not least, this is how the scopes in a complex query may apply:
         User.name
     LIMIT 3;
 
-.. aafig::
-    :aspect: 60
-    :scale: 150
-    :textual:
-
-
+::
 
     +-- (0)----------------------------------+
     |   "WITH"                               |
