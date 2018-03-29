@@ -1,8 +1,8 @@
 .. _ref_edgeql_functions_string:
 
 
-String functions
-================
+String
+======
 
     .. TODO::
 

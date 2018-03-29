@@ -1,8 +1,8 @@
 .. _ref_edgeql_functions_setagg:
 
 
-Set aggregate functions
-=======================
+Aggregates
+==========
 
 .. eql:function:: std::count(SET OF any) -> int
 
@@ -45,4 +45,5 @@ Set aggregate functions
         # returns 1.0
 
 Here's a list of aggregate functions covered in other sections:
-:eql:func:`array_agg`.
+
+* :eql:func:`array_agg`

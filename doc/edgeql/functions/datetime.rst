@@ -1,8 +1,8 @@
 .. _ref_edgeql_functions_datetime:
 
 
-Date/time functions
-===================
+Date/time
+=========
 
 .. eql:function:: std::current_date() -> date
 

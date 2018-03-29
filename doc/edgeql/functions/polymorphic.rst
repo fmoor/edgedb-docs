@@ -1,8 +1,8 @@
 .. _ref_edgeql_functions_polymorphic:
 
 
-Polymorphic functions
-=====================
+Polymorphic
+===========
 
 .. eql:function:: std::len(any) -> int64
 

@@ -1,8 +1,8 @@
 .. _ref_edgeql_functions_random:
 
 
-Random/UUID functions
-=====================
+Random/UUID
+===========
 
 .. eql:function:: std::random() -> float64
 

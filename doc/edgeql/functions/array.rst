@@ -1,8 +1,8 @@
 .. _ref_edgeql_functions_array:
 
 
-Array functions
-===============
+Array
+=====
 
 .. eql:function:: std::array_agg(SET OF any) -> array<any>
 
@@ -45,7 +45,8 @@ Array functions
         SELECT array_contains(['foo', 'bar'], 'baz');
         # returns FALSE
 
-.. eql:function:: std::array_enumerate(array<any>) -> SET OF tuple<any, int64>
+.. eql:function:: std::array_enumerate(array<any>) -> \
+                  SET OF tuple<any, int64>
 
     :param $0: input array
     :paramtype $0: array<any>
@@ -79,12 +80,9 @@ Array functions
 
     Return array elements as a set.
 
+    The ordering of the returned set is not guaranteed.
+
     .. code-block:: eql
 
         SELECT array_unpack([2, 3, 5]);
         # returns {3, 2, 5}
-
-    .. note::
-
-        Notice that the ordering of the returned set is not
-        guaranteed.

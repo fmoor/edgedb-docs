@@ -4,10 +4,10 @@
 Functions
 =========
 
-Many built-in functions and user-defined functions operate on
-elements, so they are also element operations. This implies that if
-any of the input sets are empty, the result of applying an element
-function is also empty.
+Many built-in and user-defined functions operate on elements,
+so they are element-wise operations. This implies that if any of the
+input sets are empty, the result of applying an element function
+is also empty.
 
 .. _ref_edgeql_functions_agg:
 
@@ -27,9 +27,6 @@ singletons. Examples of aggregate functions include built-ins such as
     WITH MODULE example
     SELECT array_agg(Issue ORDER BY Issue.number);
 
-EdgeQL has a number of built-in functions in the ``std`` module. Like
-everything else in ``std`` module it is not necessary to specify the
-module name to refer to these functions.
 
 .. toctree::
     :maxdepth: 3
