@@ -248,7 +248,14 @@ class EQLField(s_docfields.Field):
 
     def make_xrefs(self, rolename, domain, target, innernode=d_nodes.emphasis,
                    contnode=None, env=None):
-        delims = r'(\s*[\[\]\(\)<>,](?:\s*or\s)?\s*|\s+or\s+|\s*SET\s+OF\s+)'
+        delims = r'''(?x)
+        (
+            \s* [\[\]\(\)<>,] \s* | \s+or\s+ |
+            \s*\bSET\s+OF\s+ |
+            \s*\bOPTIONAL\s+
+        )
+        '''
+
         delims_re = re.compile(delims)
         sub_targets = re.split(delims, target)
 
@@ -781,7 +788,10 @@ class EQLTypeXRef(s_roles.XRefRole):
 
     @staticmethod
     def filter_target(target):
-        new_target = re.sub(r'(?i)^\s*SET\s+OF\s+', '', target)
+        new_target = re.sub(r'''(?xi)
+            ^ \s*\bSET\s+OF\s+ | \s*\bOPTIONAL\s+
+        ''', '', target)
+
         if '<' in new_target:
             new_target, _ = new_target.split('<', 1)
         return new_target

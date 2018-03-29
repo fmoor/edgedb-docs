@@ -160,6 +160,29 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
             '''),
             ['XXX', 'array<int>', 'array<int64>', 'array<array<int>>'])
 
+    def test_eql_type_7(self):
+        src = '''
+        .. eql:type:: std::int
+
+            An integer.
+
+        Testing :eql:type:`OPTIONAL  int` ref.
+        Testing :eql:type:`OPTIONAL int` ref.
+        Testing :eql:type:`SET  OF  int` ref.
+        Testing :eql:type:`SET OF int` ref.
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //paragraph /
+                reference[@eql-type="type"] /
+                literal / text()
+            '''),
+            ['OPTIONAL  int', 'OPTIONAL int', 'SET  OF  int', 'SET OF int'])
+
 
 class TestEqlFunction(unittest.TestCase, BaseDomainTest):
 
