@@ -167,8 +167,8 @@ representing the ``Issue.priority.name``:
 Since ``priority`` is not a required link, not every ``Issue`` will
 have one. It is important to realize that the above query will *only*
 contain Issues with non-empty priorities. If it is desirable to have
-*all* Issues, then :ref:`coalescing<ref_edgeql_expressions_coalesce>`
-or a :ref:`shape<ref_edgeql_shapes>` query should be used instead.
+*all* Issues, then coalescing (:eql:op:`??<COALESCE>`) or a
+:ref:`shape<ref_edgeql_shapes>` query should be used instead.
 
 On the other hand the following query will include *all* Issues,
 because the tuple elements are made from the set of Issues and the set

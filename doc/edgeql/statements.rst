@@ -270,7 +270,7 @@ A ``GROUP`` statement is used to allow operations on set partitions.
 The input set is partitioned using expressions in the ``USING`` and
 ``BY`` clauses, and then for each partition the expression in the
 ``UNION`` clause is evaluated and merged with the rest of the results
-via a ``UNION``. There are various useful functions that require a set
+via a :eql:op:`UNION`. There are various useful functions that require a set
 of values as their input - aggregate functions. Simple aggregate
 function examples include :eql:func:`count`, :eql:func:`sum`,
 :eql:func:`array_agg`. All of these are functions that map a set of
@@ -492,7 +492,7 @@ Usage of FOR statement
 considered in detail separately. However, the common core is that
 ``FOR`` iterates over elements of some arbitrary expression. Then for
 each element of the iterator some set is computed and combined via a
-``UNION`` with the other such computed sets.
+:eql:op:`UNION` with the other such computed sets.
 
 The simplest use case is when the iterator is given by a set
 expression and it follows the general form of ``FOR x IN A ...``:

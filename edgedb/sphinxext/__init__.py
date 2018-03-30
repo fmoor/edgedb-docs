@@ -673,10 +673,10 @@ class EQLOperatorDirective(BaseEQLDirective):
             typerolename='type'),
 
         EQLTypedField(
-            'returntype',
-            label='Return',
+            'resulttype',
+            label='Result',
             has_arg=False,
-            names=('returntype',),
+            names=('resulttype',),
             typerolename='type'),
     ]
 

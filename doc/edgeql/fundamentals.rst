@@ -216,8 +216,7 @@ of the following ways:
   producing a non-empty result for it).
 
   This type of input handling is used by many EdgeQL operators. For
-  example, it is used by the
-  :ref:`coalescing operator<ref_edgeql_expressions_elops>` ``??``.
+  example, it is used by the coalescing operator :eql:op:`??<COALESCE>`.
 
 - Set as a whole.
 
@@ -243,8 +242,7 @@ It is important to note that these are technically properties of
 function `parameters` and not the function overall. It is perfectly
 possible to have a function that behaves in an element-wise fashion
 w.r.t. one parameter and is aggregate-like w.r.t. another. In fact,
-the EdgeQL :ref:`operator<ref_edgeql_expressions>` ``IN`` has exactly
-this property.
+the EdgeQL operator :eql:op:`IN` has exactly this property.
 
 There's another important interaction of function arguments. As long
 as the arguments are independent of each other (i.e. they use
@@ -429,8 +427,8 @@ separates `steps` and each step corresponds to a ``link`` name that
 must be followed. By default, links are followed in the `outbound`
 direction (the direction that is actually specified in the schema).
 The direction of the link can be also specified explicitly by using
-``>`` for `outbound` and ``<`` for `inbound`. Thus, the above query can be
-rewritten more explicitly, but equivalently as:
+``>`` for `outbound` and ``<`` for `inbound`. Thus, the above query
+can be rewritten more explicitly, but equivalently as:
 
 .. code-block:: eql
 
@@ -817,7 +815,7 @@ Shape annotation is preserved only by operations that preserve the
 type (rather than specify a type or the result explicitly). In general
 terms, any operation that maps :eql:type:`any` onto :eql:type:`any`
 also preserves shapes, but operations that specify the types
-explicitly (such as ``+``, which is polymorphic, but specifies
-:eql:type:`int64`, :eql:type:`float64`, or :eql:type:`str` explicitly
-as the return type) effectively "remove" shape annotation from the
-result.
+explicitly (such as :eql:op:`+<PLUS>`, which is polymorphic, but
+specifies :eql:type:`int64`, :eql:type:`float64`, or :eql:type:`str`
+explicitly as the return type) effectively "remove" shape annotation
+from the result.

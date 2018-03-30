@@ -31,7 +31,7 @@ non-required links (or the roots of which might not exists):
     SELECT Foo.a OR Foo.b;
 
 When the desired behavior is to treat ``{}`` as equivalent to
-``FALSE``, the coalesce ``??`` operator should be used:
+``FALSE``, the coalesce :eql:op:`??<COALESCE>` operator should be used:
 
 .. code-block:: eql
 
@@ -57,7 +57,7 @@ applied to the argument directly:
     WITH MODULE example
     SELECT count(User FILTER User.name LIKE 'A%');
 
-Operator ``IN`` is identical, but syntactically less obvious case.
+Operator :eql:op:`IN` is identical, but syntactically less obvious case.
 Consider the following queries:
 
 .. code-block:: eql

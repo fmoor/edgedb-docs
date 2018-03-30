@@ -206,13 +206,13 @@ watchers in the DB".
     | +-----------------------------+ |
     +---------------------------------+
 
-To illustrate the peculiar signature of ``IN`` operator it can be put
-in a tuple next to an aggregate function, such as :eql:func:`count`.
-The ``IN`` operator's second operand creates its own sub-scope
-(because, intuitively, the membership is checked against the set as a
-whole). The example above shows that ``Issue.watchers`` exist
-independently in parallel scopes in ``IN`` operator and in
-:eql:func:`count`.
+To illustrate the peculiar signature of :eql:op:`IN` operator it can
+be put in a tuple next to an aggregate function, such as
+:eql:func:`count`. The :eql:op:`IN` operator's second operand creates
+its own sub-scope (because, intuitively, the membership is checked
+against the set as a whole). The example above shows that
+``Issue.watchers`` exist independently in parallel scopes in
+:eql:op:`IN` operator and in :eql:func:`count`.
 
 Last but not least, this is how the scopes in a complex query may apply:
 
