@@ -741,7 +741,7 @@ class EQLFunctionDirective(BaseEQLDirective):
                 cause=ex)
 
         if (not isinstance(astnode, ql_ast.CreateFunction) or
-                not isinstance(astnode.name, ql_ast.ClassRef)):
+                not isinstance(astnode.name, ql_ast.ObjectRef)):
             raise DirectiveParseError(
                 self, f'EdgeQL parser returned unsupported AST')
 
