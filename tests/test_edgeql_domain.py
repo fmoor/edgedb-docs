@@ -397,7 +397,7 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 
             :optype A: int or str
             :optype B: int or str
-            :returntype: int or str
+            :resulttype: int or str
 
             Arithmetic addition.
 
@@ -420,7 +420,7 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
             2)
 
         self.assertEqual(len(x.xpath('//field[@eql-name="operand"]')), 2)
-        self.assertEqual(len(x.xpath('//field[@eql-name="returntype"]')), 1)
+        self.assertEqual(len(x.xpath('//field[@eql-name="resulttype"]')), 1)
 
         self.assertEqual(
             x.xpath('''
@@ -440,7 +440,7 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 
             :optype A: any
             :optype B: type
-            :returntype: any
+            :resulttype: any
 
             Is
 
