@@ -29,6 +29,7 @@ class BaseDomainTest:
                 'sphinx-build',
                 '-b', format,
                 '-W',
+                '-n',
                 '-C',
                 '-D', 'extensions=edgedb.sphinxext',
                 '-q',
@@ -221,6 +222,10 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
 
             An integer.
 
+        .. eql:type:: any
+
+            any.
+
         .. eql:function:: std::test(any) -> any
 
             :param $0: param
@@ -380,11 +385,19 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 
     def test_eql_op_1(self):
         src = '''
+        .. eql:type:: int
+
+            int
+
+        .. eql:type:: str
+
+            123
+
         .. eql:operator:: PLUS: A + B
 
-            :optype A: int or str or bytes
-            :optype B: int or str or bytes
-            :returntype: int or str or bytes
+            :optype A: int or str
+            :optype B: int or str
+            :returntype: int or str
 
             Arithmetic addition.
 
@@ -416,6 +429,33 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
                 literal / text()
             '''),
             ['XXX'])
+
+    def test_eql_op_2(self):
+        src = '''
+        .. eql:type:: any
+
+            123
+
+        .. eql:operator:: IS: A IS B
+
+            :optype A: any
+            :optype B: type
+            :returntype: any
+
+            Is
+
+        :eql:op:`XXX <IS>`
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //field[@eql-opname="B"] /
+                field_body / * / literal_strong / text()
+            '''),
+            ['B'])
 
 
 class TestEqlKeyword(unittest.TestCase, BaseDomainTest):
@@ -481,6 +521,10 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
 
     def test_eql_stmt_3(self):
         src = '''
+
+        .. eql:type:: any
+
+            123
 
         .. eql:statement:: SELECT
             :haswith:

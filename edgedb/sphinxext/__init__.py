@@ -235,6 +235,8 @@ class EQLField(s_docfields.Field):
         title = target
         if domain == 'eql' and rolename == 'type':
             target = EQLTypeXRef.filter_target(target)
+            if target in EQLTypedField.ignored_types:
+                return d_nodes.Text(title)
 
         refnode = s_nodes.pending_xref('', refdomain=domain,
                                        refexplicit=title != target,
@@ -276,6 +278,10 @@ class EQLField(s_docfields.Field):
 
 
 class EQLTypedField(EQLField):
+
+    ignored_types = {
+        'type'
+    }
 
     def __init__(self, name, names=(), label=None, rolename=None,
                  *, typerolename, has_arg=True):
