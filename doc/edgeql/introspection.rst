@@ -1,6 +1,10 @@
 Introspection
 =============
 
+.. TODO: rewrite this to include a formal reference of the `schema` module.
+   with necessary references to datamodel bits that describe various
+   schema aspects.
+
 EdgeQL keeps a records of all of the classes declared in the *schema*.
 It is possible to access these via ``__class__`` attribute of any
 object. It is also possible to access them directly via the built-in

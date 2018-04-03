@@ -1,4 +1,4 @@
-.. _ref_edgeql_cheatsheet:
+.. _ref_eql_cheatsheet:
 
 
 Syntax Cheat Sheet

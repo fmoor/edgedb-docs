@@ -1,4 +1,4 @@
-.. _ref_edgeql_functions_setagg:
+.. _ref_eql_functions_setagg:
 
 
 Aggregates

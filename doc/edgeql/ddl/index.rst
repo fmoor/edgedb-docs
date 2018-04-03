@@ -1,4 +1,4 @@
-.. _ref_edgeql_ddl:
+.. _ref_eql_ddl:
 
 
 DDL

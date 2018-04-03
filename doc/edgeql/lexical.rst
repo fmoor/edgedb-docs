@@ -1,14 +1,21 @@
-.. _ref_edgeql_lexical:
+.. _ref_eql_lexical:
 
 
 Lexical Structure
 =================
 
-EdgeQL is a declarative language and a large part of its expressive
-power lies in the structures that describe the data. It is white space
-insensitive, using ``;`` as a statement terminator. It is case
-sensitive except for *keywords* (in the examples the keywords are
-written in upper case as a matter of convention).
+Every EdgeQL command is composed of a sequence of *tokens*, terminated by
+a semicolon (``;``).  The types of valid tokens as well as their order
+is determined by the syntax of the particular command.
+
+EdgeQL is case sensistive except for *keywords* (in the examples the
+keywords are written in upper case as a matter of convention).
+
+There are several kinds of tokens: *keywords*, *identifiers*,
+*literals* (constants) and *symbols* (operators and punctuation).
+
+Tokens are normally separated by whitespace (space, tab, newline) or
+comments.
 
 
 Identifiers
@@ -19,7 +26,7 @@ The plain identifiers are similar to many other languages, they are
 alphanumeric with underscores and cannot start with a digit. The
 quoted identifiers start and end with a *backtick*
 ```quoted.identifier``` and can contain any characters inside, but
-must not start with an "@".
+must not start with an ampersand (``@``).
 
 .. productionlist:: edgeql
     identifier: `plain_ident` | `quoted_ident`
@@ -31,8 +38,8 @@ must not start with an "@".
     qident_rest: <any character>
 
 Quoted identifiers usually needed to represent module names that
-contain "." or to distinguish *names* from *keywords* (for instance to
-allow referring to a link named "order" as ```order```).
+contain a dot (``.``) or to distinguish *names* from *reserved keywords*
+(for instance to allow referring to a link named "order" as ```order```).
 
 
 Names and keywords
@@ -88,3 +95,29 @@ paths and shapes).
     name: `short_name` | `fq_name`
     fq_name: `short_name` "::" `short_name` |
            : `short_name` "::" `unreserved_keyword`
+
+
+.. _ref_eql_lexical_const:
+
+Constants
+---------
+
+.. TODO
+
+
+Operators
+---------
+
+.. TODO
+
+
+Punctuation
+-----------
+
+.. TODO
+
+
+Comments
+--------
+
+.. TODO

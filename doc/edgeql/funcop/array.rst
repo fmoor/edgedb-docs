@@ -1,4 +1,4 @@
-.. _ref_edgeql_functions_array:
+.. _ref_eql_functions_array:
 
 
 Array

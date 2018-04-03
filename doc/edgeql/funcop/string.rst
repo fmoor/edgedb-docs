@@ -1,4 +1,4 @@
-.. _ref_edgeql_functions_string:
+.. _ref_eql_functions_string:
 
 
 String

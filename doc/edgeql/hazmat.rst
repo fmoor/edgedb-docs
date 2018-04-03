@@ -1,4 +1,4 @@
-.. _ref_edgeql_hazmat:
+.. _ref_eql_hazmat:
 
 
 Mistakes and misconceptions

@@ -11,11 +11,11 @@ Welcome to the EdgeDB |version| documentation.
 .. !!! DO NOT CHANGE :maxdepth: egdedb.com/docs depends on it !!!
 .. toctree::
     :maxdepth: 5
+    :includehidden:
 
-    datamodel/overview
-    schema/architecture
-    schema/evolution
+    intro
+    tutorial/basic
+    datamodel/index
     edgeql/index
     graphql/index
-    tutorial/basic
     dev/index

@@ -1,5 +1,5 @@
-Sample application
-==================
+Tutorial
+========
 
 This tutorial covers the setup and a few use case for an issue
 management platform.
