@@ -1,4 +1,4 @@
-.. _ref_edgeql_expressions:
+.. _ref_edgeql_operators:
 
 
 Operators

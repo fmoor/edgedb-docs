@@ -12,10 +12,13 @@ Welcome to the EdgeDB |version| documentation.
 .. toctree::
     :maxdepth: 5
 
+    tutorial/basic
     datamodel/overview
+    datamodel/types
+    datamodel/constraints
+    datamodel/views
+    edgeql/index
     schema/architecture
     schema/evolution
-    edgeql/index
     graphql/index
-    tutorial/basic
     dev/index

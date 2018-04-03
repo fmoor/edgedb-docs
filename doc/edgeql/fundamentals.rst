@@ -4,117 +4,54 @@
 Fundamentals
 ============
 
-EdgeQL is the query language used to work with EdgeDB and it has been
-designed to work with objects, their properties and relations. It is a
-declarative functional statically typed language. Conceptually every
-query can be broken down into a composition of several functions
-taking some subset of the whole data as input and producing another
-set of data. The various expressions and clauses correspond to
-specific functions in this composition. EdgeQL is structured
-syntactically in blocks called clauses. The first clause takes
-original data as input and every subsequent clause takes the output of
-the previous clause as its input. In this way it is fairly easy to
-keep track of what a given query is trying to express by following
-along this sequence of transformations.
+EdgeQL is the primary language used to interact with EdgeDB, and
+can be used to define, mutate and query data.  EdgeQL is superficially
+similar to *SQL*: the input consists of a sequence of *commands*, and
+the database returns a specific response to each command in sequence.
 
-Data
-----
-
-The data in EdgeDB forms a directed labeled graph. The nodes contain
-the data, while the edges represent links. The schema is a formal
-description of all of the legal data types and link types.
-
-.. insert sample schema and data graph here
-
-.. _ref_edgeql_fundamentals_paths:
-
-Paths
-+++++
-
-Consider a path through the data graph. The path effectively
-represents a mapping of the starting node onto the target node. An
-EdgeQL `path expression` represents a set of such paths. For example,
-``Issue.owner`` is a path expression that represents a set of paths
-that start at all of the ``Issue`` nodes and follow the edges from the
-``owner`` set. Path expressions typically start with a `concept` (e.g.
-``Issue``) defining a set of starting nodes. Then a ``.``-separated
-sequence of links that are legally reachable according to the schema
-determines the sequence of edges that must be followed (e.g.
-``Issue.owner`` and ``Issue.owner.email`` are legal path expressions,
-but ``Issue.email`` is not). Path expressions themselves represent a
-valid set of nodes (the end-nodes of all the paths in the data graph).
-So Path expressions evaluate to the collection of values contained in
-the set of target nodes. Note that every path is the set denoted by
-the path expression **must** include every edge specified by the
-links, no partial paths are allowed.
-
-In EdgeQL we use path expressions to represent the set of target nodes
-(we also treat ``Issue`` as a trivial 0-edge path where the target set
-is the same as the starting set). Every path expression is a set
-function that maps a set of nodes onto another set of nodes reachable
-via graph edges.
-
-.. note::
-
-    For brevity, this documentation refers to a `path expression` as
-    simply a `path` everywhere else. In the rare instances when
-    disambiguation is needed, *data graph path* and *path expression*
-    is used explicitly.
-
-    Similarly, the `value` of a `path` is intended to mean the
-    collection of values of the set of target nodes.
-
-    The first element of a `path` is often called its `root`.
-
-.. _ref_edgeql_fundamentals_same:
-
-There's also a basic principle in EdgeQL that *the same symbol refers
-to the same thing* (in absence ``DETACHED`` keyword). This is fairly
-intuitive for simple expressions involving paths with a common prefix
-(shared symbol) such as:
+For example, the following EdgeQL ``SELECT`` command would return a
+set of all `User` objects with the value of the ``name`` link equal to
+``"Jonh"``.
 
 .. code-block:: eql
 
-    WITH MODULE example
-    SELECT (User.first_name, User.last_name);
+    SELECT User FILTER User.name = 'John';
 
-The query, in fact, does select a set of tuples containing first and
-last names of each user. The path prefix ``User`` refers to the same
-entity in both parts of the expression. Typically this property makes
-it easier to write concise queries without having to worry about
-accidentally introducing a cross-product from all possible
-combinations.
 
-For a complete description of paths refer to
-:ref:`this section<ref_edgeql_fundamentals_path>`.
+.. _ref_edgeql_fundamentals_set:
 
-Shapes
-++++++
+Everything is a set
+-------------------
 
-Shapes are a way to specify entire sets of trees in the data graph.
-The first element of the shape is the `root` of the tree. The nested
-structure consists of various legally reachable links.
+EdgeDB is fundamentally working with sets. Which means that there can
+be no duplicate results. The *identity* of an object is determined by
+its ``id``. For practical reasons there's a caveat for atomic values,
+whose identity is defined as being *always* unique (essentially every
+instance of the atomic value is a different unique entity as far as
+sets are concerned). Please see the chapter on
+:ref:`set operators<ref_edgeql_expressions_setops>` for more
+examples and details.
 
-.. code-block:: eql
+All sets must also be homogeneous, i.e. all members of a set have to
+be of the same basic :ref:`type<ref_edgeql_types>`. Thus all sets are
+either composed of *objects*, *atomic values*, *arrays*, *maps*, or
+:eql:type:`tuples <tuple>`. It's worth noting that mixing objects
+representing different
+:ref:`concepts<ref_schema_architechture_concepts>` is fine
+since they are all derived from the same base ``Object``.
 
-    WITH MODULE example
-    SELECT
-        # everything below is a shape
-        Issue {  # root
-            number,
-            owner: {  # sub-shape
-                name,
-                email
-            }
-        };
+For more details see :ref:`how expressions work<ref_edgeql_expressions>`.
 
-One big difference between shapes and path expressions is that any
-non-root shape element is optional. This means that every tree denoted
-by a shape must start at the shape's root and be the largest reachable
-tree given the hierarchy of links in the shape.
 
-For a complete description of shapes refer to
-:ref:`this section<ref_edgeql_shapes>`.
+There is no NULL
+----------------
+
+Traditional relational databases deal with tables and use ``NULL`` as
+a value denoting absence of data. Thus ``NULL`` is a special *value*
+in those databases. EdgeDB works with *sets*, so when a
+link/relationship is missing, there is no actual value associated with
+it, instead it's just an empty set.
+
 
 
 .. _ref_edgeql_fundamentals_multisets:
