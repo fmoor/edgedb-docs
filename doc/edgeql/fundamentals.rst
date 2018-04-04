@@ -5,9 +5,9 @@ Fundamentals
 ============
 
 EdgeQL is the primary language used to interact with EdgeDB, and
-can be used to define, mutate and query data.  EdgeQL is superficially
-similar to *SQL*: the input consists of a sequence of *commands*, and
-the database returns a specific response to each command in sequence.
+can be used to define, mutate and query data.  EdgeQL input consists
+of a sequence of *commands*, and the database returns a specific response
+to each command in sequence.
 
 For example, the following EdgeQL ``SELECT`` command would return a
 set of all `User` objects with the value of the ``name`` link equal to
@@ -18,93 +18,138 @@ set of all `User` objects with the value of the ``name`` link equal to
     SELECT User FILTER User.name = 'John';
 
 
+.. _ref_edgeql_fundamentals_type_system:
+
+Type system
+-----------
+
+EdgeQL is a strongly typed language.  Every value in EdgeQL has a type,
+which is determined statically from the database schema and the expression
+that defines that value.
+
+
 .. _ref_edgeql_fundamentals_set:
 
 Everything is a set
 -------------------
 
-EdgeDB is fundamentally working with sets. Which means that there can
-be no duplicate results. The *identity* of an object is determined by
-its ``id``. For practical reasons there's a caveat for atomic values,
-whose identity is defined as being *always* unique (essentially every
-instance of the atomic value is a different unique entity as far as
-sets are concerned). Please see the chapter on
-:ref:`set operators<ref_edgeql_expressions_setops>` for more
-examples and details.
-
-All sets must also be homogeneous, i.e. all members of a set have to
-be of the same basic :ref:`type<ref_edgeql_types>`. Thus all sets are
-either composed of *objects*, *atomic values*, *arrays*, *maps*, or
-:eql:type:`tuples <tuple>`. It's worth noting that mixing objects
-representing different
-:ref:`concepts<ref_schema_architechture_concepts>` is fine
-since they are all derived from the same base ``Object``.
-
-For more details see :ref:`how expressions work<ref_edgeql_expressions>`.
-
-
-There is no NULL
-----------------
-
-Traditional relational databases deal with tables and use ``NULL`` as
-a value denoting absence of data. Thus ``NULL`` is a special *value*
-in those databases. EdgeDB works with *sets*, so when a
-link/relationship is missing, there is no actual value associated with
-it, instead it's just an empty set.
-
-
-
-.. _ref_edgeql_fundamentals_multisets:
-
-Multisets
-+++++++++
-
-Every EdgeQL expression evaluates to a non-nested `multiset` (a set
-that allows duplicate elements) of some data. However, it's worth
-nothing that some of the basic building blocks always produce `sets`
-(i.e. they guarantee that there are no duplicate elements).
-Specifically paths that end with a link which is pointing to a
-`concept` (e.g. ``Issue.owner``) always produce sets of unique
-objects. This is due to 2 properties of EdgeDB:
-
-1) No two data graph nodes contain the same `object`.
-
-2) The value of a path is given by the collection of the values within
-   the `set` of target data graph nodes.
-
-So because a path expression denotes a set of unique data graph nodes,
-it follows that it also evaluates to a unique set of `objects` from
-those nodes.
-
-This is not true for a path targeting an `atom` (or any non-concept).
-Multiple graph nodes are allowed to contain the same atomic value. So
-a path like ``Issue.time_estimate`` could evaluate to a `multiset`
-with duplicates.
+Every value in EdgeQL is viewed as a set of elements.
+A set may be empty (*empty set*), contain a single element (a *singleton*),
+or contain multiple elements.
 
 .. note::
+    :class: aside
 
-    For the sake of brevity, this documentation uses the word `sets`
-    when referring to expression values. It is to be understood that
-    in the general case this implies a `multiset` instead. When a
-    disambiguation is necessary the uniqueness of elements is
-    explicitly addressed.
+    Strictly speaking, EdgeQL sets are *multisets*, as they do not require
+    the elements to be unique.
+
+A set cannot contain elements of different base types.  Mixing objects and
+primitive types, as well as primitive types with different base type, is
+not allowed.
+
+Traditional relational databases deal with tables and use ``NULL`` as
+a value denoting absence of data.  EdgeDB works with *sets*, so the absence of
+data is just an empty set.
 
 
-.. _ref_edgeql_fundamentals_function:
+.. _ref_edgeql_fundamentals_references:
 
-Functions
----------
+Set references and paths
+------------------------
 
-EdgeQL is a functional language in the sense that every query
-expression can be represented as a composition of set functions. So
-every clause and operator in EdgeQL are conceptually equivalent to
-some set function. User-defined functions also follow the same base
-principles.
+A *set reference* is a *name* (a simple identifier or a qualified schema name)
+that represents a set of values.  It can be the name of an object type, the
+name of a view, or an *expression alias* defined in a statement.
 
-A set function takes zero or more sets as input and produces a set as
-output. For simplicity, consider a set function with only one input
-parameter. Any given input set can be handled by the function in one
-of the following ways:
+For example a reference to the ``User`` object type in the following
+query will result in a set of all ``User`` objects:
+
+.. code-block:: eql
+
+    SELECT User;
+
+Note, that unlike SQL no explicit ``FROM`` clause is needed.
+
+A *path expression* (or simply a *path*) represents a set of values that
+are reachable from a given set of nodes via a specific path in the data graph.
+For example, the following will result in a set of all names of ``Users`` who
+are friends with some other user:
+
+.. code-block:: eql
+
+    SELECT User.friends.name;
+
+See :ref:`ref_edgeql_expressions_paths` for more information.
+
+
+.. _ref_edgeql_fundamentals_functional:
+
+EdgeQL is functional
+--------------------
+
+EdgeQL is a functional language in the sense that every
+expression can be represented as a composition of functions.
+
+Consider a query:
+
+.. code-block:: eql
+
+    SELECT User
+    FILTER User.age > 20
+    ORDER BY User.name
+
+EdgeDB will evaluate this query as the following hypothetical functional
+expression:
+
+::
+
+    order(
+        filter(
+            select_all(type = 'User'),
+            predicate = function(u) => greater(u.age, 20)
+        ),
+        key = function(u) => u.name
+    )
+
+Notably, every EdgeQL statement can be interpreted as a pipeline: subsequent
+clauses use the result of the preceding clause as input.
+See :ref:`ref_edgeql_statements` for more information on how statements
+and clauses are interpreted.
+
+For simplicity, a reference to a *function* in this section means any
+EdgeQL operator, clause or an actual function.
+
+There are two main ways a function consumes an argument:
+element-wise or as a whole.  The way is determined by how the parameter
+declaration.
+
+Element-wise computation algorithm:
+
+1. Make a cartesian product of all element-wise arguments
+2. Call the function repeatedly on each tuple of the product
+3. Form the output set by concatenating the result of each
+   function invocation.
+
+.. code-block:: pseudo eql
+
+    db> WITH A := {1, 2}, B := {3, 4}
+    ... SELECT A * B;
+    3
+    4
+    6
+    8
+
+
+
+::
+    union(
+        product(select_all('A'), select_all('B')),
+        function(a, b) => a * b
+    )
+
+means that the function is called repeatedly
+for every tuple in the cartesian product
+
 
 - Element-wise.
 
@@ -157,8 +202,8 @@ of the following ways:
 
 - Set as a whole.
 
-  The output set is somehow dependent on the entire input set and
-  cannot be produced by merging outputs in an element-wise fashion.
+  The output set is dependent on the entire input set and cannot be
+  produced by merging outputs in an element-wise fashion.
   This is typical of aggregate functions, such as :eql:func:`sum` or
   :eql:func:`count`.
 

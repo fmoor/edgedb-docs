@@ -34,6 +34,7 @@ A set reference is an *name* (a simple identifier or a qualified schema name)
 that represents a set of values.  It can be the name of an object type, the
 name of a view, or an *alias* defined in a statement.
 
+.. _ref_edgeql_expressions_paths:
 
 Paths
 -----
@@ -185,10 +186,42 @@ Set constructor
 .. TODO
 
 
+.. _ref_edgeql_expressions_tuple_constructor:
+
 Tuple constructor
 -----------------
 
 .. TODO
+
+Creating collections syntactically (e.g. using ``[...]`` or ``(...)``)
+is an element-wise operation. One way of thinking about these syntax
+constructs is to treat them exactly like functions that simply turn
+their arguments into a set of collections.
+
+This means that the following code will create a set of tuples with
+the first element being ``Issue`` and the second a :eql:type:`str`
+representing the ``Issue.priority.name``:
+
+.. code-block:: eql
+
+    WITH MODULE example
+    SELECT (Issue, Issue.priority.name);
+
+Since ``priority`` is not a required link, not every ``Issue`` will
+have one. It is important to realize that the above query will *only*
+contain Issues with non-empty priorities. If it is desirable to have
+*all* Issues, then coalescing (:eql:op:`??<COALESCE>`) or a
+:ref:`shape<ref_edgeql_shapes>` query should be used instead.
+
+On the other hand the following query will include *all* Issues,
+because the tuple elements are made from the set of Issues and the set
+produced by the aggregate function :eql:func:`array_agg`, which is
+never ``{}``:
+
+.. code-block:: eql
+
+    WITH MODULE example
+    SELECT (Issue, array_agg(Issue.priority.name));
 
 
 Tuple element reference
@@ -207,6 +240,21 @@ Subscripts
 ----------
 
 .. TODO
+
+
+Statements
+----------
+
+Any ``SELECT`` or ``FOR`` statement, and, with some restrictions, ``INSERT``,
+``UPDATE`` or ``DELETE`` statements may be used as expressions.  Parentheses
+are required around the statement to disambiguate:
+
+.. code-block:: eql
+
+    1 + (SELECT len(User.name))
+
+For more information about statements refer to
+:ref:`this section <ref_edgeql_statements>`.
 
 
 Expression evaluation rules

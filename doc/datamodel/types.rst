@@ -3,29 +3,56 @@
 Types
 =====
 
-EdgeDB types are divided into 3 groups: scalar types, object types and
-collection types. Object types and collection types represent
-different ways of structurally composing other types. Scalar types are
-the most basic building blocks.
-
-* `Scalar types`_
-
-    The most basic types.
+There are two main categories of types in EdgeDB: *object types* and
+*primitive types*.  Primitive types are further subdivided into
+*scalar types* and *collection types*.
 
 * `Object types`_
 
-    Object types are used to semantically group data.
+    A collection of links to other types.
+
+* `Scalar types`_
+
+    Individual basic types such as :eql:type:`int32` and :eql:type:`str`.
 
 * `Collection types`_
 
-    Collection types are used to package data based on usage. There
-    are 4 kinds of collection types: :eql:type:`array`,
-    :eql:type:`map`, :eql:type:`tuple`, and :eql:type:`json`.
+    There are 3 kinds of collection types built into EdgeDB:
+    :eql:type:`array`, :eql:type:`map`, and :eql:type:`tuple`.
 
 * Meta-types_
 
     :eql:type:`SET-OF`, :eql:type:`OPTIONAL`, and :eql:type:`any`
     type annotations used for function signatures.
+
+
+Object types
+------------
+
+.. eql:type:: std::Object
+
+    Base type which every object type implicitly extends.
+
+    Object types represent relationships between types. They use
+    ``links`` to semantically group other data types.
+
+    For example:
+
+    .. code-block:: eschema
+
+        concept User:
+            required link name to str
+            link email to str
+
+    The above example defines an object type ``User``. This type has
+    two links: ``name`` and ``email``. Both of the links are
+    :eql:type:`strings<str>`. Link ``name`` is *required*, whereas
+    ``email`` is *optional*.
+
+    Object types make up the core of EdgeDB. Various queries allow to
+    retrieve the data stored in EdgeDB by exploring the relationships
+    defined as object types. Collectively the object types define the
+    semantic structure of the data in EdgeDB.
 
 
 Scalar types
@@ -112,274 +139,100 @@ known as *scalars*.
 
     Auto-incrementing sequence of :eql:type:`int64`.
 
+.. eql:type:: std::json
 
-Object types
-------------
-
-.. eql:type:: std::Object
-
-    Base type which every object type implicitly extends.
-
-    Object types represent relationships between types. They use
-    ``links`` to semantically group other data types.
-
-    For example:
-
-    .. code-block:: eschema
-
-        concept User:
-            required link name to str
-            link email to str
-
-    The above example defines an object type ``User``. This type has
-    two links: ``name`` and ``email``. Both of the links are
-    :eql:type:`strings<str>`. Link ``name`` is *required*, whereas
-    ``email`` is *optional*.
-
-    Object types make up the core of EdgeDB. Various queries allow to
-    retrieve the data stored in EdgeDB by exploring the relationships
-    defined as object types. Collectively the object types define the
-    semantic structure of the data in EdgeDB.
+    Arbitrary JSON data.
 
 
 Collection types
 ----------------
 
-Collection types represent various ways of packaging data. Typically
-they do not represent any semantic relationship, but rather are used
-for structural grouping. Often collection types are used to package
-data in a certain way for serializing.
-
-Creating collections syntactically (e.g. using ``[...]`` or ``(...)``)
-is an element-wise operation. One way of thinking about these syntax
-constructs is to treat them exactly like functions that simply turn
-their arguments into a set of collections.
-
-This means that the following code will create a set of tuples with
-the first element being ``Issue`` and the second a :eql:type:`str`
-representing the ``Issue.priority.name``:
-
-.. code-block:: eql
-
-    WITH MODULE example
-    SELECT (Issue, Issue.priority.name);
-
-Since ``priority`` is not a required link, not every ``Issue`` will
-have one. It is important to realize that the above query will *only*
-contain Issues with non-empty priorities. If it is desirable to have
-*all* Issues, then coalescing (:eql:op:`??<COALESCE>`) or a
-:ref:`shape<ref_edgeql_shapes>` query should be used instead.
-
-On the other hand the following query will include *all* Issues,
-because the tuple elements are made from the set of Issues and the set
-produced by the aggregate function :eql:func:`array_agg`, which is
-never ``{}``:
-
-.. code-block:: eql
-
-    WITH MODULE example
-    SELECT (Issue, array_agg(Issue.priority.name));
-
-
-.. eql:type:: std::array
-
-    Arrays are homogeneous ordered collections.
-
-    Array indexing starts at 0.
-
-    At the moment only one-dimensional arrays are supported in EdgeDB.
-
-    Array declaration must include the type of the elements. For
-    example: :eql:type:`array\<int64\>`, :eql:type:`array\<User\>`, etc.
-
-    Arrays support indexing and slicing operators:
-
-    .. code-block:: eql
-
-        SELECT [1, 2, 3];
-        # this will return [[1, 2, 3]]
-
-        WITH
-            # define an array for testing
-            arr := [1, 2, 3]
-        SELECT
-            # select the element at index 1
-            arr[1];
-        # this will return [2]
-
-        WITH
-            # define an array for testing
-            arr := [1, 2, 3]
-        SELECT
-            # select the slice from
-            # 1 (inclusive) to 3 (exclusive)
-            arr[1:3];
-        # this will return [2, 3]
-
-    Another way of creating an array is to use :eql:func:`array_agg`
-    built-in, which converts a set into an array. If the ordering is
-    important the ``ORDER`` clause must be specified for the set,
-    otherwise no specific ordering guarantee can be made for the
-    :eql:func:`array_agg` aggregate function:
-
-    .. code-block:: eql
-
-        WITH MODULE example
-        SELECT array_agg(
-            (SELECT User ORDER BY User.name)
-        );
-
-
-.. eql:type:: std::map
-
-    Maps are indexed homogeneous collections.
-
-    Map declaration must include the types of keys and values. For
-    example: :eql:type:`map\<int, str\>`, :eql:type:`map\<str, User\>`, etc.
-
-    Maps are indexed homogeneous collections, where the indexes are
-    arbitrary but must be all of the same type.  Values don't have to
-    be the same type as indexes, but they must still be the same type
-    as each other.
-
-    No specific ordering of a map is assumed or guaranteed, thus
-    slicing operators are not available for them.
-
-    Examples of map usage:
-
-    .. code-block:: eql
-
-        SELECT ['a' -> 1, 'b' -> 2, 'c' -> 3];
-        # this will return [{'a': 1, 'b': 2, 'c': 3}]
-
-        WITH
-            # define a map for testing
-            map := ['a' -> 1, 'b' -> 2, 'c' -> 3]
-        SELECT
-            # select the element at index 'b'
-            map['b'];
-        # this will return [2]
+Collection types are special generic types used to group homogeneous or
+heterogeneous data.
 
 
 .. eql:type:: std::tuple
 
-    Tuples are ordered heterogeneous collections.
+    A tuple type is a heterogeneous sequence of other types.
 
-    Their components are ordered and can be of any type. Two tuples
-    are equal if all of their components are equal and in the same
-    order.
+    Tuple elements can optionally have names,
+    in which case the tuple is called a *named tuple*.
 
-    Tuple type declaration must include the types of their components.
-    For example: :eql:type:`tuple\<int, int\>`,
-    :eql:type:`tuple\<int, int, str\>`, :eql:type:`tuple\<str, User\>`,
-    :eql:type:`tuple\<bool, tuple\<User, int\>\>`, etc.
+    A tuple type can be explicitly declared in an expression or schema
+    declaration using the following syntax:
 
-    Examples of map usage:
+    .. code-block:: pseudo-eql
 
-    .. code-block:: eql
+        tuple<[element_type, ...]>
+
+    A named tuple:
+
+    .. code-block:: pseudo-eql
+
+        tuple<element_name := element_type [, ... ]>
+
+    Any type can be used as a tuple element type.
+
+    A tuple type is created implicitly when a
+    :ref:`tuple constructor <ref_edgeql_expressions_tuple_constructor>` is
+    used:
+
+    .. code-block:: pseudo-eql
 
         # a simple 2-tuple made of a str and int
-        SELECT ('foo', 42);
+        db> SELECT ('foo', 42).__type__;
+        std::tuple<std::str, std::int64>
 
-        WITH
-            # define a tuple for testing
-            tup := ('foo', 42)
-        SELECT
-            # select the first element of the tuple
-            tup.0;
-        # returns ['foo']
+    Two tuples are equal if all of their elements are equal and in the same
+    order.  Note that element names in named tuples are not significant for
+    comparison:
 
-        WITH
-            tup := ('foo', 42)
-        SELECT
-            # create a new 2-tuple reversing the elements
-            (tup.1, tup.0);
-        # returns [[42, 'foo']]
+    .. code-block:: pseudo-eql
 
-        WITH
-            tup := ('foo', 42)
-        SELECT
-            # compare 2 tuples
-            tup = ('foo', 42);
-        # returns [True]
+        db> SELECT (1, 2, 3) = (a := 1, b := 2, c := 3);
+        True
 
 
-    Tuple elements can be *named*, however names do not affect
-    the ordering of elements within the tuple in any way.
+.. eql:type:: std::array
 
-    The names are used for convenience making it easier to refer
-    to different elements as well as in tuple serialization.
+    Arrays represent a one-dimensional homogeneous ordered list.
 
-    Only valid identifiers can be used to name tuple elements.
+    Array indexing starts at 0.
 
-    .. code-block:: eql
+    A tuple type can be explicitly declared in an expression or schema
+    declaration using the following syntax:
 
-        # a simple named 2-tuple made of a str and int
-        SELECT (a := 'foo', b := 42);
+    .. code-block:: pseudo-eql
 
-        WITH
-            # define a tuple for testing
-            tup := (a := 'foo', b := 42)
-        SELECT
-            # select the element of the tuple denoted by 'a'
-            tup.a;
-        # returns ['foo']
+        array<element_type>
 
-        WITH
-            tup := (a := 'foo', b := 42)
-        SELECT
-            # compare 2 tuples
-            tup = ('foo', 42);
-        # returns [True]
+    With the exception of other array types, any type can be used as an
+    array element type.
 
-        WITH
-            tup := (a := 'foo', b := 42)
-        SELECT
-            # compare 2 tuples
-            tup = (b := 42, a := 'foo');
-        # returns [False] because the ordering of
-        # the tuple elements is different
+    An array type is created implicitly when an
+    :ref:`array constructor <ref_edgeql_expressions_array_constructor>` is
+    used:
 
-        WITH
-            tup1 := (a := 'foo', b := 42),
-            tup2 := (b := 42, a := 'foo')
-        SELECT
-            # compare tuple elements
-            (tup1.a = tup2.a, tup1.b = tup1.b);
-        # returns [[True, True]]
+    .. code-block:: pseudo-eql
 
-    It is possible to nest other collection types and tuples within
-    each other:
-
-    .. code-block:: eql
-
-        # array of 3-tuples
-        SELECT [
-            # where each tuple has:
-            (
-                # str,
-                'foo',
-                # array of int,
-                [1, 2],
-                # tuple (int, int) as elements
-                (3, 5),
-            ),
-            (
-                'bar',
-                [100, 200, 9001],
-                (-2, 4),
-            ),
-        ];
+        db> SELECT [1, 2].__type__;
+        std::array<std::int64>
 
 
-.. eql:type:: std::json
+.. eql:type:: std::map
 
-    JSON (JavaScript Object Notation) data.
+    Maps are homogeneous key-value types.
 
-    JSON type allows storing structured, but unvalidated data. Unlike
-    other collection types this type does not require declaring the
-    internal structure. As such, no specific guaranteed about JSON data
-    can be given.
+    A map type can be explicitly declared in an expression or schema
+    declaration using the following syntax:
+
+    .. code-block:: pseudo-eql
+
+        map<key_type, element_type>
+
+    Any type can be used as a map key type or a map element type.
+
+    No specific ordering of a map is assumed or guaranteed.
 
 
 Meta-types
