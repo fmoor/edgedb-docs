@@ -1,20 +1,15 @@
-.. _ref_edgeql_index:
-
-
-======
 EdgeQL
 ======
 
 
 .. toctree::
     :maxdepth: 3
+    :hidden:
 
-    fundamentals
-    cheatsheet
+    overview
     statements
-    operators
     types
-    functions/index
+    funcop/index
     scope
     ddl
     introspection

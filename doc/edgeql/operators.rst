@@ -4,6 +4,24 @@
 Operators
 =========
 
+There are *binary infix* and *unary prefix* operators in EdgeQL.
+
+Binary infix operator syntax:
+
+.. code-block:: pseudo-eql
+
+    expression operator expression
+
+Unary prefix operator syntax:
+
+.. code-block:: pseudo-eql
+
+    operator expression
+
+For a complete reference of EdgeQL operators refer to
+:ref:`this section <ref_edgeql_operators>`.
+
+
 Expressions allow to manipulate, query, and modify data in EdgeQL.
 Operators are used to build expressions out of the basic component
 parts: literals, :ref:`paths<ref_edgeql_fundamentals_paths>`,

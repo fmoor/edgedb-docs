@@ -4,6 +4,21 @@
 Polymorphic
 ===========
 
+.. eql:type:: any
+
+    Generic type
+
+
+.. eql:type:: OPTIONAL
+
+    Optional parameter keyword
+
+
+.. eql:type:: SET-OF
+
+    Whole-set parameter keyword
+
+
 .. eql:function:: std::len(any) -> int64
 
     :param $0: input

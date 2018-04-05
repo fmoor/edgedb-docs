@@ -1,8 +1,27 @@
 .. _ref_edgeql_functions:
 
 
-Functions
-=========
+Functions and operators
+=======================
+
+The syntax for a function call is as follows:
+
+.. code-block:: pseudo-eql
+
+    function_name ([argument [, argument ...]])
+
+Here *function_name* is a possibly qualified name of a function, and
+*argument* is an *expression* optionally prefixed with an argument name
+and a turnstile (``:=``).
+
+For example, the following computes the length of a string ``'foo'``:
+
+.. code-block:: eql
+
+    len('foo')
+
+For more information on functions refer to
+:ref:`this section <ref_edgeql_functions>`.
 
 Many built-in and user-defined functions operate on elements,
 so they are element-wise operations. This implies that if any of the
@@ -30,6 +49,7 @@ singletons. Examples of aggregate functions include built-ins such as
 
 .. toctree::
     :maxdepth: 3
+    :hidden:
 
     array
     datetime
