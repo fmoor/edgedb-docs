@@ -1,3 +1,7 @@
+:orphan:
+
+.. _ref_eql_expr_shapes:
+
 Shapes
 ======
 
@@ -57,7 +61,7 @@ tree of objects with a single ``INSERT`` statement.
 The above query inserts a new ``Issue`` object, and creates and links a new
 ``Comment`` object to it.
 
-See :ref:`ref_edgeql_statements_insert` for more information on the use of
+See :ref:`ref_eql_statements_insert` for more information on the use of
 shapes in ``INSERT`` statements.
 
 
@@ -97,7 +101,7 @@ the ``name`` and the ``email`` for that user.
 
 .. TODO: old content below, rework and incorporate more examples.
 
-.. _ref_edgeql_shapes:
+.. _ref_eql_shapes:
 
 Shapes
 ------
@@ -132,7 +136,7 @@ information about how many issues they have:
     };
 
 Similarly, we can add a filter based on the number of issues that a
-user has by referring to the :ref:`computable<ref_edgeql_computables>`
+user has by referring to the :ref:`computable<ref_eql_computables>`
 defined by the shape:
 
 .. code-block:: eql
@@ -142,7 +146,7 @@ defined by the shape:
         issues := count(User.<owner[IS Issue])
     } FILTER User.issues > 5;
 
-In order to refer to :ref:`computables<ref_edgeql_computables>` a
+In order to refer to :ref:`computables<ref_eql_computables>` a
 shape must be in the same lexical statement as the expression
 referring to it.
 
@@ -171,7 +175,7 @@ referring to it.
 Using shapes
 ------------
 
-:ref:`Shapes<ref_edgeql_shapes>` are the way of specifying structured
+:ref:`Shapes<ref_eql_shapes>` are the way of specifying structured
 object data. They are used to get a set of `objects` and their
 relationships in a structured way. Shape specification can be added to
 any expression that denotes an object. Fundamentally, a shape
@@ -257,7 +261,7 @@ some issues the names and bodies of these issues should be included in
 the returned value. The query effectively says 'please return the set
 of *all* users and provide this specific information for each of them
 if available'. This is one of the important differences between
-`shape` specification and a :ref:`path<ref_edgeql_fundamentals_path>`.
+`shape` specification and a :ref:`path <ref_eql_expr_paths>`.
 
 Shape annotation is preserved only by operations that preserve the
 type (rather than specify a type or the result explicitly). In general

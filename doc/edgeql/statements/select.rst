@@ -1,4 +1,4 @@
-.. _ref_edgeql_statements_select:
+.. _ref_eql_statements_select:
 
 Select
 ======

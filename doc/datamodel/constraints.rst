@@ -1,4 +1,4 @@
-.. _ref_edgedb_constraints:
+.. _ref_datamodel_constraints:
 
 Constraints
 ===========

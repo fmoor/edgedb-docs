@@ -7,11 +7,12 @@ EdgeQL
     :hidden:
 
     overview
-    statements
-    types
+    expressions/index
+    statements/index
     funcop/index
-    scope
-    ddl
+    ddl/index
     introspection
     lexical
     hazmat
+    cheatsheet
+    scope

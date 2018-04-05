@@ -1,4 +1,4 @@
-.. _ref_edgeql_architecture:
+.. _ref_eql_architecture:
 
 Schema architecture
 -------------------
@@ -65,7 +65,7 @@ semantics and behaviour. All atoms are usually either directly or
 indirectly derived from one of the predefined fundamental types; it is
 also possible to define custom fundamental types.
 
-Refer to the section on :ref:`Types<ref_edgeql_types>` for the full
+Refer to the section on :ref:`Types<ref_datamodel_scalar_types>` for the full
 list of atoms.
 
 
@@ -293,7 +293,7 @@ primarily describes what attributes, links and properties an object
 has, rather than behavior (there's nothing quite like the notion of
 class methods used in OOP). This means that inheritance only affects
 what something *is* (see
-:ref:`IS operator in EdgeQL<ref_edgeql_types>`) and what attributes,
+:ref:`IS operator in EdgeQL<ref_datamodel_scalar_types>`) and what attributes,
 links and properties an object has. This makes multiple inheritance
 easier to understand and use. In fact, many of the usage patterns for
 multiple inheritance are the same as for *mixins* in OOP.

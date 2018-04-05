@@ -1,3 +1,5 @@
+.. _ref_datamodel_scalars_json:
+
 JSON
 ====
 

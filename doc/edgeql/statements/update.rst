@@ -1,3 +1,5 @@
+.. _ref_eql_statements_update:
+
 Update
 ------
 
@@ -8,20 +10,25 @@ it operated.
 
 The data flow of an ``UPDATE`` block can be conceptualized like this:
 
-.. code-block:: pseudo-eql
+.. eql:statement:: UPDATE
+    :haswith:
 
-    WITH MODULE example
+    ``UPDATE`` -- update objects in a database
 
-    UPDATE
-        <expr>  # compute a set of things
+    .. eql:synopsis::
 
-    # optional clause
-    FILTER
-        <expr>  # filter the computed set
+        [ WITH MODULE module_aliases, expression_aliases ]
 
-    SET
-        <shape> # update objects based on the
-                # computed/filtered set
+        UPDATE
+            <expr>  # compute a set of things
+
+        # optional clause
+        FILTER
+            <expr>  # filter the computed set
+
+        SET
+            <shape> # update objects based on the
+                    # computed/filtered set
 
 Notice that there are no ``ORDER``, ``OFFSET`` or ``LIMIT`` clauses in
 the ``UPDATE`` statement. This is because it is a mutation statement
@@ -49,7 +56,7 @@ Here are a couple of examples of using the ``UPDATE`` statement:
 
 The statement ``FOR <x> IN <expr>`` allows to express certain bulk
 updates more clearly. See
-:ref:`Usage of FOR statement<ref_edgeql_forstatement>` for more details.
+:ref:`Usage of FOR statement<ref_eql_forstatement>` for more details.
 
 
 Clause signatures

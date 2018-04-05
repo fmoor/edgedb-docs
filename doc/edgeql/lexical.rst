@@ -1,4 +1,4 @@
-.. _ref_edgeql_lexical:
+.. _ref_eql_lexical:
 
 
 Lexical Structure
@@ -97,7 +97,7 @@ paths and shapes).
            : `short_name` "::" `unreserved_keyword`
 
 
-.. _ref_edgeql_lexical_const:
+.. _ref_eql_lexical_const:
 
 Constants
 ---------

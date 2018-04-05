@@ -1,4 +1,4 @@
-.. _ref_edgeql_functions_datetime:
+.. _ref_eql_functions_datetime:
 
 
 Date/time

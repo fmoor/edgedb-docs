@@ -1,3 +1,5 @@
+.. _ref_eql_statements_for:
+
 For
 ---
 
@@ -37,9 +39,9 @@ iterate over can be conceptualized like this:
 
 
 Typically a simple iteration over set elements is used in conjunction
-with an Insert_ or an Update_ statement. This mode is less useful with
-a Select_ expression since a ``FILTER`` may accomplish the same end
-result.
+with an :eql:stmt:`INSERT` or an :eql:stmt:`UPDATE` statement. This
+mode is less useful with a :eql:stmt:`SELECT` expression since a
+``FILTER`` may accomplish the same end result.
 
 .. NOTE::
 
@@ -72,7 +74,7 @@ Here is a summary of clauses that can be used with ``FOR``:
 - ``SET OF`` *A* LIMIT ``SET OF`` *B*
 
 
-.. _ref_edgeql_forstatement:
+.. _ref_eql_forstatement:
 
 Usage of FOR statement
 ++++++++++++++++++++++

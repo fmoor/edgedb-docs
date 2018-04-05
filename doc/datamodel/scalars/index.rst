@@ -8,15 +8,18 @@ hold a single value, called a *scalar value*.
 
 The standard EdgeDB scalar types are:
 
-- :ref:`Numeric types <ref_datamodel_scalars_numeric`:
-    * :eql:type:`int16`
-    * :eql:type:`int32`
-    * :eql:type:`int64`
-    * :eql:type:`float32`
-    * :eql:type:`float64`
-    * :eql:type:`numeric`
+- :ref:`Numeric types <ref_datamodel_scalars_numeric>`:
 
-- :ref:`Boolean type <ref_datamodel_scalars_boolean>`
+  * :eql:type:`int16`
+  * :eql:type:`int32`
+  * :eql:type:`int64`
+  * :eql:type:`float32`
+  * :eql:type:`float64`
+  * :eql:type:`numeric`
+
+- :ref:`String type <ref_datamodel_scalars_str>`
+
+- :ref:`Boolean type <ref_datamodel_scalars_bool>`
 
 - :ref:`Date/Time types <ref_datamodel_scalars_datetime>`
 
@@ -25,6 +28,7 @@ The standard EdgeDB scalar types are:
 
 .. toctree::
     :maxdepth: 3
+    :hidden:
 
     numeric
     str

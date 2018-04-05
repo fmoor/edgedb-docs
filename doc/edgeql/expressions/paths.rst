@@ -1,4 +1,6 @@
-.. _ref_edgeql_expressions_paths:
+:orphan:
+
+.. _ref_eql_expr_paths:
 
 Paths
 -----

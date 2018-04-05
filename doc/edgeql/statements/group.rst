@@ -1,4 +1,4 @@
-.. _ref_edgeql_statements_group:
+.. _ref_eql_statements_group:
 
 Group
 -----

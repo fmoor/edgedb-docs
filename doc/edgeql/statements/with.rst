@@ -1,4 +1,4 @@
-.. _ref_edgeql_with:
+.. _ref_eql_with:
 
 With block
 ----------

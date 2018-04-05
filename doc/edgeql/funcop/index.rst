@@ -1,8 +1,11 @@
-.. _ref_edgeql_functions:
+.. _ref_eql_funcop:
 
 
-Functions and operators
+Functions and Operators
 =======================
+
+EdgeDB provides a large number of operato
+
 
 The syntax for a function call is as follows:
 
@@ -20,15 +23,12 @@ For example, the following computes the length of a string ``'foo'``:
 
     len('foo')
 
-For more information on functions refer to
-:ref:`this section <ref_edgeql_functions>`.
-
 Many built-in and user-defined functions operate on elements,
 so they are element-wise operations. This implies that if any of the
 input sets are empty, the result of applying an element function
 is also empty.
 
-.. _ref_edgeql_functions_agg:
+.. _ref_eql_functions_agg:
 
 Aggregate functions are *set functions* mapping arbitrary sets onto
 singletons. Examples of aggregate functions include built-ins such as
@@ -57,3 +57,4 @@ singletons. Examples of aggregate functions include built-ins such as
     random
     setagg
     string
+    operators

@@ -1,3 +1,5 @@
+.. _ref_datamodel_scalars_datetime:
+
 Date/Time Types
 ===============
 

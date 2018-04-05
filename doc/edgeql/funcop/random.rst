@@ -1,4 +1,4 @@
-.. _ref_edgeql_functions_random:
+.. _ref_eql_functions_random:
 
 
 Random/UUID

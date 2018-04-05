@@ -3,7 +3,6 @@
 Collection types
 ================
 
-
 Collection types are special generic types used to group homogeneous or
 heterogeneous data.
 
@@ -31,13 +30,13 @@ heterogeneous data.
     Any type can be used as a tuple element type.
 
     A tuple type is created implicitly when a
-    :ref:`tuple constructor <ref_edgeql_expressions_tuple_constructor>` is
+    :ref:`tuple constructor <ref_eql_expr_tuple_ctor>` is
     used:
 
     .. code-block:: pseudo-eql
 
         # a simple 2-tuple made of a str and int
-        db> SELECT ('foo', 42).__type__;
+        db> SELECT ('foo', 42).__type__.name;
         std::tuple<std::str, std::int64>
 
     Two tuples are equal if all of their elements are equal and in the same
@@ -67,7 +66,7 @@ heterogeneous data.
     array element type.
 
     An array type is created implicitly when an
-    :ref:`array constructor <ref_edgeql_expressions_array_constructor>` is
+    :ref:`array constructor <ref_eql_expr_array_ctor>` is
     used:
 
     .. code-block:: pseudo-eql

@@ -1,42 +1,68 @@
-.. _ref_edgeql_expressions_tuple_constructor:
+:orphan:
 
-Tuple constructor
------------------
+.. _ref_eql_expr_tuple_ctor:
 
-.. TODO
+Tuple Constructor
+=================
 
-Creating collections syntactically (e.g. using ``[...]`` or ``(...)``)
-is an element-wise operation. One way of thinking about these syntax
-constructs is to treat them exactly like functions that simply turn
-their arguments into a set of collections.
+A tuple constructor is an expression that consists of a sequence of
+comma-separated expressions enclosed in parentheses.  It produces a
+tuple value:
 
-This means that the following code will create a set of tuples with
-the first element being ``Issue`` and the second a :eql:type:`str`
-representing the ``Issue.priority.name``:
+.. code-block:: pseudo-eql
 
-.. code-block:: eql
+    ( <expr> [, ... ] )
 
-    WITH MODULE example
-    SELECT (Issue, Issue.priority.name);
+Named tuples are created using the following syntax:
 
-Since ``priority`` is not a required link, not every ``Issue`` will
-have one. It is important to realize that the above query will *only*
-contain Issues with non-empty priorities. If it is desirable to have
-*all* Issues, then coalescing (:eql:op:`??<COALESCE>`) or a
-:ref:`shape<ref_edgeql_shapes>` query should be used instead.
+.. code-block:: pseudo-eql
 
-On the other hand the following query will include *all* Issues,
-because the tuple elements are made from the set of Issues and the set
-produced by the aggregate function :eql:func:`array_agg`, which is
-never ``{}``:
+    ( <identifier> := <expr> [, ... ] )
 
-.. code-block:: eql
+Note that *all* elements in a named tuple must have a name.
 
-    WITH MODULE example
-    SELECT (Issue, array_agg(Issue.priority.name));
+A tuple constructor automatically creates a corresponding
+:eql:type:`std::tuple` type:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT ('foo', 42).__type__.name;
+    std::tuple<std::str, std::int64>
 
 
-Tuple element reference
------------------------
+.. _ref_eql_expr_tuple_elementref:
 
-.. TODO
+Tuple Element Reference
+=======================
+
+An element of a tuple can be referenced in the form:
+
+.. code-block:: pseudo-eql
+
+    <expr>.<element-index>
+
+Here, *expr* is any expression that has a tuple type, and *element-name* is
+either the *zero-based index* of the element, if the tuple is unnamed, or
+the name of an element in a named tuple.
+
+Examples:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT (1, 'EdgeDB').0;
+    {1}
+
+    db> SELECT (number := 1, name := 'EdgeDB').name;
+    {"EdgeDB"}
+
+Referencing a non-existent tuple element will result in an error:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT (1, 2).5;
+    EdgeQLError: 5 is not a member of a tuple
+
+    ---- query context ----
+
+        line 1
+            > SELECT (1, 2).3;

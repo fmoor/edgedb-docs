@@ -1,3 +1,5 @@
+.. _ref_eql_statements_delete:
+
 Delete
 ------
 
@@ -9,12 +11,21 @@ will return the set of removed objects.
 
 The data flow of a ``DELETE`` block can be conceptualized like this:
 
-.. code-block:: pseudo-eql
+.. eql:statement:: DELETE
+    :haswith:
 
-    WITH MODULE example
+    ``DELETE`` -- remove objects from a database
 
-    DELETE
-        <expr>  # delete the following objects
+    .. eql:synopsis::
+
+        [ WITH module_aliases, expression_aliases ]
+
+        DELETE
+            <expr>  # delete the following objects
+
+    Notice that there are no other clauses in the ``DELETE`` statement.
+    This is because it is a mutation statement and not typically used to
+    query the DB.
 
 Here's a simple example of deleting a specific user:
 
@@ -23,7 +34,3 @@ Here's a simple example of deleting a specific user:
     WITH MODULE example
     DELETE (SELECT User
             FILTER User.name = 'Alice Smith');
-
-Notice that there are no other clauses in the ``DELETE`` statement.
-This is because it is a mutation statement and not typically used to
-query the DB.

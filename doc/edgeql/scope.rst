@@ -1,4 +1,4 @@
-.. _ref_edgeql_scope:
+.. _ref_eql_scope:
 
 Scope
 =====
@@ -9,7 +9,7 @@ documentation refers to the scope of a sub-query it implicitly refers
 to all the parent scopes in which the particular sub-query is nested
 lexically.
 
-The :ref:`with block<ref_edgeql_with>` is nested in the scope defined
+The :ref:`with block<ref_eql_with>` is nested in the scope defined
 by the statement. Any symbols defined in it are only visible within
 that particular statement. ``WITH`` block aliases are themselves in
 the parent scope w.r.t. the rest of the statement. However, the
@@ -302,7 +302,7 @@ Last but not least, this is how the scopes in a complex query may apply:
     | +------------------------------------+ |
     +----------------------------------------+
 
-.. _ref_edgeql_scope_prefix:
+.. _ref_eql_scope_prefix:
 
 Longest common prefix
 ---------------------
@@ -494,7 +494,7 @@ schema, though) and what we want is a result of the form "Open issue
         Issue.status.name = 'Open';
 
 Due to the fact that ``Issue`` and ``Issue.number`` exist in the same
-scope, the :ref:`longest common prefix<ref_edgeql_scope_prefix>` rule
+scope, the :ref:`longest common prefix<ref_eql_scope_prefix>` rule
 dictates that ``Issue`` must refer to the same object for both of
 these expressions. This means that :eql:func:`count` is always
 operating on a set of one ``Issue``.
@@ -535,7 +535,7 @@ prefix:
         Issue.status.name = 'Open';
 
 
-.. _ref_edgeql_scope_clauses:
+.. _ref_eql_scope_clauses:
 
 Clauses and shapes
 ------------------
@@ -553,7 +553,7 @@ scope as the second. This is not the case for ``LIMIT`` and ``OFFSET``
 clauses for instance.
 
 
-.. _ref_edgeql_computables:
+.. _ref_eql_computables:
 
 Sub-queries and computables
 ---------------------------
