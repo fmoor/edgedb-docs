@@ -16,6 +16,6 @@ Welcome to the EdgeDB |version| documentation.
     intro
     tutorial/basic
     datamodel/index
-    edgeql/index
+    edgeql/__toc__
     graphql/index
     dev/index
