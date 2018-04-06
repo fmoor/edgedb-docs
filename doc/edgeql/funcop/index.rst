@@ -58,3 +58,4 @@ singletons. Examples of aggregate functions include built-ins such as
     setagg
     string
     operators
+    logical

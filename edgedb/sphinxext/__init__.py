@@ -955,7 +955,7 @@ class EdgeQLDomain(s_domains.Domain):
 
 def setup(app):
     app.add_lexer("eschema", EdgeSchemaLexer())
-    app.add_lexer("eql", EdgeQLLexer())
+    app.add_lexer("edgeql", EdgeQLLexer())
     app.add_lexer("pseudo-eql", EdgeQLLexer())
     app.add_lexer("graphql", GraphQLLexer())
 

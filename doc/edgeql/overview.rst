@@ -48,8 +48,8 @@ primitive types, as well as primitive types with different base type, is
 not allowed.
 
 Traditional relational databases deal with tables and use ``NULL`` as
-a value denoting absence of data.  EdgeDB works with *sets*, so the absence of
-data is just an empty set.
+a special *value* denoting absence of data.  EdgeDB works with *sets*,
+so the absence of data is just an empty set.
 
 
 .. _ref_eql_fundamentals_references:
@@ -148,7 +148,7 @@ and clauses are interpreted.
 
 .. _ref_eql_fundamentals_eval:
 
-Expression evaluation
+Expression Evaluation
 ---------------------
 
 For simplicity, a reference to a *function* in this section means any
@@ -165,6 +165,8 @@ are declared as element-wise for their arguments, while aggregate functions,
 such as :eql:func:`sum` or :eql:func:`count` take their input as a whole.
 
 An expression is evaluated recursively using the following procedure:
+
+.. _ref_eql_fundamentals_eval_algo:
 
 1. :ref:`Canonicalize <ref_eql_fundamentals_path_canon>` all path
    expressions.
@@ -224,3 +226,31 @@ is always equal to ``1``:
       (1, 1, 3),
       (2, 1, 3)
     }
+
+
+.. _ref_eql_fundamentals_emptyset:
+
+Empty Set Handling
+~~~~~~~~~~~~~~~~~~
+
+In the :ref:`evaluation algorithm <ref_eql_fundamentals_eval_algo>` above,
+the second step is making a cartesian product of element-wise inputs.
+Consequently, if any argument is an *empty set* the product will also be an
+empty set.  In this situation there are two possible scenarios:
+
+1. If *none* of the function arguments were declared as ``OPTIONAL``,
+   the function is never called and the result is an empty set.  This is
+   the most common case.
+
+2. If *any* of the function arguments were declared as ``OPTIONAL``, the
+   function is called once and its result is returned.
+
+For example, the following query returns an empty set:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT {2} * {};
+    {}
+
+A most notable example of a function that *does* get called on empty input
+is the :eql:op:`coalescing <COALESCE>` operator.
