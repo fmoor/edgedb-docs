@@ -60,7 +60,7 @@ heterogeneous data.
 
     .. code-block:: pseudo-eql
 
-        array<element_type>
+        array\<<element_type>\>
 
     With the exception of other array types, any type can be used as an
     array element type.
@@ -84,7 +84,7 @@ heterogeneous data.
 
     .. code-block:: pseudo-eql
 
-        map<key_type, element_type>
+        map\<<key_type>, <element_type>\>
 
     Any type can be used as a map key type or a map element type.
 

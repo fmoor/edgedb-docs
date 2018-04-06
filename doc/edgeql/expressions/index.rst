@@ -136,9 +136,9 @@ Type Casts
 A type cast expression converts the specified value to another value of
 the specified type:
 
-.. code-block:: edgeql
+.. code-block:: pseudo-eql
 
-    "<" <type> ">" <expression>
+    \<<type>\> <expression>
 
 The *type* must be a scalar or a container type.
 
