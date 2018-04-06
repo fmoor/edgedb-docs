@@ -49,7 +49,7 @@ A shape in an ``INSERT`` statement is used to specify the data to insert
 into a database.  The recursive nature of shapes allows creating an entire
 tree of objects with a single ``INSERT`` statement.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     INSERT Issue {
         name := 'Issue #1',
@@ -126,7 +126,7 @@ some values used for filtering.
 For example it's possible to augment each user object with the
 information about how many issues they have:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT User {
         name,
@@ -139,7 +139,7 @@ Similarly, we can add a filter based on the number of issues that a
 user has by referring to the :ref:`computable<ref_eql_computables>`
 defined by the shape:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT User {
         name,
@@ -159,7 +159,7 @@ referring to it.
     ``issue.watchers`` without further restrictions and only access
     the restricted set of watchers that was fetched.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT Issue {
             name,
@@ -176,7 +176,7 @@ Using shapes
 ------------
 
 :ref:`Shapes<ref_eql_shapes>` are the way of specifying structured
-object data. They are used to get a set of `objects` and their
+object data. They are used to get a set of ``objects`` and their
 relationships in a structured way. Shape specification can be added to
 any expression that denotes an object. Fundamentally, a shape
 specification does not alter the identity of the objects it is
@@ -188,7 +188,7 @@ For example, a query that retrieves a set of ``Issue`` objects with
 ``time_estimate``, ``owner``, etc.) for all of the issues owned by
 Alice Smith, would look like this:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT
@@ -199,7 +199,7 @@ Alice Smith, would look like this:
 
 Shapes can be nested to retrieve more complex structures:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Issue {  # base shape
@@ -215,7 +215,7 @@ object will have ``name``, ``body`` and ``owner`` links, where
 ``owner`` will also have a ``name``. To restrict this to only issues
 that are not 'closed', the following query can be used:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Issue {  # base shape
@@ -230,7 +230,7 @@ that are not 'closed', the following query can be used:
 To retrieve all users and their associated issues (if any), the following
 shape query can be used:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT User {
@@ -251,7 +251,7 @@ By default only outbound links may be referred to in shapes directly
 ``owned`` is used to include data by following the inbound link
 ``owner`` to its origin. Since the link ``owner`` on ``Issue`` is
 ``*1`` (by default), when it is followed in the other direction is
-functions as a ``1*``. So ``<owner`` points to a `set` of multiple
+functions as a ``1*``. So ``<owner`` points to a ``set`` of multiple
 issues sharing a particular owner. For each issue the sub-shape for
 the ``status`` link will be retrieved containing just the ``name``.
 
@@ -261,7 +261,7 @@ some issues the names and bodies of these issues should be included in
 the returned value. The query effectively says 'please return the set
 of *all* users and provide this specific information for each of them
 if available'. This is one of the important differences between
-`shape` specification and a :ref:`path <ref_eql_expr_paths>`.
+``shape`` specification and a :ref:`path <ref_eql_expr_paths>`.
 
 Shape annotation is preserved only by operations that preserve the
 type (rather than specify a type or the result explicitly). In general

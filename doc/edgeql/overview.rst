@@ -3,16 +3,17 @@
 Overview
 ========
 
-EdgeQL is the primary language used to interact with EdgeDB, and
-can be used to define, mutate and query data.  EdgeQL input consists
-of a sequence of *commands*, and the database returns a specific response
-to each command in sequence.
+EdgeQL is the primary language of EdgeDB.  It is used to define, mutate, and
+query data.
 
-For example, the following EdgeQL ``SELECT`` command would return a
-set of all `User` objects with the value of the ``name`` link equal to
-``"Jonh"``.
+EdgeQL input consists of a sequence of *commands*, and the database
+returns a specific response to each command in sequence.
 
-.. code-block:: eql
+For example, the following EdgeQL :eql:stmt:`SELECT` command would return a
+set of all ``User`` objects with the value of the ``name`` link equal to
+``"John"``.
+
+.. code-block:: edgeql
 
     SELECT User FILTER User.name = 'John';
 
@@ -63,7 +64,7 @@ name of a view, or an *expression alias* defined in a statement.
 For example a reference to the ``User`` object type in the following
 query will result in a set of all ``User`` objects:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT User;
 
@@ -71,7 +72,7 @@ Note, that unlike SQL no explicit ``FROM`` clause is needed.
 
 A set reference can be an expression alias:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH odd_numbers := {1, 3, 5, 7, 9}
     SELECT odd_numbers;
@@ -86,7 +87,7 @@ sequence of links or link properties from some source set.
 For example, the following will result in a set of all names of ``Users`` who
 are friends with some other user:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT User.friends.name;
 
@@ -95,22 +96,17 @@ are friends with some other user:
 The longest common path prefixes in an expression are treated as equivalent
 set references.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT (User.friends.first_name, User.friends.last_name)
 
 The canonical form of the above query is:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH UserFriends := User.friends
     SELECT (UserFriends.first_name, UserFriends.last_name)
 
-.. glossary::
-
-   scope
-      A collection of all known set references at a certain point
-      in an expression.
 
 See :ref:`ref_eql_expr_paths` for more information on path syntax.
 
@@ -125,7 +121,7 @@ be represented as a composition of functions.
 
 Consider a query:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT User
     FILTER User.age > 20

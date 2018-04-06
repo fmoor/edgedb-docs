@@ -1,3 +1,5 @@
+:orphan:
+
 .. _ref_eql_statements_group:
 
 Group
@@ -69,7 +71,7 @@ Consider the following example of a query that gets some statistics
 about Issues, namely what's the total number of issues and time spent
 per owner:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     GROUP Issue
@@ -90,7 +92,7 @@ If there's a need to only look at statistics that end up over a
 certain threshold of total time spent, a ``FILTER`` can be used in
 conjunction with an alias of the ``UNION`` clause result:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     GROUP Issue
@@ -112,7 +114,7 @@ If there's a need to filter the *input* set of Issues, then this can
 be done by using a ``SELECT`` expression at the subject clause of the
 ``GROUP``:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     GROUP

@@ -43,7 +43,7 @@ Select
         preceding clause, while the ``$cond`` represents the filtering
         condition expression. Consider the following:
 
-        .. code-block:: eql
+        .. code-block:: edgeql
 
             WITH MODULE example
             SELECT count(User)
@@ -95,7 +95,7 @@ optional clauses a ``(SELECT Expr)`` is completely equivalent to
 
 Consider an example using the ``FILTER`` optional clause:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT User {
@@ -118,7 +118,7 @@ obvious. However, forcing the cardinality to be at most 1 by using the
 result of this query can safely assume there's only one result
 available.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT User {
@@ -135,7 +135,7 @@ available.
 
 Next example makes use of ``ORDER BY`` and ``LIMIT`` clauses:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Issue {
@@ -165,7 +165,7 @@ SET OF $cond)``, where the ``$input`` represents the value of the
 preceding clause, while the ``$cond`` represents the filtering
 condition expression. Consider the following:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT count(User)
@@ -173,7 +173,7 @@ condition expression. Consider the following:
 
 The above can be conceptualized as:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT _filter(
@@ -186,7 +186,7 @@ argument (of :eql:func:`count`), while ``User.name LIKE 'Alice%'`` is
 also a ``SET OF`` argument (of ``filter``). So the symbol ``User`` in
 these two expressions exists in 2 parallel scopes. Contrast it with:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # This will actually only count users whose name starts with
     # 'Alice'.

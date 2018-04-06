@@ -15,7 +15,7 @@ result is also ``{}`` (since there are no elements produced in the
 Cartesian product). This is particularly important for comparisons and
 boolean logic operations as all of the following evaluate to ``{}``:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT TRUE OR {};
     SELECT FALSE AND {};
@@ -24,7 +24,7 @@ boolean logic operations as all of the following evaluate to ``{}``:
 This can lead to subtle mistakes when using actual paths that involve
 non-required links (or the roots of which might not exists):
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # will evaluate to {} if either 'a' or 'b' link is missing on a
     # given object Foo
@@ -33,7 +33,7 @@ non-required links (or the roots of which might not exists):
 When the desired behavior is to treat ``{}`` as equivalent to
 ``FALSE``, the coalesce :eql:op:`??<COALESCE>` operator should be used:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # will treat missing 'a' or 'b' links as equivalent to FALSE
     SELECT Foo.a ?? FALSE OR Foo.b ?? FALSE;
@@ -46,7 +46,7 @@ externally defined ``FILTER`` clause cannot affect the contents of
 that set. Instead, if filtering is required, the ``FILTER`` must be
 applied to the argument directly:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # here FILTER will not affect the count
     WITH MODULE example
@@ -60,7 +60,7 @@ applied to the argument directly:
 Operator :eql:op:`IN` is identical, but syntactically less obvious case.
 Consider the following queries:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # here FILTER will not affect the Issue.owner in IN
     WITH MODULE example

@@ -6,7 +6,7 @@ Syntax Cheat Sheet
 
 Link, link property and backwards link:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT Foo.bar;         # link
     SELECT Foo.bar@spam;    # link property

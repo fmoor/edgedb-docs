@@ -29,7 +29,7 @@ of a mutation is required.
 
 Here's a simple example of an ``INSERT`` statement creating a new user:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     INSERT User {
@@ -39,7 +39,7 @@ Here's a simple example of an ``INSERT`` statement creating a new user:
 ``INSERT`` is not only a statement, but also an expression and as such
 is has a value of the set of objects that has been created.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     INSERT Issue {
@@ -53,7 +53,7 @@ is has a value of the set of objects that has been created.
 It is possible to create nested objects in a single ``INSERT``
 statement as an atomic operation.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     INSERT Issue {
@@ -75,7 +75,7 @@ by some tool) or a query. A ``FOR`` statement is the basis for this
 use-case and ``INSERT`` is simply the expression in the ``UNION``
 clause.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # example of a bulk insert of users based on explicitly provided
     # data

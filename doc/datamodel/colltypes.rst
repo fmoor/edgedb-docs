@@ -37,7 +37,7 @@ heterogeneous data.
 
         # a simple 2-tuple made of a str and int
         db> SELECT ('foo', 42).__type__.name;
-        std::tuple<std::str, std::int64>
+        {"std::tuple<std::str, std::int64>"}
 
     Two tuples are equal if all of their elements are equal and in the same
     order.  Note that element names in named tuples are not significant for
@@ -46,7 +46,7 @@ heterogeneous data.
     .. code-block:: pseudo-eql
 
         db> SELECT (1, 2, 3) = (a := 1, b := 2, c := 3);
-        True
+        {True}
 
 
 .. eql:type:: std::array
@@ -72,7 +72,7 @@ heterogeneous data.
     .. code-block:: pseudo-eql
 
         db> SELECT [1, 2].__type__;
-        std::array<std::int64>
+        {"std::array<std::int64>"}
 
 
 .. eql:type:: std::map

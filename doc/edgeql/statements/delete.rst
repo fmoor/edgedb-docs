@@ -29,7 +29,7 @@ The data flow of a ``DELETE`` block can be conceptualized like this:
 
 Here's a simple example of deleting a specific user:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     DELETE (SELECT User

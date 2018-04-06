@@ -37,20 +37,20 @@ objects should be included in the result.  It has the following syntax:
 The example below shows a path that represents the names of all friends
 of all ``User`` objects in the database.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     User.friends.name
 
 And this represents all users who are owners of at least one ``Issue``:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     Issue.<owners[IS User]
 
 And this represents a set of all dates on which users became friends,
 if ``since`` is defined as a link property on the ``User.friends`` link:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     User.friends@since
 
@@ -74,12 +74,12 @@ fundamental building blocks of EdgeQL. A path defines a set of data in
 EdgeDB (just like any other expression) based on the data type and
 relationship with other data.
 
-A path always starts with some ``concept`` as its `root` and it may
-have an arbitrary number of `steps` following various ``links``. The
-simplest path consists only of a `root` and is interpreted to mean
+A path always starts with some ``concept`` as its ``root`` and it may
+have an arbitrary number of ``steps`` following various ``links``. The
+simplest path consists only of a ``root`` and is interpreted to mean
 'all objects of the type `root`'.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Issue;
@@ -87,32 +87,32 @@ simplest path consists only of a `root` and is interpreted to mean
 In the above example ``Issue`` is a path that represents all objects in
 the database of type ``Issue``. That is the result of the above query.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Issue.owner;
 
-The path ``Issue.owner`` consists of the `root` ``Issue`` and a `path
-step` ``.owner``. It specifies the set of all objects that can be
+The path ``Issue.owner`` consists of the ``root`` ``Issue`` and a ``path
+step`` ``.owner``. It specifies the set of all objects that can be
 reached from any object of type ``Issue`` by following its link
 ``owner``. This means that the above query will only retrieve users
 that actually have at least one issue. The ``.`` operator in the path
-separates `steps` and each step corresponds to a ``link`` name that
-must be followed. By default, links are followed in the `outbound`
+separates ``steps`` and each step corresponds to a ``link`` name that
+must be followed. By default, links are followed in the ``outbound``
 direction (the direction that is actually specified in the schema).
 The direction of the link can be also specified explicitly by using
-``>`` for `outbound` and ``<`` for `inbound`. Thus, the above query
+``>`` for ``outbound`` and ``<`` for `inbound`. Thus, the above query
 can be rewritten more explicitly, but equivalently as:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Issue.>owner;
 
 To select all issues that actually have at least one watcher, it is
-possible to construct a path using `inbound` link:
+possible to construct a path using ``inbound`` link:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT User.<watchers;
@@ -124,7 +124,7 @@ In our case, there is only one link in the schema that is called
 ``watchers``. This link belongs to ``Issue`` and indeed it has
 ``User`` as its target, so the above query will get all the ``Issue``
 objects that have at least one watcher. Only links that have a concept
-as their target can be followed in the `inbound` direction. It is not
+as their target can be followed in the ``inbound`` direction. It is not
 possible to follow inbound links on atoms.
 
 Just like the direction of the step can be specified explicitly in a
@@ -132,19 +132,19 @@ path, so can the type of the link target. In order to retrieve all the
 ``SystemUsers`` that have actually created new ``Issues`` (as opposed
 to ``Comments``) the following query could be made:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Issue.owner[IS SystemUser];
 
-In the above query the `path step` is expressed as ``owner[IS
+In the above query the ``path step`` is expressed as ``owner[IS
 SystemUser]``, where ``owner`` is the name of the link to follow, and
 the qualifier ``[IS ...]`` specifies a restriction on the target's
 type.
 
 This is equivalent to:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Issue.owner
@@ -157,7 +157,7 @@ that ``[IS SystemUser]`` allows to refer to links specific to
 Finally combining all of the above, it is possible to write a query to
 retrieve all the ``Comments`` to ``Issues`` created by ``SystemUsers``:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT SystemUser.<owner[IS Issue].<issue;
@@ -179,7 +179,7 @@ retrieve all the ``Comments`` to ``Issues`` created by ``SystemUsers``:
     specify the link module explicitly. The entire fully-qualified
     link name then needs to be enclosed in parentheses:
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         WITH MODULE some_module
         SELECT A.foo.bar;
@@ -210,7 +210,7 @@ Consider the following schema:
 
 Then the query selecting all favorite Post sorted by their rank is:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT User.favorites

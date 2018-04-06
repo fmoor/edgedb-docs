@@ -111,7 +111,7 @@ Basic set operators:
     It's worth noting that :eql:op:`IF..ELSE` is a kind of syntax
     sugar for the following expression:
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         # SELECT a IF cond ELSE b is equivalent to the below:
         SELECT
@@ -134,7 +134,7 @@ Basic set operators:
     A typical use case of coalescing operator is to provide default
     values for optional links.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         # Get a set of tuples (<issue name>, <priority>)
         # for all issues.
@@ -158,7 +158,7 @@ Basic set operators:
     Set membership operators :eql:op:`IN` and :eql:op:`NOT IN<IN>`
     that test for each element of ``A`` whether the it is present in ``B``.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT 1 IN {1, 3, 5};
         # returns [True]
@@ -400,7 +400,7 @@ Type-checking
     it does not in any way participate in the interactions of sets and
     longest common prefix rules.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT 1 IS int;
         # returns [True]
@@ -423,7 +423,7 @@ This is called *casting*. In order to *cast* one expression into a
 different type the expression is prefixed with the ``<new_type>``,
 as follows:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # cast a string literal into an integer
     SELECT <int>"42";
@@ -437,7 +437,7 @@ as follows:
 Casts also work for converting tuples or declaring different tuple
 element names for convenience.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT <tuple<int, str>>(1, 3);
     # returns [[1, '3']]
@@ -454,7 +454,7 @@ element names for convenience.
 An important use of *casting* is in defining the type of an empty
 set ``{}``, which can be required for purposes of type disambiguation.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT Text {

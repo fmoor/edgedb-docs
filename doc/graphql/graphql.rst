@@ -37,21 +37,21 @@ Queries
 
 Consider this example:
 
-+--------------------------------------+-----------------------+
-| GraphQL                              | EdgeQL equivalent     |
-+======================================+=======================+
-| .. code-block:: graphql              | .. code-block:: eql   |
-|                                      |                       |
-|   query @edgedb(module: "example") { |   WITH MODULE example |
-|       Book {                         |   SELECT Book {       |
-|           title                      |       title,          |
-|           synopsis                   |       synopsis,       |
-|           author {                   |       author: {       |
-|               name                   |           name        |
-|           }                          |       }               |
-|       }                              |   };                  |
-|   }                                  |                       |
-+--------------------------------------+-----------------------+
++--------------------------------------+--------------------------+
+| GraphQL                              | EdgeQL equivalent        |
++======================================+==========================+
+| .. code-block:: graphql              | .. code-block:: edgeql   |
+|                                      |                          |
+|   query @edgedb(module: "example") { |   WITH MODULE example    |
+|       Book {                         |   SELECT Book {          |
+|           title                      |       title,             |
+|           synopsis                   |       synopsis,          |
+|           author {                   |       author: {          |
+|               name                   |           name           |
+|           }                          |       }                  |
+|       }                              |   };                     |
+|   }                                  |                          |
++--------------------------------------+--------------------------+
 
 The directive ``@edgedb`` takes a required argument of ``module`` that
 specifies the module for the concept used as the top-level field of
@@ -72,7 +72,7 @@ document:
 +--------------------------------------+----------------------------+
 | GraphQL                              | EdgeQL equivalent          |
 +======================================+============================+
-| .. code-block:: graphql              | .. code-block:: eql        |
+| .. code-block:: graphql              | .. code-block:: edgeql     |
 |                                      |                            |
 |   query @edgedb(module: "example") { |   WITH MODULE example      |
 |       Book(title: "Spam") {          |   SELECT Book {            |
@@ -89,7 +89,7 @@ expected in EdgeQL):
 +---------------------------------------+---------------------------+
 | GraphQL                               | EdgeQL equivalent         |
 +=======================================+===========================+
-| .. code-block:: graphql               | .. code-block:: eql       |
+| .. code-block:: graphql               | .. code-block:: edgeql    |
 |                                       |                           |
 |   query @edgedb(module: "example") {  |   WITH MODULE example     |
 |       Book(author__name:              |   SELECT Book {           |
@@ -110,7 +110,7 @@ mapped to variables in EdgeQL.
 +-----------------------------------+---------------------------------+
 | GraphQL                           | EdgeQL equivalent               |
 +===================================+=================================+
-| .. code-block:: graphql           | .. code-block:: eql             |
+| .. code-block:: graphql           | .. code-block:: edgeql          |
 |                                   |                                 |
 |   query ($name: String!)          |   WITH MODULE example           |
 |   @edgedb(module: "example") {    |   SELECT Book {                 |
@@ -143,7 +143,7 @@ DB and returned as the result of this operation.
 +----------------------------------+----------------------------------+
 | GraphQL                          | EdgeQL equivalent                |
 +==================================+==================================+
-| .. code-block:: graphql          | .. code-block:: eql              |
+| .. code-block:: graphql          | .. code-block:: edgeql           |
 |                                  |                                  |
 |   mutation ($name: String!)      |   WITH MODULE example            |
 |   @edgedb(module: "example") {   |   SELECT (                       |
@@ -172,7 +172,7 @@ as filters, they make no sense as part of *insert* mutation.
 +----------------------------------------+--------------------------+
 | GraphQL                                | EdgeQL equivalent        |
 +========================================+==========================+
-| .. code-block:: graphql                | .. code-block:: eql      |
+| .. code-block:: graphql                | .. code-block:: edgeql   |
 |                                        |                          |
 |   mutation ($name: String!)            |   WITH MODULE example    |
 |   @edgedb(module: "example") {         |   SELECT (               |
@@ -191,7 +191,7 @@ EdgeQL in the following manner:
 +----------------------------------+--------------------------------+
 | GraphQL                          | EdgeQL equivalent              |
 +==================================+================================+
-| .. code-block:: graphql          | .. code-block:: eql            |
+| .. code-block:: graphql          | .. code-block:: edgeql         |
 |                                  |                                |
 |   mutation ($title: String!,     |   WITH MODULE example          |
 |             $name: String!)      |   SELECT (                     |
@@ -220,7 +220,7 @@ object to be linked.
 +----------------------------------+------------------------------------+
 | GraphQL                          | EdgeQL equivalent                  |
 +==================================+====================================+
-| .. code-block:: graphql          | .. code-block:: eql                |
+| .. code-block:: graphql          | .. code-block:: edgeql             |
 |                                  |                                    |
 |     mutation ($title: String!,   |     WITH MODULE example            |
 |               $authid: String!)  |     SELECT (                       |
@@ -260,7 +260,7 @@ the books of a specified author.
 +----------------------------------+-----------------------------------+
 | GraphQL                          | EdgeQL equivalent                 |
 +==================================+===================================+
-| .. code-block:: graphql          | .. code-block:: eql               |
+| .. code-block:: graphql          | .. code-block:: edgeql            |
 |                                  |                                   |
 |     mutation ($name: String!)    |     WITH MODULE example           |
 |     @edgedb(module: "example") { |     SELECT (                      |

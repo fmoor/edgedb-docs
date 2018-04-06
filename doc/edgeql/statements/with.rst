@@ -29,7 +29,7 @@ without any module specified explicitly, the module will default to
 
 The following queries are exactly equivalent:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     SELECT User {
@@ -59,7 +59,7 @@ It is also possible to define aliases modules in the ``WITH`` block.
 Consider the following query that needs to compare objects
 corresponding to concepts defined in two different modules.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example,
@@ -72,7 +72,7 @@ corresponding to concepts defined in two different modules.
 Another use case is for giving short aliases to long module names
 (especially if module names contain `.`).
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example,
@@ -92,7 +92,7 @@ specify the cardinality explicitly. For example, when using
 computables in shapes it may be desirable to specify the cardinality
 of the computable because it affects serialization.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -126,7 +126,7 @@ symbol in the ``WITH`` block. However, care must be taken to ensure
 that this refactoring doesn't alter the meaning of the expression due
 to scope change.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # Consider a query to get all users that own Issues and the
     # comments those users made.
@@ -147,7 +147,7 @@ to scope change.
 
 An example of incorrect refactoring would be:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # This query gets a set of tuples of
     # issues and their owners.
@@ -157,7 +157,7 @@ An example of incorrect refactoring would be:
 
     # This query gets a set of tuples that
     # result from a cartesian product of all issues
-    # with all owners. This is because `Issue` and `U`
+    # with all owners. This is because ``Issue`` and ``U``
     # are considered independent sets.
     WITH
         MODULE example,
@@ -184,7 +184,7 @@ own the same number of issues as someone else:
     possibly motivated by keeping the symbols closer to their place if
     usage.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example,

@@ -36,7 +36,7 @@ and not typically used to query the DB.
 
 Here are a couple of examples of using the ``UPDATE`` statement:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # update the user with the name 'Alice Smith'
     WITH MODULE example

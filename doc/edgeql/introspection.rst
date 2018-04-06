@@ -1,7 +1,7 @@
 Introspection
 =============
 
-.. TODO: rewrite this to include a formal reference of the `schema` module.
+.. TODO: rewrite this to include a formal reference of the ``schema`` module.
    with necessary references to datamodel bits that describe various
    schema aspects.
 
@@ -10,7 +10,7 @@ It is possible to access these via ``__class__`` attribute of any
 object. It is also possible to access them directly via the built-in
 special module ``schema``.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # the following two are equivalent, provided there's at least
     # one Text object in the DB
@@ -32,7 +32,7 @@ Various schema entities are represented by their own concepts in the
 ``LinkProperty``, etc. A full list can be retrieved by getting all the
 ``schema::Class`` objects.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # get all the classes defined in the 'example' module
     WITH MODULE schema
@@ -47,7 +47,7 @@ for each of the links can be retrieved via ``attributes``, using the
 attribute name ``stdattrs::mapping`` and ``@value`` to get the mapping
 value.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # get all 'example' concepts with their links
     WITH MODULE schema

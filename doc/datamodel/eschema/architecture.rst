@@ -394,7 +394,7 @@ With the above schema it's possible to write a simple query looking
 for a specific ``Person`` (including ``Employee``) or a specific
 ``Employee``:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # looking for any Person named Alice Smith
     SELECT Person FILTER Person.name = 'Alice Smith';
@@ -488,7 +488,7 @@ via inheritance and used in queries:
 With the above schema the following queries make use of the link
 inheritance:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # Select all grandchildren names
     SELECT Person.grandchildren.name FILTER Person.name = 'John Ham';

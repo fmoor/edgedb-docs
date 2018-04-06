@@ -1,9 +1,12 @@
 :orphan:
 
+Arrays
+======
+
 .. _ref_eql_expr_array_ctor:
 
 Array Constructor
-=================
+-----------------
 
 An array constructor is an expression that consists of a sequence of
 comma-separated expressions *of the same type* enclosed in square brackets.
@@ -35,10 +38,10 @@ having elements in it:
     {[]}
 
 
-.. _ref_eql_expr_array_elementref:
+.. _ref_eql_expr_array_elref:
 
 Array Element Reference
-=======================
+-----------------------
 
 An element of an array can be referenced in the following form:
 

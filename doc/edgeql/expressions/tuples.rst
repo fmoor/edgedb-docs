@@ -1,9 +1,12 @@
 :orphan:
 
+Tuples
+======
+
 .. _ref_eql_expr_tuple_ctor:
 
 Tuple Constructor
-=================
+-----------------
 
 A tuple constructor is an expression that consists of a sequence of
 comma-separated expressions enclosed in parentheses.  It produces a
@@ -30,10 +33,10 @@ A tuple constructor automatically creates a corresponding
     std::tuple<std::str, std::int64>
 
 
-.. _ref_eql_expr_tuple_elementref:
+.. _ref_eql_expr_tuple_elref:
 
 Tuple Element Reference
-=======================
+-----------------------
 
 An element of a tuple can be referenced in the form:
 
@@ -54,6 +57,13 @@ Examples:
 
     db> SELECT (number := 1, name := 'EdgeDB').name;
     {"EdgeDB"}
+
+Tuples can be nested:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT (nested_tuple := (1, 2),).nested_tuple.0;
+    {1}
 
 Referencing a non-existent tuple element will result in an error:
 

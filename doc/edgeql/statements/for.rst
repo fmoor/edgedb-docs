@@ -48,7 +48,7 @@ mode is less useful with a :eql:stmt:`SELECT` expression since a
     Technically, a ``FOR`` statement can be viewed as a special case
     of ``GROUP``:
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         FOR X IN {Foo}
         UNION (INSERT Bar {foo := X});
@@ -88,7 +88,7 @@ each element of the iterator some set is computed and combined via a
 The simplest use case is when the iterator is given by a set
 expression and it follows the general form of ``FOR x IN A ...``:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     # the iterator is an explicit set of tuples, so x is an
@@ -117,7 +117,7 @@ are cases when a bulk update lots of external data, that cannot be
 derived from the objects being updated. That is a good use-case when a
 ``FOR`` statement is appropriate.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # Here's an example of an update that is awkward to
     # express without the use of FOR statement
@@ -152,7 +152,7 @@ When updating data that mostly or completely depends on the objects
 being updated there's no need to use the ``FOR`` statement and it is not
 advised to use it for performance reasons.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     UPDATE User
@@ -179,7 +179,7 @@ in a later step with an update is often simpler with a ``FOR``
 statement helping to associate the link target to the link property in
 an intuitive manner.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # Expressing this without FOR statement is fairly tedious.
     WITH

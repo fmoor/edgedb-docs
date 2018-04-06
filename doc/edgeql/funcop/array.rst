@@ -16,7 +16,7 @@ Array
 
     The ordering of the input set will be preserved if specified.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT array_agg({2, 3, 5});
         # returns [2, 3, 5]
@@ -37,7 +37,7 @@ Array
 
     Return ``TRUE`` if the array contains the specified element.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT array_contains([2, 3, 5], 2);
         # returns TRUE
@@ -60,7 +60,7 @@ Array
     and the second element is the index of that value for all values
     in the array.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT array_enumerate([2, 3, 5]);
         # returns {(3, 1), (2, 0), (5, 2)}
@@ -82,7 +82,7 @@ Array
 
     The ordering of the returned set is not guaranteed.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT array_unpack([2, 3, 5]);
         # returns {3, 2, 5}
