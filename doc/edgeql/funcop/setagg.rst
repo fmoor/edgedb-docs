@@ -14,7 +14,7 @@ Aggregates
 
     Return the number of elements in a set.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT count({2, 3, 5});
         # returns 3
@@ -36,7 +36,7 @@ Aggregates
     can be cast into it, such as :eql:type:`float64` or
     :eql:type:`int64`.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT sum({2, 3, 5});
         # returns 10

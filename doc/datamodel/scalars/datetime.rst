@@ -23,6 +23,6 @@ Date/Time Types
     milliseconds, seconds, minutes, hours, days, weeks, months, years,
     decades, centuries, millennia, e.g.:
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT <timedelta>'2.3 millennia 3 weeks';

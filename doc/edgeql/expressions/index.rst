@@ -7,25 +7,6 @@ Expressions
 Expressions are used to represent a *value* or a *set of values* in EdgeQL
 commands.
 
-An expression is one of the following:
-
-- A :ref:`scalar literal <ref_eql_expr_index_literal>`
-- A :ref:`set reference <ref_eql_expr_index_setref>`
-- A :ref:`path <ref_eql_expr_index_path>`
-- A :ref:`shape annotation <ref_eql_expr_index_shape>`
-- A :ref:`parameter reference <ref_eql_expr_index_param>`
-- An :ref:`operator expression <ref_eql_expr_index_operator>`
-- A function call
-- A type cast
-- A set constructor
-- A tuple constructor
-- A tuple element reference
-- An array constructor
-- An array element reference or an array slice
-- A statement in parentheses
-- Any expression in parentheses (parentheses are useful for
-  grouping and explicit precedence)
-
 
 .. _ref_eql_expr_index_literal:
 
@@ -33,12 +14,12 @@ Scalar Literals
 ---------------
 
 A literal representation of a supported scalar type.
-See :ref:`this section <ref_eql_lexical_const>` for details about
+See :ref:`ref_eql_lexical_const` for details about
 the syntax for standard scalar literals.
 
 Additionally, any scalar value may be represented as a casted string literal:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql
 
     <float>'1.23'
 
@@ -54,7 +35,7 @@ name of a view, or an *alias* defined in a statement.
 
 For example, in the following query ``User`` is a set reference:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     SELECT User;
 
@@ -82,14 +63,14 @@ shape syntax and semantics.
 
 .. _ref_eql_expr_index_param:
 
-Parameter References
---------------------
+Parameters
+----------
 
 A parameter reference is used to indicate a value that is supplied externally
 to an EdgeQL expression.  Parameter references are used in parametrized
 statements and function definitions.  The form of a parameter reference is:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql
 
     $name
 
@@ -97,7 +78,7 @@ statements and function definitions.  The form of a parameter reference is:
 For example, in the following function definition, ``$n`` references the
 value of the function argument whenever the function is called:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     CREATE FUNCTION square($n: int64) -> int64 FROM EDGEQL $$
         SELECT $n * $n;
@@ -124,7 +105,26 @@ Unary prefix operator syntax:
 
     <operator> <expression>
 
-A complete reference of EdgeQL operators can be found in
+A complete reference of standard EdgeQL operators can be found in
+:ref:`ref_eql_funcop`.
+
+
+.. _ref_eql_expr_index_function_call:
+
+Function Calls
+--------------
+
+The syntax for a function call is as follows:
+
+.. code-block:: pseudo-eql
+
+    function_name ([argument [, argument ...]])
+
+Here *function_name* is a possibly qualified name of a function, and
+*argument* is an *expression* optionally prefixed with an argument name
+and a turnstile (``:=``).
+
+A complete reference of standard EdgeQL functions can be found in
 :ref:`ref_eql_funcop`.
 
 
@@ -136,9 +136,9 @@ Type Casts
 A type cast expression converts the specified value to another value of
 the specified type:
 
-.. code-block:: eql
+.. code-block:: pseudo-eql
 
-    "<" <type> ">" <expression>
+    \<<type>\> <expression>
 
 The *type* must be a scalar or a container type.
 
@@ -181,12 +181,63 @@ it must be used together with a type cast:
     {}
 
 
-Array constructor
------------------
+Tuples
+------
 
-.. TODO
+.. _ref_eql_expr_index_tuple_ctor:
+
+Tuple Constructor
+~~~~~~~~~~~~~~~~~
+
+A tuple constructor is an expression that consists of a sequence of
+comma-separated expressions enclosed in parentheses.  It produces a
+tuple value:
+
+.. code-block:: pseudo-eql
+
+    ( <expr> [, ... ] )
+
+See :ref:`tuple expression reference <ref_eql_expr_tuple_ctor>` for more
+information on tuple constructors.
 
 
+.. _ref_eql_expr_index_tuple_elref:
+
+Tuple Element References
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+An element of a tuple can be referenced in the form:
+
+.. code-block:: pseudo-eql
+
+    <expr>.<element-index>
+
+Here, *expr* is any expression that has a tuple type, and *element-name* is
+either the *zero-based index* of the element, if the tuple is unnamed, or
+the name of an element in a named tuple.
+
+See :ref:`tuple expression reference <ref_eql_expr_tuple_elref>` for more
+information on accessing tuple elements.
+
+
+.. _ref_eql_expr_index_array_ctor:
+
+Arrays
+------
+
+An array constructor is an expression that consists of a sequence of
+comma-separated expressions *of the same type* enclosed in square brackets.
+It produces an array value:
+
+.. code-block:: pseudo-eql
+
+    "[" <expr> [, ...] "]"
+
+See :ref:`array expression reference <ref_eql_expr_array_ctor>` for more
+information on array constructors.
+
+
+.. _ref_eql_expr_index_stmt:
 
 Statements
 ----------
@@ -195,9 +246,21 @@ Any ``SELECT`` or ``FOR`` statement, and, with some restrictions, ``INSERT``,
 ``UPDATE`` or ``DELETE`` statements may be used as expressions.  Parentheses
 are required around the statement to disambiguate:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     1 + (SELECT len(User.name))
 
-For more information about statements refer to
-:ref:`this section <ref_eql_statements>`.
+See :ref:`ref_eql_statements` for more information.
+
+
+.. _ref_eql_expr_index_parens:
+
+Parentheses
+-----------
+
+Expressions can be enclosed in parentheses to indicate explicit evaluation
+precedence and to group subexpressions visually for better readability:
+
+.. code-block:: edgeql
+
+    SELECT (1 + 1) * 2 / (3 + 8);

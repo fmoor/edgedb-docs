@@ -19,7 +19,7 @@ and a turnstile (``:=``).
 
 For example, the following computes the length of a string ``'foo'``:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     len('foo')
 
@@ -34,7 +34,7 @@ Aggregate functions are *set functions* mapping arbitrary sets onto
 singletons. Examples of aggregate functions include built-ins such as
 :eql:func:`count` and :eql:func:`array_agg`.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # count maps a set to an integer, specifically it returns the
     # number of elements in a set
@@ -58,3 +58,4 @@ singletons. Examples of aggregate functions include built-ins such as
     setagg
     string
     operators
+    logical

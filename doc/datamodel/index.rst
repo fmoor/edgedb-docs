@@ -1,13 +1,16 @@
-Data Model
-==========
+.. _ref_datamodel_overview:
+
+========
+Overview
+========
 
 EdgeDB is an object-relational database with strongly typed schema.
 
 An EdgeDB schema is primarily composed from *object type* definitions, which
 describe entities in a specific domain.  An *object type* is a collection
-of named references to other types (*links*).
+of named *properties* and *links* to other types.
 
-Here is an example of a simple EdgeDB type using the eschema notation:
+Here is an example of a simple EdgeDB type using the Edge Schema notation:
 
 .. code-block:: eschema
 
@@ -20,26 +23,42 @@ Here is an example of a simple EdgeDB type using the eschema notation:
 :ref:`scalar type <ref_datamodel_scalar_types>`.  EdgeDB also supports
 several :ref:`collection types <ref_datamodel_collection_types>`.
 
-EdgeDB schemas consist of :ref:`modules <ref_datamodel_modules>` and can
-also contain the following declarations:
 
-* :ref:`ref_datamodel_links`
-* :ref:`ref_datamodel_linkprops`
-* :ref:`ref_datamodel_constraints`
-* :ref:`ref_datamodel_attributes`
-* :ref:`ref_datamodel_functions`
+Modules and Items
+=================
 
-.. toctree::
-    :maxdepth: 3
-    :hidden:
+EdgeDB schemas consist of :ref:`modules <ref_datamodel_modules>`.  Modules
+contain *schema items*.
 
-    objects
-    scalars/index
-    colltypes
-    functions
-    links
-    constraints
-    views
-    modules
-    databases
-    eschema/index
+There are several kinds of schema items:
+
+* :ref:`object type definitions <ref_datamodel_object_types>`
+* :ref:`scalar type definitions <ref_datamodel_scalar_types>`
+* :ref:`link definitions <ref_datamodel_links>`
+* :ref:`property definitions <ref_datamodel_props>`
+* :ref:`constraint definitions <ref_datamodel_constraints>`
+* :ref:`schema attribute definitions <ref_datamodel_attributes>`
+* :ref:`function definitions <ref_datamodel_functions>`
+
+
+Inheritance
+===========
+
+Many items in EdgeDB schema support *inheritance* as a composition mechanism.
+Schema items can *extend* other item(s) of the same item kind.  When extending,
+*child* items inherit the aspects of the parent item(s) in the manner specific
+to the schema item kind.  For example, when an object type extends another
+object type, it inherits all parent properties, links, constraints and other
+aspects.  Additionally, for instances of the child type
+``object IS ParentType`` is ``True`` (see :eql:op:`IS operator <IS>`), and
+instances of the child type are included in the set of all instances of
+the parent type.
+
+
+EdgeDB Schema
+=============
+
+:ref:`EdgeDB Schema <ref_eschema>` is a high-level declarative alternative to
+:ref:`EdgeQL data definition<ref_eql_ddl>` commands.  It is designed to
+be consise and readable.  Most of the examples and synopses in this section
+use the EdgeDB Schema notation.

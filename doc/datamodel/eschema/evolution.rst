@@ -25,10 +25,10 @@ must be applied in other modules for a given migration to be valid.
 Schema modules
 ~~~~~~~~~~~~~~
 
-Typically, a single module is described in one `module_name.eschema`
+Typically, a single module is described in one ``module_name.eschema``
 file. For convenience there's also a way to split one module across
-multiple `.eschema` files. EdgeDB framework considers all the schema
-files in the a directory named `module_name.eschema` describing one
+multiple ``.eschema`` files. EdgeDB framework considers all the schema
+files in the a directory named ``module_name.eschema`` describing one
 module. Since the schema is a declarative construct, there is no need
 to consider the order in which various elements are declared and so
 the exact way in which these declarations are split among one or more

@@ -19,7 +19,7 @@ String
 
     Return a lowercase copy of the input string.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT lower('Some Fancy Title');
         # returns 'some fancy title'

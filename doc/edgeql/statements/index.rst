@@ -41,5 +41,4 @@ Data modification statements:
     insert
     update
     delete
-    group
     with

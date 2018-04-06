@@ -22,7 +22,7 @@ scopes have been labeled with a number indicating nesting depth.
 Different scopes at the same nesting depth also have a letter added to
 the indexing.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -61,10 +61,10 @@ the indexing.
 The scope breakdown of the above query makes it easy to see that the
 ``FILTER`` cannot affect the ``watchers`` sub-shape because they are
 in parallel scopes (`2b,1,0` vs `2a,1,0`). On the other hand, the
-common prefix ``Issue`` from scope `1,0` means the same thing in the
+common prefix ``Issue`` from scope ``1,0`` means the same thing in the
 ``FILTER`` as well as in the main part of the query.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example,
@@ -113,7 +113,7 @@ the same ``first_name`` as someone else. The ``User`` that's part of
 the definition of ``U`` is in a sibling scope to the ``User`` in the
 main query.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -138,12 +138,12 @@ main query.
     +---------------------------------+
 
 In the above example the aggregate function :eql:func:`count` creates
-a sub- scope `2,1,0` for its argument. However, like before, the
-common prefix ``Issue`` from scope `1,0` is shared between
+a sub- scope ``2,1,0`` for its argument. However, like before, the
+common prefix ``Issue`` from scope ``1,0`` is shared between
 ``Issue.number`` and ``Issue.watchers``. Therefore the :eql:func:`count`
 will be applied to watchers of each issue separately.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -178,7 +178,7 @@ it has its own scope (`2a,1,0`) parallel to the scope created by
 ``Issue.number`` of the sub-query and effectively means "all issue
 watchers in the DB".
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -216,7 +216,7 @@ against the set as a whole). The example above shows that
 
 Last but not least, this is how the scopes in a complex query may apply:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -312,7 +312,7 @@ the same thing*. Applied to paths this rule means that any common
 prefix in two paths in the same scope is considered to refer to the
 *same* object. Consider the following queries:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # tuple query
     WITH
@@ -347,7 +347,7 @@ priority names taken independently.
 This rule holds no matter where in the ``SELECT`` expression the path
 is used, as long as it is in the same scope. For example:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -365,7 +365,7 @@ name is 'High'. The common prefix makes it easy to write intuitive
 queries, by ensuring that the same sub-path always means the same
 thing. Consider a more complex query:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -397,7 +397,7 @@ get the following features:
 To see how different scopes within the same expression affect the
 interpretation, consider the following query:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -423,7 +423,7 @@ Although, technically, the ``LIMIT`` clause can refer to ``User``, so
 long as the resulting expression is a *singleton*. The following query
 is illegal because ``len(User.name)`` is a set:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -438,7 +438,7 @@ Here's another example of an illegal expression. In this case
 ``LIMIT`` is referring to a symbol (``res``) defined in a sibling
 scope:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example
@@ -457,7 +457,7 @@ Aggregate functions
 There's an interesting interaction between the longest common prefix
 rule and aggregate functions. Consider the following:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # count all the issues
     WITH
@@ -478,7 +478,7 @@ a sequential integer (still represented as a string according to our
 schema, though) and what we want is a result of the form "Open issue
 <number> / <total issues>".
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # The naive way of combining the result
     # of count with a specific Issue does not work.
@@ -502,7 +502,7 @@ operating on a set of one ``Issue``.
 The way to fix that is to define another set as ``Issue`` in the
 ``WITH`` clause.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # The alias I2 functions as if it
     # were a schema-level view, even though
@@ -522,7 +522,7 @@ Here's an example of an aggregate function that specifically takes
 advantage of only being applied to the set restricted by the common
 prefix:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # Each result will only have the watchers
     # of a given open issue.
@@ -573,7 +573,7 @@ following shape query retrieving a single user with additional data in
 the for of latest 3 Issues and total open issue count (this would make
 sense for an admin account, for example):
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH
         MODULE example

@@ -1,18 +1,24 @@
 .. _ref_eql_ddl:
 
+Data Definition
+===============
 
-DDL
-===
+EdgeQL includes a set of commands to manipulate all aspects of the
+database schema.  It is called the *data definition language* or *DDL*,
+and is a low-level equivalent to
+:ref:`EdgeDB Schema <ref_eschema>`.
 
-Data definition language is an imperative language used to create and
-modify the DB schema. Typically it is not expected that the average
-EdgeDB user is ever exposed to it directly. Rather it is the language
-which is used by the higher order schema migration tools.
+.. toctree::
+    :maxdepth: 3
+    :hidden:
 
-
-.. eql:statement:: CREATE-FUNCTION
-
-    Creates a function.
-
-
-See also :eql:stmt:`how to create a function <CREATE-FUNCTION>`.
+    databases
+    modules
+    objects
+    scalars
+    links
+    props
+    indexes
+    constraints
+    functions
+    attributes

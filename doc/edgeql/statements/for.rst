@@ -1,77 +1,65 @@
 .. _ref_eql_statements_for:
 
-For
----
+FOR
+===
 
-A ``FOR`` statement is used where mathematically a universal qualifier
-(∀) would be appropriate. It allows to compute a set based on the
-elements of some other set.
+.. eql:statement:: FOR
+    :haswith:
 
-The data flow of a ``FOR`` block that uses elements of a set to
-iterate over can be conceptualized like this:
+    ``FOR``--compute a union of subsets based on values of another set
 
-.. code-block:: pseudo-eql
+    .. eql:synopsis::
 
-    WITH MODULE example
+        [ WITH <with-item> [, ...] ]
 
-    FOR <el>        # repeat for every element <el>
-        IN <set>    # of the set literal <set>
+        FOR <variable> IN "{" <iterator-set> [, ...]  "}"
 
-    UNION
-        <expr>  # map every element onto a result set,
-                # merging them all with a UNION
+        UNION <output-expr>
 
-    # optional clause
-    FILTER
-        <expr>  # filter the returned set of values
+        [ FILTER <expr> ]
 
-    # optional clause
-    ORDER BY
-        <expr>  # define ordering of the filtered set
+        [ ORDER BY <expr> [direction] [THEN ...] ]
 
-    # optional clause
-    OFFSET
-        <expr>  # slice the filtered/ordered set
+        [ OFFSET <expr> ]
 
-    # optional clause
-    LIMIT
-        <expr>  # slice the filtered/ordered set
+        [ LIMIT  <expr> ]
 
+    .. eql:clause:: FOR: FOR var IN A
 
-Typically a simple iteration over set elements is used in conjunction
-with an :eql:stmt:`INSERT` or an :eql:stmt:`UPDATE` statement. This
-mode is less useful with a :eql:stmt:`SELECT` expression since a
-``FILTER`` may accomplish the same end result.
+        :paramtype A: SET OF any
+        :returntype: any
 
-.. NOTE::
+        The ``FOR`` clause has this general form:
 
-    Technically, a ``FOR`` statement can be viewed as a special case
-    of ``GROUP``:
+        .. code-block:: pseudo-eql
 
-    .. code-block:: eql
+            FOR <variable> IN <iterator-expr>
 
-        FOR X IN {Foo}
-        UNION (INSERT Bar {foo := X});
+        where *iterator-expr* is a
+        :ref:`set constructor <ref_eql_expr_index_set_ctor>` of arbitrary
+        type.
 
-        # can be equivalently rewritten as:
-        GROUP Foo
-        USING _ := Foo
-        BY _
-        INTO X
-        UNION (INSERT Bar {foo := X});
+    .. eql:clause:: UNION: A UNION B
 
+        :paramtype A: any
+        :paramtype B: SET OF any
+        :returntype: any
 
-Clause signatures
-+++++++++++++++++
+        The ``UNION`` clause of the ``FOR`` statement has this general form:
 
-Here is a summary of clauses that can be used with ``FOR``:
+        .. code-block:: pseudo-eql
 
-- FOR *alias* IN ``SET OF`` *B*
-- *A* UNION ``SET OF`` *B*
-- *A* FILTER ``SET OF`` *B*
-- *A* ORDER BY ``SET OF`` *B*
-- ``SET OF`` *A* OFFSET ``SET OF`` *B*
-- ``SET OF`` *A* LIMIT ``SET OF`` *B*
+            UNION <output-expr>
+
+        Here, *output-expr* is an arbitrary expression that is evaluated for
+        every element in a set produced by evaluating the ``FOR`` clause.
+        The results of the evaluation are appended into the result set.
+
+    The optional :eql:clause:`FILTER <SELECT:FILTER>`,
+    :eql:clause:`ORDER <SELECT:ORDER>`, :eql:clause:`OFFSET <SELECT:OFFSET>`,
+    and :eql:clause:`LIMIT <SELECT:LIMIT>` apply to the result of the
+    ``FOR .. UNION`` evaluation and have the same meaning as in the
+    :eql:stmt:`SELECT` statement.
 
 
 .. _ref_eql_forstatement:
@@ -88,7 +76,7 @@ each element of the iterator some set is computed and combined via a
 The simplest use case is when the iterator is given by a set
 expression and it follows the general form of ``FOR x IN A ...``:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     # the iterator is an explicit set of tuples, so x is an
@@ -117,7 +105,7 @@ are cases when a bulk update lots of external data, that cannot be
 derived from the objects being updated. That is a good use-case when a
 ``FOR`` statement is appropriate.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # Here's an example of an update that is awkward to
     # express without the use of FOR statement
@@ -152,7 +140,7 @@ When updating data that mostly or completely depends on the objects
 being updated there's no need to use the ``FOR`` statement and it is not
 advised to use it for performance reasons.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     UPDATE User
@@ -179,7 +167,7 @@ in a later step with an update is often simpler with a ``FOR``
 statement helping to associate the link target to the link property in
 an intuitive manner.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     # Expressing this without FOR statement is fairly tedious.
     WITH

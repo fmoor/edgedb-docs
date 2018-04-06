@@ -53,7 +53,7 @@ The schema can be applied either via a migration tool or directly
 using ``CREATE MIGRATION`` and ``COMMIT MIGRATION`` commands. Let's do it in
 the interactive console via the low level EdgeQL commands.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     CREATE MODULE example;
 
@@ -94,7 +94,7 @@ name the module "example".
 
 Let's start with a few users and status objects:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     INSERT example::User {
         name := 'Alice Smith'
@@ -117,7 +117,7 @@ Note that alternatively, the users and statuses could have been created using
 
 Now that we have the basics set up, we can log the first issue:
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     INSERT Issue {
@@ -169,7 +169,7 @@ Let's add priority to the schema, first. We'll have one new
         required link name to str:
             constraint unique
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     CREATE MIGRATION example::d2
     FROM example::d1
@@ -183,7 +183,7 @@ Given the new schema we can use the migration tools to apply the
 changes to our existing EdgeDB data. After that we can create
 ``Status`` and ``Priority`` objects.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     INSERT example::Priority {
         name := 'High'
@@ -204,7 +204,7 @@ changes to our existing EdgeDB data. After that we can create
 With the priority objects all set up we can now update the ``Issue``
 to have "High" priority.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     UPDATE Issue
@@ -220,7 +220,7 @@ to have "High" priority.
 It seems though that the issue has actually been resolved, so let's
 make a comment about that and close the issue.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     INSERT Comment {
@@ -294,7 +294,7 @@ refactoring.
             # time if it is not specified at the point of comment
             # creation
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     CREATE MIGRATION example::d3
     FROM example::d2 TO eschema $$
@@ -306,7 +306,7 @@ After the migration we still need to fix all comments in our system to
 have some owner. In the example so far there was only comment but
 let's treat it as if we have several comments made by the same person.
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     WITH MODULE example
     UPDATE Comment
@@ -366,7 +366,7 @@ schema to make owner a required field for all ``Owned`` objects.
         link priority to Priority
         # notice we no longer need to override the owner link
 
-.. code-block:: eql
+.. code-block:: edgeql
 
     CREATE MIGRATION example::d4
     FROM example::d3

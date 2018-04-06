@@ -29,11 +29,11 @@ quoted identifiers start and end with a *backtick*
 must not start with an ampersand (``@``).
 
 .. productionlist:: edgeql
-    identifier: `plain_ident` | `quoted_ident`
-    plain_ident: `ident_first` `ident_rest`*
+    identifier: ``plain_ident`` | ``quoted_ident``
+    plain_ident: ``ident_first`` `ident_rest`*
     ident_first: <any letter, underscore>
     ident_rest: <any letter, digits, underscore>
-    quoted_ident: "`" `qident_first` `qident_rest`* "`"
+    quoted_ident: "`" ``qident_first`` `qident_rest`* "`"
     qident_first: <any character except "@">
     qident_rest: <any character>
 
@@ -54,9 +54,9 @@ Every identifier that is not a *reserved* keyword is a valid *name*.
 *Names* are used to refer to concepts, links, link properties, etc.
 
 .. productionlist:: edgeql
-    short_name: `not_keyword_ident` | `quoted_ident`
-    not_keyword_ident: <any `plain_ident` except for `keyword`>
-    keyword: `reserved_keyword` | `unreserved_keyword`
+    short_name: ``not_keyword_ident`` | ``quoted_ident``
+    not_keyword_ident: <any ``plain_ident`` except for `keyword`>
+    keyword: ``reserved_keyword`` | ``unreserved_keyword``
     reserved_keyword: case insensitive sequence matching any
                     : of the following
                     : "AGGREGATE" | "ALTER" | "AND" |
@@ -92,9 +92,9 @@ They can be used in most places where a short name can appear (such as
 paths and shapes).
 
 .. productionlist:: edgeql
-    name: `short_name` | `fq_name`
-    fq_name: `short_name` "::" `short_name` |
-           : `short_name` "::" `unreserved_keyword`
+    name: ``short_name`` | ``fq_name``
+    fq_name: ``short_name`` "::" ``short_name`` |
+           : ``short_name`` "::" ``unreserved_keyword``
 
 
 .. _ref_eql_lexical_const:
@@ -103,6 +103,12 @@ Constants
 ---------
 
 .. TODO
+
+
+.. _ref_eql_lexical_dollar_quoting:
+
+Dollar-quoted String Constants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Operators

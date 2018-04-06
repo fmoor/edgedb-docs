@@ -34,7 +34,7 @@ Polymorphic
     number of bytes in :eql:type:`bytes`, or the number of elements in
     an :eql:type:`array`.
 
-    .. code-block:: eql
+    .. code-block:: edgeql
 
         SELECT len('foo');
         # returns 3
