@@ -1,7 +1,7 @@
 .. _ref_eql_statements_for:
 
-For
----
+FOR
+===
 
 A ``FOR`` statement is used where mathematically a universal qualifier
 (∀) would be appropriate. It allows to compute a set based on the

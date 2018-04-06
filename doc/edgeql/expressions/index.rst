@@ -7,26 +7,6 @@ Expressions
 Expressions are used to represent a *value* or a *set of values* in EdgeQL
 commands.
 
-An expression is one of the following:
-
-- A :ref:`scalar literal <ref_eql_expr_index_literal>`
-- A :ref:`set reference <ref_eql_expr_index_setref>`
-- A :ref:`path <ref_eql_expr_index_path>`
-- A :ref:`shape annotation <ref_eql_expr_index_shape>`
-- A :ref:`parameter reference <ref_eql_expr_index_param>`
-- An :ref:`operator expression <ref_eql_expr_index_operator>`
-- A :ref:`function call <ref_eql_expr_index_function_call>`
-- A :ref:`type cast <ref_eql_expr_index_typecast>`
-- A :ref:`set constructor <ref_eql_expr_index_set_ctor>`
-- A :ref:`tuple constructor <ref_eql_expr_index_tuple_ctor>`
-- A :ref:`tuple element reference <ref_eql_expr_index_tuple_elref>`
-- An :ref:`array constructor <ref_eql_expr_index_array_ctor>`
-- An :ref:`array element reference <ref_eql_expr_index_array_elref>`
-  or an array slice
-- A :ref:`statement <ref_eql_expr_index_stmt>` in parentheses
-- Any :ref:`expression in parentheses <ref_eql_expr_index_parens>`
-  (parentheses are useful for grouping and explicit precedence)
-
 
 .. _ref_eql_expr_index_literal:
 
@@ -34,7 +14,7 @@ Scalar Literals
 ---------------
 
 A literal representation of a supported scalar type.
-See :ref:`this section <ref_eql_lexical_const>` for details about
+See :ref:`ref_eql_lexical_const` for details about
 the syntax for standard scalar literals.
 
 Additionally, any scalar value may be represented as a casted string literal:
@@ -83,8 +63,8 @@ shape syntax and semantics.
 
 .. _ref_eql_expr_index_param:
 
-Parameter References
---------------------
+Parameters
+----------
 
 A parameter reference is used to indicate a value that is supplied externally
 to an EdgeQL expression.  Parameter references are used in parametrized
@@ -201,10 +181,13 @@ it must be used together with a type cast:
     {}
 
 
+Tuples
+------
+
 .. _ref_eql_expr_index_tuple_ctor:
 
-Tuple Constructors
-------------------
+Tuple Constructor
+~~~~~~~~~~~~~~~~~
 
 A tuple constructor is an expression that consists of a sequence of
 comma-separated expressions enclosed in parentheses.  It produces a
@@ -221,7 +204,7 @@ information on tuple constructors.
 .. _ref_eql_expr_index_tuple_elref:
 
 Tuple Element References
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 An element of a tuple can be referenced in the form:
 
@@ -239,8 +222,8 @@ information on accessing tuple elements.
 
 .. _ref_eql_expr_index_array_ctor:
 
-Array Constructors
-------------------
+Arrays
+------
 
 An array constructor is an expression that consists of a sequence of
 comma-separated expressions *of the same type* enclosed in square brackets.
@@ -252,24 +235,6 @@ It produces an array value:
 
 See :ref:`array expression reference <ref_eql_expr_array_ctor>` for more
 information on array constructors.
-
-
-.. _ref_eql_expr_index_array_elref:
-
-Array Element References
-------------------------
-
-An element of an array can be referenced in the following form:
-
-.. code-block:: pseudo-eql
-
-    <expr> "[" <index-expr> "]"
-
-Here, *expr* is any expression of array type, and *index-expr* is any
-integer expression.
-
-See :ref:`array expression reference <ref_eql_expr_array_elref>` for more
-information on accessing array elements and slices.
 
 
 .. _ref_eql_expr_index_stmt:
@@ -290,8 +255,8 @@ See :ref:`ref_eql_statements` for more information.
 
 .. _ref_eql_expr_index_parens:
 
-Parenthesized Expressions
--------------------------
+Parentheses
+-----------
 
 Expressions can be enclosed in parentheses to indicate explicit evaluation
 precedence and to group subexpressions visually for better readability:

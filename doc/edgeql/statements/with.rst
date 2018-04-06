@@ -1,7 +1,7 @@
 .. _ref_eql_with:
 
-With block
-----------
+WITH block
+==========
 
 .. eql:keyword:: WITH
 

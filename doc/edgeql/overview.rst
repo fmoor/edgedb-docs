@@ -25,12 +25,13 @@ Type system
 
 EdgeQL is a strongly typed language.  Every value in EdgeQL has a type,
 which is determined statically from the database schema and the expression
-that defines that value.
+that defines that value.  Refer to :ref:`ref_datamodel_overview` for
+details about the type system.
 
 
 .. _ref_eql_fundamentals_set:
 
-Everything is a set
+Everything is a Set
 -------------------
 
 Every value in EdgeQL is viewed as a set of elements.
@@ -52,9 +53,44 @@ a special *value* denoting absence of data.  EdgeDB works with *sets*,
 so the absence of data is just an empty set.
 
 
+.. _ref_eql_fundamentals_functional:
+
+EdgeQL is Functional
+--------------------
+
+EdgeQL is a functional language in the sense that every expression can
+be represented as a composition of functions.
+
+Consider a query:
+
+.. code-block:: edgeql
+
+    SELECT User
+    FILTER User.age > 20
+    ORDER BY User.name;
+
+EdgeDB will evaluate this query as the following hypothetical functional
+expression:
+
+::
+
+    order(
+        filter(
+            select_all(type = 'User'),
+            predicate = function(u) => greater(u.age, 20)
+        ),
+        key = function(u) => u.name
+    )
+
+Notably, every EdgeQL statement can be interpreted as a pipeline: subsequent
+clauses use the result of the preceding clause as input.
+See :ref:`ref_eql_statements` for more information on how statements
+and clauses are interpreted.
+
+
 .. _ref_eql_fundamentals_references:
 
-Set references and paths
+Set References and Paths
 ------------------------
 
 A *set reference* is a *name* (a simple identifier or a qualified schema name)
@@ -93,8 +129,9 @@ are friends with some other user:
 
 .. _ref_eql_fundamentals_path_canon:
 
-The longest common path prefixes in an expression are treated as equivalent
-set references.
+When two or more paths in an expression share a common prefix
+(i.e. start the same), then their longest common path prefix is treated
+as an equivalent set reference
 
 .. code-block:: edgeql
 
@@ -108,42 +145,8 @@ The canonical form of the above query is:
     SELECT (UserFriends.first_name, UserFriends.last_name)
 
 
-See :ref:`ref_eql_expr_paths` for more information on path syntax.
-
-
-.. _ref_eql_fundamentals_functional:
-
-EdgeQL is functional
---------------------
-
-EdgeQL is a functional language in the sense that every expression can
-be represented as a composition of functions.
-
-Consider a query:
-
-.. code-block:: edgeql
-
-    SELECT User
-    FILTER User.age > 20
-    ORDER BY User.name;
-
-EdgeDB will evaluate this query as the following hypothetical functional
-expression:
-
-::
-
-    order(
-        filter(
-            select_all(type = 'User'),
-            predicate = function(u) => greater(u.age, 20)
-        ),
-        key = function(u) => u.name
-    )
-
-Notably, every EdgeQL statement can be interpreted as a pipeline: subsequent
-clauses use the result of the preceding clause as input.
-See :ref:`ref_eql_statements` for more information on how statements
-and clauses are interpreted.
+See :ref:`ref_eql_expr_paths` for more information on path syntax and
+behavior.
 
 
 .. _ref_eql_fundamentals_eval:
@@ -172,6 +175,8 @@ An expression is evaluated recursively using the following procedure:
    expressions.
 
 2. Make a cartesian product of all element-wise inputs.
+   See :ref:`ref_eql_fundamentals_emptyset` on what happens when the
+   product is empty.
 
 3. Iterate over the input product tuple, and on every iteration:
 
@@ -243,7 +248,8 @@ empty set.  In this situation there are two possible scenarios:
    the most common case.
 
 2. If *any* of the function arguments were declared as ``OPTIONAL``, the
-   function is called once and its result is returned.
+   function is called once with element-wise arguments as empty sets,
+   its result is returned.
 
 For example, the following query returns an empty set:
 

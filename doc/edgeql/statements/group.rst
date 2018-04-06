@@ -2,8 +2,8 @@
 
 .. _ref_eql_statements_group:
 
-Group
------
+GROUP
+=====
 
 A ``GROUP`` statement is used to allow operations on set partitions.
 The input set is partitioned using expressions in the ``USING`` and

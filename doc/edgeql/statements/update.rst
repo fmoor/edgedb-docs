@@ -1,7 +1,7 @@
 .. _ref_eql_statements_update:
 
-Update
-------
+UPDATE
+======
 
 It is possible to update already existing objects via ``UPDATE``
 statement. An update can target a single object or be a bulk update.

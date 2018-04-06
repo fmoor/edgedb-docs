@@ -1,7 +1,7 @@
 .. _ref_eql_statements_insert:
 
-Insert
-------
+INSERT
+======
 
 ``INSERT`` allows creating new objects in EdgeDB. Notice that
 generally ``id`` is not specified at creation time (although it can

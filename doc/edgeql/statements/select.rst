@@ -1,6 +1,6 @@
 .. _ref_eql_statements_select:
 
-Select
+SELECT
 ======
 
 .. eql:statement:: SELECT

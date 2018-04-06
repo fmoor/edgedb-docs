@@ -1,7 +1,7 @@
 .. _ref_eql_statements_delete:
 
-Delete
-------
+DELETE
+======
 
 ``DELETE`` statement removes the specified set of objects from the
 database. Therefore, a ``FILTER`` can be applied to the set being

@@ -4,6 +4,94 @@
 Array
 =====
 
+.. _ref_eql_expr_array_elref:
+
+Array Element Reference
+-----------------------
+
+An element of an array can be referenced in the following form:
+
+.. code-block:: pseudo-eql
+
+    <expr> "[" <index-expr> "]"
+
+Here, *expr* is any expression of array type, and *index-expr* is any
+integer expression.
+
+Example:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT [1, 2, 3][0]
+    {1}
+
+Negative indexing is supported:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT [1, 2, 3][-1]
+    {3}
+
+Referencing a non-existent array element will result in an empty set:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT [1, 2, 3][0]
+    {}
+
+
+.. _ref_eql_expr_array_slice:
+
+Array Slice
+-----------
+
+An array slice can be referenced in the following form:
+
+.. code-block:: pseudo-eql
+
+    <expr> "[" <lower-bound> : <upper-bound> "]"
+
+Here, *expr* is any expression of array type, and *lower-bound* and
+*upper-bound* are arbitrary integer expressions.  Both *lower-bound*,
+and *upper-bound* are optional.  An ommitted *lower-bound* default to zero,
+and an ommitted *upper-bound* defaults to the size of the array.
+The upper bound is non-inclusive.
+
+Examples:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT [1, 2, 3][0:2]
+    {
+      [1, 2]
+    }
+
+    db> SELECT [1, 2, 3][2:]
+    {
+      [3]
+    }
+
+    db> SELECT [1, 2, 3][:1]
+    {
+      [1]
+    }
+
+    db> SELECT [1, 2, 3][:-2]
+    {
+      [1]
+    }
+
+Referencing a non-existent array slice will result in an empty array:
+
+.. code-block:: pseudo-eql
+
+    db> SELECT [1, 2, 3][10:20]
+    {[]}
+
+
+Functions
+---------
+
 .. eql:function:: std::array_agg(SET OF any) -> array<any>
 
     :param $0: input set

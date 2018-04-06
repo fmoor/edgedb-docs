@@ -1,3 +1,5 @@
+.. _ref_datamodel_overview:
+
 Data Model
 ==========
 
