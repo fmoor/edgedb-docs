@@ -9,9 +9,8 @@ EdgeQL
     overview
     expressions/index
     statements/index
-    funcop/index
     ddl/index
-    introspection
+    funcop/index
     lexical
     hazmat
     cheatsheet

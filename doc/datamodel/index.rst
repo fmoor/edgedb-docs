@@ -45,3 +45,4 @@ also contain the following declarations:
     modules
     databases
     eschema/index
+    introspection
