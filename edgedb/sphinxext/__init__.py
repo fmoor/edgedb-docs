@@ -150,6 +150,11 @@ Notes:
   format used in PostgreSQL documentation:
   https://www.postgresql.org/docs/10/static/sql-select.html
 
+* An "inline-synopsis" role can be used to show some pseudo-eql markup
+  as an inline highlighted code block:
+
+  - :eql:inline-synopsis:`ADD ATTRIBUTE <attribute_name>`.
+
 
 Types
 -----
@@ -953,10 +958,17 @@ class EdgeQLDomain(s_domains.Domain):
         return fn
 
 
+class InlineSynopsis(d_nodes.literal):
+    tagname = 'inline-synopsis'
+
+
 def setup(app):
     app.add_lexer("eschema", EdgeSchemaLexer())
     app.add_lexer("eql", EdgeQLLexer())
     app.add_lexer("pseudo-eql", EdgeQLLexer())
     app.add_lexer("graphql", GraphQLLexer())
+
+    app.add_node(InlineSynopsis)
+    app.add_generic_role('eql:inline-synopsis', InlineSynopsis)
 
     app.add_domain(EdgeQLDomain)
