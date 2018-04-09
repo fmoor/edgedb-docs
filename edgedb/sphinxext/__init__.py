@@ -506,7 +506,7 @@ class BaseEQLDirective(s_directives.ObjectDescription):
 
         if name in objects:
             raise DirectiveParseError(
-                self, f'duplicate function {name} description')
+                self, f'duplicate {self.objtype} {name} description')
         objects[name] = (self.env.docname, self.objtype)
 
 
