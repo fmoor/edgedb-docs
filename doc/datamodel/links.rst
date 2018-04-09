@@ -8,9 +8,3 @@ Links
 
 Link Properties
 ===============
-
-
-.. _ref_datamodel_attributes:
-
-Type Attributes
-===============

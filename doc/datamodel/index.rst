@@ -42,6 +42,7 @@ also contain the following declarations:
     links
     constraints
     views
+    attributes
     modules
     databases
     eschema/index

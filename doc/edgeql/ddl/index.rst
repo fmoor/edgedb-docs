@@ -12,4 +12,8 @@ and is a low-level equivalent to
     :maxdepth: 3
     :hidden:
 
-    objects1
+    objects
+    links
+    linkprops
+    constraints
+    attributes
