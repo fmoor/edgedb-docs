@@ -583,6 +583,34 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
             '''),
             ['FLT'])
 
+    def test_eql_stmt_4(self):
+        src = '''
+
+        .. eql:statement:: SELECT
+
+            A short SELECT desc.
+
+            test
+            ====
+
+            123123
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //desc_content / section / title / text()
+            '''),
+            ['test'])
+
+        self.assertEqual(
+            x.xpath('''
+                //desc_content / section / paragraph / text()
+            '''),
+            ['123123'])
+
 
 class TestEqlInlineCode(unittest.TestCase, BaseDomainTest):
 

@@ -590,6 +590,9 @@ class EQLStatementDirective(BaseEQLDirective):
         if not hasattr(self.state.nested_parse.__func__, 'eql-wrapped'):
             func = self.state.nested_parse.__func__
 
+            # Monkey-patch 'state.nested_parse()' to allow sub-sections
+            # in :eql:statement: directive (otherwise we would have to
+            # copy/paste sphinx.directives.ObjectDescription.run() code.)
             def nested_parse_wrapper(*args, **kwargs):
                 func(self.state, *args, match_titles=True, **kwargs)
 
