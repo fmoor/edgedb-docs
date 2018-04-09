@@ -582,3 +582,20 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
                 literal / text()
             '''),
             ['FLT'])
+
+
+class TestEqlInlineCode(unittest.TestCase, BaseDomainTest):
+
+    def test_eql_inline_role_1(self):
+        src = '''
+        a test of :eql:inline-synopsis:`WITH <aaaa>`.
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //inline-synopsis / text()
+            '''),
+            ['WITH <aaaa>'])
