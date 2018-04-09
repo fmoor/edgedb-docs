@@ -193,6 +193,7 @@ To reference a keyword use a ":eql:kw:" role.  For instance:
 
 
 import re
+import types
 
 from edgedb.lang.edgeql.pygments import EdgeQLLexer
 from edgedb.lang.graphql.pygments import GraphQLLexer
@@ -581,8 +582,24 @@ class EQLStatementDirective(BaseEQLDirective):
 
         self.env.ref_context['eql:statement'] = self.names[-1]
 
+        if not hasattr(self.state.nested_parse.__func__, 'eql-wrapped'):
+            func = self.state.nested_parse.__func__
+
+            def nested_parse_wrapper(*args, **kwargs):
+                func(self.state, *args, match_titles=True, **kwargs)
+
+            setattr(nested_parse_wrapper, 'eql-wrapped', True)
+            setattr(nested_parse_wrapper, 'eql-func', func)
+            setattr(nested_parse_wrapper, 'eql-owner', self)
+            self.state.nested_parse = nested_parse_wrapper
+
     def after_content(self):
         del self.env.ref_context['eql:statement']
+
+        if getattr(self.state.nested_parse, 'eql-owner') is self:
+            self.state.nested_parse = types.MethodType(
+                getattr(self.state.nested_parse, 'eql-func'),
+                self.state)
 
 
 class EQLStatementClauseDirective(BaseEQLDirective):
