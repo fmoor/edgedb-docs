@@ -16,3 +16,4 @@ EdgeQL
     hazmat
     cheatsheet
     scope
+    eval

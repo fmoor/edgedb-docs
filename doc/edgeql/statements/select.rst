@@ -6,7 +6,7 @@ SELECT
 .. eql:statement:: SELECT
     :haswith:
 
-    A ``SELECT`` statement returns a set of objects.
+    ``SELECT``--retrieve or compute a set of values.
 
     .. eql:synopsis::
 
@@ -22,40 +22,109 @@ SELECT
 
         [ LIMIT  <expr> ]
 
-    The first clause is ``SELECT``. It indicates that ``FILTER``, ``ORDER
-    BY``, ``OFFSET``, or ``LIMIT`` clauses may follow an expression, i.e.
-    it makes an expression into a ``SELECT`` statement. Without any of the
-    optional clauses a ``(SELECT Expr)`` is completely equivalent to
-    ``Expr`` for any expression ``Expr``.
-
     .. eql:clause:: FILTER: A FILTER B
 
         :paramtype A: any
         :paramtype B: SET OF any
         :returntype: any
 
-        The ``FILTER`` clause ...
+        The optional ``FILTER`` clause has this general form:
 
-        The ``FILTER`` clause cannot affect anything aggregate-like in the
-        preceding ``SELECT`` clause. This is due to how ``FILTER`` clause
-        works. It can be conceptualized as a function like ``filter($input,
-        SET OF $cond)``, where the ``$input`` represents the value of the
-        preceding clause, while the ``$cond`` represents the filtering
-        condition expression. Consider the following:
+        .. code-block:: pseudo-eql
 
-        .. code-block:: edgeql
+            FILTER <condition>
 
-            WITH MODULE example
-            SELECT count(User)
-            FILTER User.name LIKE 'Alice%';
+        where condition is any expression that has a result of type
+        :eql:type:`std::bool`.  The condition is evaluated for every
+        element in the set produced by the ``SELECT`` clause.  The result
+        of the evaluation of the ``FILTER`` clause is a set of boolean
+        values.  If at least one value in this set is ``True``, the input
+        element is included, otherwise it is eliminated from the output.
+
+    .. eql:clause:: ORDER: A ORDER BY B
+
+        :paramtype A: any
+        :paramtype B: SET OF any
+        :returntype: any
+
+        The optional ``ORDER BY`` clause has this general form:
+
+        .. code-block:: pseudo-eql
+
+            ORDER BY
+                <expression> [ ASC | DESC ] [ EMPTY { FIRST | LAST } ]
+                [ THEN ... ]
+
+        The ``ORDER BY`` clause produces a result set sorted according
+        to the specified expression or expressions, which are evaluated
+        for every element of the input set.
+
+        If two elements are equal according to the leftmost *expression*, they
+        are compared according to the next expression and so on.  If two
+        elements are equal according to all expressions, the resulting order
+        is undefined.
+
+        Each *expression* can be an arbitrary expression that results in a
+        value of an *orderable type*.  Primitive types are orderable,
+        object types are not.  Additionally, the result of each expression
+        must be an empty set or a singleton.  Using an expression that may
+        produce more elements is a compile-time error.
+
+        An optional ``ASC`` or ``DESC`` keyword can be added after any
+        *expression*.  If not specified ``ASC`` is assumed by default.
+
+        If ``EMPTY LAST`` is specified, then input values that produce
+        an empty set when evaluating an *expression* are sorted *after*
+        all other values; if ``EMPTY FIRST`` is specified, then they
+        are sorted *before* all other values.  If neither is specified,
+        ``EMPTY FIRST`` is assumed when ``ASC`` is specified or implied,
+        and ``EMPTY LAST`` when ``DESC`` is specified.
+
+    .. eql:clause:: OFFSET: A OFFSET B
+
+        :paramtype A: SET OF any
+        :paramtype B: SET OF std::int64
+        :returntype: any
+
+        The optional ``OFFSET`` clause has this general form:
+
+        .. code-block:: pseudo-eql
+
+            OFFSET <element-count>
+
+        where *element-count* is a *singleton expression* of an integer
+        type.  This expression is evaluated once and its result is used
+        to skip the first *element-count* elements of the input set
+        while producing the output.  If *element-count* evaluates to
+        an empty set, it is equivalent to ``OFFSET 0``, which is equivalent
+        to omitting the ``OFFSET`` clause.  If *element-count* evaluates
+        to a value that is larger then the cardinality of the input set,
+        an empty set is produced as the result.
+
+    .. eql:clause:: LIMIT: A LIMIT B
+
+        :paramtype A: SET OF any
+        :paramtype B: SET OF std::int64
+        :returntype: any
+
+        The optional ``LIMIT`` clause has this general form:
+
+        .. code-block:: pseudo-eql
+
+            LIMIT <element-count>
+
+        where *element-count* is a *singleton expression* of an integer
+        type.  This expression is evaluated once and its result is used
+        to include only the first *element-count* elements of the input set
+        while producing the output.  If *element-count* evaluates to
+        an empty set, it is equivalent to specifying no ``LIMIT`` clause.
 
 
-See also :eql:stmt:`SELECT`.
-See also :eql:clause:`FILTER <SELECT:FILTER>`.
+Description
+-----------
 
-
-A ``SELECT`` statement returns a set of objects. The data flow of a
-``SELECT`` block can be conceptualized like this:
+``SELECT`` retrieves or computes a set of values.  The data
+flow of a ``SELECT`` block can be conceptualized like this:
 
 .. code-block:: pseudo-eql
 

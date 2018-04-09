@@ -42,6 +42,8 @@ those objects in the *expr* set that are instances of *object-type*.
   on the context.
 
 
+.. _ref_eql_expr_shapes_insert:
+
 Shapes in INSERT
 ----------------
 
@@ -64,6 +66,8 @@ The above query inserts a new ``Issue`` object, and creates and links a new
 See :ref:`ref_eql_statements_insert` for more information on the use of
 shapes in ``INSERT`` statements.
 
+
+.. _ref_eql_expr_shapes_update:
 
 Shapes in UPDATE
 ----------------

@@ -3,14 +3,6 @@
 DELETE
 ======
 
-``DELETE`` statement removes the specified set of objects from the
-database. Therefore, a ``FILTER`` can be applied to the set being
-removed, while the ``DELETE`` statement itself does not have a
-``FILTER`` clause. Just like ``INSERT`` if used as an expression it
-will return the set of removed objects.
-
-The data flow of a ``DELETE`` block can be conceptualized like this:
-
 .. eql:statement:: DELETE
     :haswith:
 
@@ -18,19 +10,40 @@ The data flow of a ``DELETE`` block can be conceptualized like this:
 
     .. eql:synopsis::
 
-        [ WITH module_aliases, expression_aliases ]
+        [ WITH <with-spec> [ , ... ] ]
 
-        DELETE
-            <expr>  # delete the following objects
+        DELETE <expr>
 
-    Notice that there are no other clauses in the ``DELETE`` statement.
-    This is because it is a mutation statement and not typically used to
-    query the DB.
+    .. eql:clause:: WITH: WITH
 
-Here's a simple example of deleting a specific user:
+        Alias declarations.
 
-.. code-block:: edgeql
+        The ``WITH`` clause allows specifying module aliases as well
+        as expression aliases that can be referenced by the ``UPDATE``
+        statement.  See :ref:`ref_eql_with` for more information.
 
-    WITH MODULE example
-    DELETE (SELECT User
-            FILTER User.name = 'Alice Smith');
+    .. eql:clause:: DELETE: DELETE
+
+        Remove objects returned by *expr* from the database.
+
+        .. eql:synopsis::
+
+            DELETE <expr>
+
+    Output
+    ~~~~~~
+
+    On successful completion, a ``DELETE`` statement returns the set
+    of deleted objects.
+
+
+    Examples
+    ~~~~~~~~
+
+    Here's a simple example of deleting a specific user:
+
+    .. code-block:: edgeql
+
+        WITH MODULE example
+        DELETE (SELECT User
+                FILTER User.name = 'Alice Smith');
