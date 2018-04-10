@@ -76,8 +76,7 @@ ALTER ABSTRACT LINK
 
         [ WITH <with-item> [, ...] ]
         ALTER ABSTRACT LINK <name>
-        \{ <action>; [...] \}
-        ;
+        \{ <action>; [...] \};
 
 
     Description
@@ -196,10 +195,10 @@ CREATE LINK
     .. eql:synopsis::
 
         CREATE [ REQUIRED ] [ INHERITED ] LINK <name> TO <typename>
-        [ \{ <action>; [...] \} ]
-        ;
+        [ \{ <action>; [...] \} ];
 
         CREATE [ INHERITED ] LINK <name> := <expression>;
+
 
     Description
     -----------
@@ -209,7 +208,7 @@ CREATE LINK
     There are two forms of ``CREATE LINK``, as shown in the syntax synopsis
     above.  The first form is the canonical definition form, and the second
     form is a syntax shorthand for defining a
-    :ref:`computable link <ref_eql_datamodel_computables>`.
+    :ref:`computable link <ref_datamodel_computables>`.
 
 
     Canonical Form
@@ -240,6 +239,26 @@ CREATE LINK
     link *name*.  The type of the link is inferred from the *expression*.
 
 
+    Examples
+    --------
+
+    Define a new string link ``interests`` on the ``User`` object type:
+
+    .. code-block:: edgeql
+
+        ALTER TYPE User {
+            CREATE LINK interests TO str;
+        };
+
+    Define a new computable link ``followers_count`` on the
+    ``User`` object type:
+
+    .. code-block:: edgeql
+
+        ALTER TYPE User {
+            CREATE LINK friends_count := count(__self__.friends);
+        };
+
 
 ALTER LINK
 ==========
@@ -253,8 +272,7 @@ ALTER LINK
     .. eql:synopsis::
 
         ALTER LINK <name>
-        \{ <action>; [...] \}
-        ;
+        \{ <action>; [...] \};
 
         ALTER LINK <name> <action>;
 
@@ -310,3 +328,54 @@ ALTER LINK
         :eql:inline-synopsis:`DROP CONSTRAINT <constraint-name>;`
             Remove a constraint from this link.  See
             :eql:stmt:`DROP CONSTRAINT` for details.
+
+
+    Examples
+    --------
+
+    Set the ``title`` attribute of link ``interests`` of object type ``User``
+    ``"Interests"``:
+
+    .. code-block:: edgeql
+
+        ALTER TYPE User {
+            ALTER LINK interests SET title := "Interests";
+        };
+
+    Add a minimum-length constraint to link ``name`` of object type ``User``:
+
+    .. code-block:: edgeql
+
+        ALTER TYPE User {
+            ALTER LINK name {
+                CREATE CONSTRAINT minlength(3);
+            };
+        };
+
+
+DROP LINK
+=========
+
+.. eql:statement:: DROP LINK
+
+    Remove a concrete link from the specified object type.
+
+    .. eql:synopsis::
+
+        DROP LINK <name>;
+
+    Description
+    -----------
+
+    ``DROP LINK`` removes the specified link from its
+    containing object type.  All links that inherit from this link
+    are also removed.
+
+    Examples
+    --------
+
+    Remove link ``interests`` from object type ``User``:
+
+    .. code-block:: edgeql
+
+        ALTER TYPE User DROP LINK interests;

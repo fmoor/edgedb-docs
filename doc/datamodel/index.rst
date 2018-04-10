@@ -40,6 +40,7 @@ also contain the following declarations:
     colltypes
     functions
     links
+    linkprops
     constraints
     views
     attributes
