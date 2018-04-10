@@ -65,8 +65,7 @@ ALTER ABSTRACT LINK PROPERTY
 
         [ WITH <with-item> [, ...] ]
         ALTER ABSTRACT LINK PROPERTY <name>
-        \{ <action>; [...] \}
-        ;
+        \{ <action>; [...] \};
 
     Description
     -----------
@@ -80,56 +79,58 @@ ALTER ABSTRACT LINK PROPERTY
         The following actions are allowed in the
         ``ALTER ABSTRACT LINK PROPERTY`` block:
 
-        ``RENAME TO <newname>;``
+        :eql:inline-synopsis:`RENAME TO <newname>;`
             Change the name of the link property item to *newname*.  All
             concrete link properties inheriting from this link property are
             also renamed.
 
-        ``EXTENDING <name> [, ...] [ FIRST | LAST | BEFORE <parent> | AFTER <parent> ]``
+        :eql:inline-synopsis:`EXTENDING ...`
+            Alter the link property parent list.
+            The full syntax of this action is:
+
+            .. eql:synopsis::
+
+                 EXTENDING <name> [, ...]
+                    [ FIRST | LAST | BEFORE <parent> | AFTER <parent> ]
+
             This action makes the link property item a child of the specified
-            list of parent link property items, *in addition* to the existing
-            parents.  The requirements for the parent-child relationship are
-            the same as when creating a link property.
+            list of parent link property items.  The requirements for the
+            parent-child relationship are the same as when creating
+            a link property.
 
             It is possible to specify the position in the parent list
             using the following optional keywords:
 
-            * ``FIRST``: insert parent(s) at the beginning of the parent list,
-            * ``LAST``: insert parent(s) at the end of the parent list,
-            * ``BEFORE <parent>``: insert parent(s) before an existing *parent*,
-            * ``AFTER <parent>``: insert parent(s) after an existing *parent*.
+            * ``FIRST`` -- insert parent(s) at the beginning of the
+              parent list,
+            * ``LAST`` -- insert parent(s) at the end of the parent list,
+            * ``BEFORE <parent>`` -- insert parent(s) before an
+              existing *parent*,
+            * ``AFTER <parent>`` -- insert parent(s) after an existing
+              *parent*.
 
-        ``SET <attribute> := <value>;``
+        :eql:inline-synopsis:`SET <attribute> := <value>;`
             Set link item's *attribute* to *value*.
             See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-        ``DROP ATTRIBUTE <attribute>;``
+        :eql:inline-synopsis:`DROP ATTRIBUTE <attribute>;`
             Remove link item's *attribute* to *value*.
             See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
 
-        ``CREATE LINK PROPERTY <property-name> [ \{ <subactions> \} ]``
-            Define a new link property item for this link.  See
-            :eql:stmt:`CREATE LINK PROPERTY` for details.
+        :eql:inline-synopsis:`ALTER TARGET <typename>`
+            Change the target type of the link property to the specified type.
 
-        ``ALTER LINK PROPERTY <property-name> \{ <subactions> \}``
-            Alter the definition of a link property item for this link.  See
-            :eql:stmt:`ALTER LINK PROPERTY` for details.
+        :eql:inline-synopsis:`CREATE CONSTRAINT <constraint-name> ...`
+            Define a new constraint for this link property.
+            See :eql:stmt:`CREATE CONSTRAINT` for details.
 
-        ``DROP LINK PROPERTY <property-name> \{ <subactions> \}``
-            Remove a link property item from this link.  See
-            :eql:stmt:`DROP LINK PROPERTY` for details.
+        :eql:inline-synopsis:`ALTER CONSTRAINT <constraint-name> ...`
+            Alter the definition of a constraint for this link property.
+            See :eql:stmt:`ALTER CONSTRAINT` for details.
 
-        ``CREATE CONSTRAINT <constraint-name> [ (<arguments>) ] [ \{ <subactions> \} ]``
-            Define a new constraint for this link.  See
-            :eql:stmt:`CREATE CONSTRAINT` for details.
-
-        ``ALTER CONSTRAINT <constraint-name> \{ <subactions> \}``
-            Alter the definition of a constraint for this link.  See
-            :eql:stmt:`ALTER CONSTRAINT` for details.
-
-        ``DROP CONSTRAINT <constraint-name>``
-            Remove a constraint from this link.  See
-            :eql:stmt:`DROP CONSTRAINT` for details.
+        :eql:inline-synopsis:`DROP CONSTRAINT <constraint-name>;`
+            Remove a constraint from this link property.
+            See :eql:stmt:`DROP CONSTRAINT` for details.
 
 
 DROP ABSTRACT LINK PROPERTY

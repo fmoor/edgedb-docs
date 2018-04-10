@@ -105,6 +105,12 @@ Constants
 .. TODO
 
 
+.. _ref_eql_lexical_dollar_quoting:
+
+Dollar-quoted String Constants
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 Operators
 ---------
 

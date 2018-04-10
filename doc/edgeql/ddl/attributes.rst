@@ -1,6 +1,6 @@
 .. _ref_eql_ddl_schema_attributes:
 
-
+=================
 Schema Attributes
 =================
 
@@ -9,7 +9,7 @@ This section describes the DDL commands pertaining to
 
 
 CREATE ATTRIBUTE
-----------------
+================
 
 .. eql:statement:: CREATE ATTRIBUTE
 
@@ -19,11 +19,11 @@ CREATE ATTRIBUTE
 
         [ WITH <with-item> [, ...] ]
         CREATE ATTRIBUTE <name> <typename>
-        [ \{ <subdefinition>; [...] \} ]
-        ;
+        [ \{ <subdefinition>; [...] \} ];
+
 
     Description
-    ~~~~~~~~~~~
+    -----------
 
     ``CREATE ATTRIBUTE`` defines a new schema attribute for use in the
     current database.
@@ -46,8 +46,18 @@ CREATE ATTRIBUTE
         * :eql:stmt:`SET <SET ATTRIBUTE>`
 
 
+    Examples
+    --------
+
+    Set the attribute ``title`` of object type ``User`` to ``"User"``:
+
+    .. code-block:: edgeql
+
+        ALTER TYPE User SET title := "User";
+
+
 DROP ATTRIBUTE
---------------
+==============
 
 .. eql:statement:: DROP ATTRIBUTE
 
@@ -59,13 +69,13 @@ DROP ATTRIBUTE
         DROP ATTRIBUTE <name>;
 
     Description
-    ~~~~~~~~~~~
+    -----------
 
     ``DROP ATTRIBUTE`` removes an existing schema attribute from the database
     schema.
 
     Examples
-    ~~~~~~~~
+    --------
 
     Drop the attribute ``extrainfo``:
 
@@ -75,7 +85,7 @@ DROP ATTRIBUTE
 
 
 SET ATTRIBUTE
--------------
+=============
 
 .. eql:statement:: SET ATTRIBUTE
 
@@ -86,7 +96,7 @@ SET ATTRIBUTE
         SET <attribute> := <value>
 
     Description
-    ~~~~~~~~~~~
+    -----------
 
     ``SET`` defines an attribute value for a schema item.
 
@@ -99,7 +109,7 @@ SET ATTRIBUTE
 
 
     Examples
-    ~~~~~~~~
+    --------
 
     Create an object type ``User`` and set its ``title`` attribute to
     ``"User type"``.
@@ -113,7 +123,7 @@ SET ATTRIBUTE
 
 
 DROP ATTRIBUTE (sub-action)
----------------------------
+===========================
 
 .. eql:statement:: DROP ATTRIBUTE VALUE
 
@@ -124,7 +134,7 @@ DROP ATTRIBUTE (sub-action)
         DROP ATTRIBUTE <attribute>;
 
     Description
-    ~~~~~~~~~~~
+    -----------
 
     ``DROP ATTRIBUTE`` removes an attribute value from a schema item.
 
@@ -136,12 +146,12 @@ DROP ATTRIBUTE (sub-action)
 
 
     Examples
-    ~~~~~~~~
+    --------
 
     Drop the ``title`` attribute from the ``User`` object type:
 
     .. code-block:: edgeql
 
         ALTER TYPE User {
-            DROP ATTRUBUTE title;
+            DROP ATTRIBUTE title;
         };

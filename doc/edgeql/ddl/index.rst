@@ -12,8 +12,12 @@ and is a low-level equivalent to
     :maxdepth: 3
     :hidden:
 
+    databases
+    modules
     objects
+    scalars
     links
     linkprops
     constraints
+    functions
     attributes

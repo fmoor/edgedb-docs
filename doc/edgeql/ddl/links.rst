@@ -126,6 +126,10 @@ ALTER ABSTRACT LINK
             Remove link item's *attribute* to *value*.
             See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
 
+        :eql:inline-synopsis:`ALTER TARGET <typename> [, ...]`
+            Change the target type of the link to the specified type or
+            a union of types.
+
         :eql:inline-synopsis:`CREATE LINK PROPERTY <property-name> ...`
             Define a new link property item for this link.  See
             :eql:stmt:`CREATE LINK PROPERTY` for details.
