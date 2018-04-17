@@ -40,11 +40,11 @@ CREATE ABSTRACT LINK
         between the new link and its parents.  Schema modifications
         to the parent(s) propagate to the child.
 
-        If the same *link property* name exists in more than one parent, or
+        If the same *property* name exists in more than one parent, or
         is explicitly defined in the new link and at least one parent,
-        then the data types of the link property targets must be *compatible*.
+        then the data types of the property targets must be *compatible*.
         If there is no conflict, the link properties are merged to form a
-        single link property in the new link item.
+        single property in the new link item.
 
     .. eql:clause:: ACTION: action
 
@@ -55,9 +55,9 @@ CREATE ABSTRACT LINK
             Set link item's *attribute* to *value*.
             See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-        :eql:inline-synopsis:`CREATE LINK PROPERTY`
-            Define a concrete link property on the link.
-            See :eql:stmt:`CREATE LINK PROPERTY` for details.
+        :eql:inline-synopsis:`CREATE PROPERTY`
+            Define a concrete property on the link.
+            See :eql:stmt:`CREATE PROPERTY` for details.
 
         :eql:inline-synopsis:`CREATE CONSTRAINT`
             Define a concrete constraint on the link.
@@ -123,24 +123,24 @@ ALTER ABSTRACT LINK
             See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
         :eql:inline-synopsis:`DROP ATTRIBUTE <attribute>;`
-            Remove link item's *attribute* to *value*.
+            Remove link item's *attribute*.
             See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
 
         :eql:inline-synopsis:`ALTER TARGET <typename> [, ...]`
             Change the target type of the link to the specified type or
             a union of types.
 
-        :eql:inline-synopsis:`CREATE LINK PROPERTY <property-name> ...`
-            Define a new link property item for this link.  See
-            :eql:stmt:`CREATE LINK PROPERTY` for details.
+        :eql:inline-synopsis:`CREATE PROPERTY <property-name> ...`
+            Define a new property item for this link.  See
+            :eql:stmt:`CREATE PROPERTY` for details.
 
-        :eql:inline-synopsis:`ALTER LINK PROPERTY <property-name> ...`
-            Alter the definition of a link property item for this link.  See
-            :eql:stmt:`ALTER LINK PROPERTY` for details.
+        :eql:inline-synopsis:`ALTER PROPERTY <property-name> ...`
+            Alter the definition of a property item for this link.  See
+            :eql:stmt:`ALTER PROPERTY` for details.
 
-        :eql:inline-synopsis:`DROP LINK PROPERTY <property-name>;`
-            Remove a link property item from this link.  See
-            :eql:stmt:`DROP LINK PROPERTY` for details.
+        :eql:inline-synopsis:`DROP PROPERTY <property-name>;`
+            Remove a property item from this link.  See
+            :eql:stmt:`DROP PROPERTY` for details.
 
         :eql:inline-synopsis:`CREATE CONSTRAINT <constraint-name> ...`
             Define a new constraint for this link.  See
@@ -309,17 +309,17 @@ ALTER LINK
             Remove link item's *attribute* to *value*.
             See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
 
-        :eql:inline-synopsis:`CREATE LINK PROPERTY <property-name> ...`
-            Define a new link property item for this link.  See
-            :eql:stmt:`CREATE LINK PROPERTY` for details.
+        :eql:inline-synopsis:`CREATE PROPERTY <property-name> ...`
+            Define a new property item for this link.  See
+            :eql:stmt:`CREATE PROPERTY` for details.
 
-        :eql:inline-synopsis:`ALTER LINK PROPERTY <property-name> ...`
-            Alter the definition of a link property item for this link.  See
-            :eql:stmt:`ALTER LINK PROPERTY` for details.
+        :eql:inline-synopsis:`ALTER PROPERTY <property-name> ...`
+            Alter the definition of a property item for this link.  See
+            :eql:stmt:`ALTER PROPERTY` for details.
 
-        :eql:inline-synopsis:`DROP LINK PROPERTY <property-name>;`
-            Remove a link property item from this link.  See
-            :eql:stmt:`DROP LINK PROPERTY` for details.
+        :eql:inline-synopsis:`DROP PROPERTY <property-name>;`
+            Remove a property item from this link.  See
+            :eql:stmt:`DROP PROPERTY` for details.
 
         :eql:inline-synopsis:`CREATE CONSTRAINT <constraint-name> ...`
             Define a new constraint for this link.  See

@@ -17,7 +17,8 @@ and is a low-level equivalent to
     objects
     scalars
     links
-    linkprops
+    props
+    indexes
     constraints
     functions
     attributes

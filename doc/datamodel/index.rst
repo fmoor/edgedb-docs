@@ -26,7 +26,7 @@ EdgeDB schemas consist of :ref:`modules <ref_datamodel_modules>` and can
 also contain the following declarations:
 
 * :ref:`ref_datamodel_links`
-* :ref:`ref_datamodel_linkprops`
+* :ref:`ref_datamodel_props`
 * :ref:`ref_datamodel_constraints`
 * :ref:`ref_datamodel_attributes`
 * :ref:`ref_datamodel_functions`
@@ -40,7 +40,8 @@ also contain the following declarations:
     colltypes
     functions
     links
-    linkprops
+    props
+    indexes
     constraints
     views
     attributes
