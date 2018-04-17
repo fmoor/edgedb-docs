@@ -181,7 +181,7 @@ class TestDocSnippets(unittest.TestCase):
 
     def run_block_test(self, block):
         try:
-            if block.lang == 'eql':
+            if block.lang == 'edgeql':
                 edgeql_parser.parse_block(block.code)
             elif block.lang == 'eschema':
                 schema_parser.parse(block.code)
@@ -217,14 +217,14 @@ class TestDocSnippets(unittest.TestCase):
         In large applications, the schema will usually be split
         into several :ref:`modules<ref_schema_evolution_modules>`.
 
-        .. code-block:: eql
+        .. code-block:: edgeql
 
             SELECT 122 + foo();
 
         A *schema module* defines the effective namespace for
         elements it defines.
 
-        .. code-block:: eql
+        .. code-block:: edgeql
 
             SELECT 42;
             # ^ expected to return 42

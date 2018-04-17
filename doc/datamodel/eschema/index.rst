@@ -9,5 +9,3 @@ EdgeDB Schema
     :hidden:
 
     lexical
-    architecture
-    evolution

@@ -14,7 +14,7 @@ Polymorphic
     Optional parameter keyword
 
 
-.. eql:type:: SET-OF
+.. eql:type:: SET OF
 
     Whole-set parameter keyword
 

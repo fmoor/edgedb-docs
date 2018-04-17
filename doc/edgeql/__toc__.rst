@@ -12,7 +12,4 @@ EdgeQL
     ddl/index
     funcop/index
     lexical
-    hazmat
-    cheatsheet
-    scope
     eval

@@ -210,7 +210,9 @@ from edgedb.lang.edgeql import codegen as ql_gen
 from edgedb.lang.common import markup  # NoQA
 
 from docutils import nodes as d_nodes
+from docutils import utils as d_utils
 from docutils.parsers.rst import directives as d_directives
+from docutils.parsers.rst import roles as d_roles
 
 from sphinx import addnodes as s_nodes
 from sphinx import directives as s_directives
@@ -499,21 +501,23 @@ class BaseEQLDirective(s_directives.ObjectDescription):
         return [indexnode, node]
 
     def add_target_and_index(self, name, sig, signode):
-        if name in self.state.document.ids:
+        target = name.replace(' ', '-')
+
+        if target in self.state.document.ids:
             raise DirectiveParseError(
                 self, f'duplicate {self.objtype} {name} description')
 
-        signode['names'].append(name)
-        signode['ids'].append(name)
+        signode['names'].append(target)
+        signode['ids'].append(target)
         signode['first'] = (not self.names)
         self.state.document.note_explicit_target(signode)
 
         objects = self.env.domaindata['eql']['objects']
 
-        if name in objects:
+        if target in objects:
             raise DirectiveParseError(
                 self, f'duplicate {self.objtype} {name} description')
-        objects[name] = (self.env.docname, self.objtype)
+        objects[target] = (self.env.docname, self.objtype)
 
 
 class EQLTypeDirective(BaseEQLDirective):
@@ -590,9 +594,6 @@ class EQLStatementDirective(BaseEQLDirective):
         if not hasattr(self.state.nested_parse.__func__, 'eql-wrapped'):
             func = self.state.nested_parse.__func__
 
-            # Monkey-patch 'state.nested_parse()' to allow sub-sections
-            # in :eql:statement: directive (otherwise we would have to
-            # copy/paste sphinx.directives.ObjectDescription.run() code.)
             def nested_parse_wrapper(*args, **kwargs):
                 func(self.state, *args, match_titles=True, **kwargs)
 
@@ -896,7 +897,7 @@ class EdgeQLDomain(s_domains.Domain):
         objects = self.data['objects']
         expected_type = self._role_to_object_type[type]
 
-        target = target
+        target = target.replace(' ', '-')
         if expected_type == 'keyword':
             target = f'keyword::{target}'
         elif expected_type == 'operator':
@@ -961,8 +962,17 @@ class EdgeQLDomain(s_domains.Domain):
         return fn
 
 
-class InlineSynopsis(d_nodes.literal):
-    tagname = 'inline-synopsis'
+class InlineCodeRole:
+
+    def __init__(self, lang):
+        self.lang = lang
+
+    def __call__(self, role, rawtext, text, lineno, inliner,
+                 options={}, content=[]):
+        d_roles.set_classes(options)
+        node = d_nodes.literal(rawtext, d_utils.unescape(text), **options)
+        node['eql-lang'] = self.lang
+        return [node], []
 
 
 def setup(app):
@@ -971,7 +981,6 @@ def setup(app):
     app.add_lexer("pseudo-eql", EdgeQLLexer())
     app.add_lexer("graphql", GraphQLLexer())
 
-    app.add_node(InlineSynopsis)
-    app.add_generic_role('eql:inline-synopsis', InlineSynopsis)
+    app.add_role('eql:inline-synopsis', InlineCodeRole('eql-synopsis'))
 
     app.add_domain(EdgeQLDomain)

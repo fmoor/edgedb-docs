@@ -13,37 +13,36 @@ Once the EdgeDB server is up and running the first thing to do is to
 add a schema that we will be using. To do that, let's consider which
 objects we will need in our system. Obviously we want a ``User`` and
 an ``Issue``. We probably want a ``Status``, too. In order to provide
-feedback on issues a ``Comment`` concept seems like a good idea. So
-let's start with defining the schema with these 4 concepts. Later on,
-if we need more, we can amend the schema (producing a
-:ref:`migration <ref_schema_evolution>` to alter the database).
+feedback on issues a ``Comment`` type seems like a good idea. So
+let's start with defining the schema with these 4 types. Later on,
+if we need more, we can amend the schema.
 
 The original schema would be something like this:
 
 .. code-block:: eschema
 
-    concept User:
-        required link name to str
+    type User:
+        required property name -> str
 
-    concept Issue:
-        required link text to str
-        required link status to Status
-        required link owner to User
+    type Issue:
+        required property text -> str
+        required link status -> Status
+        required link owner -> User
 
-    concept Status:
-        required link name to str:
+    type Status:
+        required property name -> str:
             # the status names should be unique
             constraint unique
 
-    concept Comment:
-        required link text to str
+    type Comment:
+        required property text -> str
         # It makes more sense to link comments to issues rather than
         # vice-versa, since that makes their coupling in the schema
         # less tight. This is a good practice for relationships that
         # don't represent inherent properties.
-        required link issue to Issue:
-            mapping := '*1'
-        link timestamp to datetime:
+        required link issue -> Issue:
+            cardinality := '*1'
+        property timestamp -> datetime:
             default := SELECT datetime::current_datetime()
             # the timestap will be automatically set to the current
             # time if it is not specified at the point of comment
@@ -58,28 +57,28 @@ the interactive console via the low level EdgeQL commands.
     CREATE MODULE example;
 
     CREATE MIGRATION example::d1 TO eschema $$
-    concept User:
-        required link name to str
+    type User:
+        required property name -> str
 
-    concept Issue:
-        required link text to str
-        required link status to Status
-        required link owner to User
+    type Issue:
+        required property text -> str
+        required link status -> Status
+        required link owner -> User
 
-    concept Status:
-        required link name to str:
+    type Status:
+        required property name -> str:
             # the status names should be unique
             constraint unique
 
-    concept Comment:
-        required link text to str
+    type Comment:
+        required property text -> str
         # It makes more sense to link comments to issues rather than
         # vice-versa, since that makes their coupling in the schema
         # less tight. This is a good practice for relationships that
         # don't represent inherent properties.
-        required link issue to Issue:
-            mapping := '*1'
-        link timestamp to datetime:
+        required link issue -> Issue:
+            cardinality := '*1'
+        property timestamp -> datetime:
             default := SELECT datetime::current_datetime()
             # the timestap will be automatically set to the current
             # time if it is not specified at the point of comment
@@ -128,45 +127,45 @@ Now that we have the basics set up, we can log the first issue:
     };
 
 Let's add priority to the schema, first. We'll have one new
-``concept`` and a change to the existing ``Issue``:
+``type`` and a change to the existing ``Issue``:
 
 .. code-block:: eschema
 
-    concept User:
-        required link name to str
+    type User:
+        required property name -> str
 
-    concept Status:
-        required link name to str:
+    type Status:
+        required property name -> str:
             # the status names should be unique
             constraint unique
 
-    concept Comment:
-        required link text to str
+    type Comment:
+        required property text -> str
         # It makes more sense to link comments to issues rather than
         # vice-versa, since that makes their coupling in the schema
         # less tight. This is a good practice for relationships that
         # don't represent inherent properties.
-        required link issue to Issue:
-            mapping := '*1'
-        link timestamp to datetime:
+        required link issue -> Issue:
+            cardinality := '*1'
+        property timestamp -> datetime:
             default := SELECT datetime::current_datetime()
             # the timestap will be automatically set to the current
             # time if it is not specified at the point of comment
             # creation
 
     #
-    # no changes to the above concepts
+    # no changes to the above types
     #
 
-    concept Issue:
-        required link text to str
-        required link status to Status
-        required link owner to User
-        link priority to Priority
+    type Issue:
+        required property text -> str
+        required link status -> Status
+        required link owner -> User
+        link priority -> Priority
         # let's make priority optional
 
-    concept Priority:
-        required link name to str:
+    type Priority:
+        required property name -> str:
             constraint unique
 
 .. code-block:: edgeql
@@ -240,55 +239,55 @@ make a comment about that and close the issue.
 At this point we may have realized that ``Issue`` and ``Comment`` have
 some underlying similarity, they are both pieces of text written by
 some user. Moreover, we could envision that as the system grows we
-could have other concepts that are owned by users as well as other
+could have other types that are owned by users as well as other
 kinds of text objects that record messages and such. While we're at
-it, we might as well also create an abstract concept for things with a
+it, we might as well also create an abstract type for things with a
 ``name``. So let's update the schema again, this time mostly
 refactoring.
 
 .. code-block:: eschema
 
-    abstract concept Named:
-        required link name to str
+    abstract type Named:
+        required property name -> str
 
     # Dictionary is a NamedObject variant, that enforces
     # name uniqueness across all instances if its subclass.
-    abstract concept Dictionary extending Named:
-        required link name to str:
+    abstract type Dictionary extending Named:
+        required property name -> str:
             delegated constraint unique
 
-    abstract concept Text:
+    abstract type Text:
         # This is an abstract object containing text.
-        required link text to str:
+        required property text -> str:
             # let's limit the maximum length of text to 10000
             # characters.
             constraint maxlength(10000)
 
-    abstract concept Owned:
+    abstract type Owned:
         # don't make the link owner required so that we can first
         # assign an owner to Comment objects already in the DB
-        link owner to User:
-            mapping := '*1'
+        link owner -> User:
+            cardinality := '*1'
 
-    concept User extending Named
+    type User extending Named
     # no need to specify 'link name' here anymore as it's inherited
 
-    concept Issue extending Text, Owned:
-        required link status to Status
-        link priority to Priority
-        required link owner to User:
-            mapping := '*1'
+    type Issue extending Text, Owned:
+        required link status -> Status
+        link priority -> Priority
+        required link owner -> User:
+            cardinality := '*1'
         # because we override the link owner to be required,
         # we need to keep this definition
 
-    concept Priority extending Dictionary
+    type Priority extending Dictionary
 
-    concept Status extending Dictionary
+    type Status extending Dictionary
 
-    concept Comment extending Text, Owned:
-        required link issue to Issue:
-            mapping := '*1'
-        link timestamp to datetime:
+    type Comment extending Text, Owned:
+        required link issue -> Issue:
+            cardinality := '*1'
+        property timestamp -> datetime:
             default := SELECT datetime::current_datetime()
             # the timestap will be automatically set to the current
             # time if it is not specified at the point of comment
@@ -319,51 +318,51 @@ schema to make owner a required field for all ``Owned`` objects.
 
 .. code-block:: eschema
 
-    abstract concept Named:
-        required link name to str
+    abstract type Named:
+        required property name -> str
 
     # Dictionary is a NamedObject variant, that enforces
     # name uniqueness across all instances if its subclass.
-    abstract concept Dictionary extending Named:
-        required link name to str:
+    abstract type Dictionary extending Named:
+        required property name -> str:
             delegated constraint unique
 
-    abstract concept Text:
+    abstract type Text:
         # This is an abstract object containing text.
-        required link text to str:
+        required property text -> str:
             # let's limit the maximum length of text to 10000
             # characters.
             constraint maxlength(10000)
 
-    concept User extending Named
+    type User extending Named
     # no need to specify 'link name' here anymore as it's inherited
 
-    concept Priority extending Dictionary
+    type Priority extending Dictionary
 
-    concept Status extending Dictionary
+    type Status extending Dictionary
 
-    concept Comment extending Text, Owned:
-        required link issue to Issue:
-            mapping := '*1'
-        link timestamp to datetime:
+    type Comment extending Text, Owned:
+        required link issue -> Issue:
+            cardinality := '*1'
+        property timestamp -> datetime:
             default := SELECT datetime::current_datetime()
             # the timestap will be automatically set to the current
             # time if it is not specified at the point of comment
             # creation
 
     #
-    # just as before, no changes to the above concepts
+    # just as before, no changes to the above types
     #
 
-    abstract concept Owned:
+    abstract type Owned:
         # don't make the link owner required so that we can first
         # assign an owner to Comment objects already in the DB
-        required link owner to User:
-            mapping := '*1'
+        required link owner -> User:
+            cardinality := '*1'
 
-    concept Issue extending Text, Owned:
-        required link status to Status
-        link priority to Priority
+    type Issue extending Text, Owned:
+        required link status -> Status
+        link priority -> Priority
         # notice we no longer need to override the owner link
 
 .. code-block:: edgeql

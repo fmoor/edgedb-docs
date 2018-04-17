@@ -190,7 +190,7 @@ DROP ABSTRACT LINK
 CREATE LINK
 ===========
 
-.. eql:statement:: CREATE-LINK
+.. eql:statement:: CREATE LINK
     :haswith:
 
     Define a new :ref:`concrete link <ref_datamodel_links>` for the

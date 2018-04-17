@@ -128,4 +128,4 @@ Parameters:
 
 
 Concrete links can also be defined using the
-:eql:stmt:`CREATE LINK <CREATE-LINK>` EdgeQL command.
+:eql:stmt:`CREATE LINK` EdgeQL command.

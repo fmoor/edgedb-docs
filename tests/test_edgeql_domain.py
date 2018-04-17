@@ -526,10 +526,10 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
 
             123
 
-        .. eql:statement:: SELECT
+        .. eql:statement:: CREATE FUNCTION
             :haswith:
 
-            A short SELECT desc.
+            A short CREATE FUNCTION desc.
 
             .. eql:synopsis::
 
@@ -543,9 +543,9 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
 
                 blah
 
-        A ref to :eql:stmt:`SELECT`
+        A ref to :eql:stmt:`CREATE FUNCTION`
 
-        A ref to :eql:clause:`FLT <SELECT:FILTER>`.
+        A ref to :eql:clause:`FLT <CREATE FUNCTION:FILTER>`.
         '''
 
         out = self.build(src, format='xml')
@@ -569,16 +569,16 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
             x.xpath('''
                 //paragraph /
                 reference[@eql-type="statement" and
-                          @refid="statement::SELECT"] /
+                          @refid="statement::CREATE-FUNCTION"] /
                 literal / text()
             '''),
-            ['SELECT'])
+            ['CREATE FUNCTION'])
 
         self.assertEqual(
             x.xpath('''
                 //paragraph /
                 reference[@eql-type="clause" and
-                          @refid="clause::SELECT::FILTER"] /
+                          @refid="clause::CREATE-FUNCTION::FILTER"] /
                 literal / text()
             '''),
             ['FLT'])
@@ -624,6 +624,6 @@ class TestEqlInlineCode(unittest.TestCase, BaseDomainTest):
 
         self.assertEqual(
             x.xpath('''
-                //inline-synopsis / text()
+                //literal[@eql-lang="eql-synopsis"] / text()
             '''),
             ['WITH <aaaa>'])

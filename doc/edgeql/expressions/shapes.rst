@@ -140,7 +140,7 @@ information about how many issues they have:
     };
 
 Similarly, we can add a filter based on the number of issues that a
-user has by referring to the :ref:`computable<ref_eql_computables>`
+user has by referring to the :ref:`computable<ref_datamodel_computables>`
 defined by the shape:
 
 .. code-block:: edgeql
@@ -150,7 +150,7 @@ defined by the shape:
         issues := count(User.<owner[IS Issue])
     } FILTER User.issues > 5;
 
-In order to refer to :ref:`computables<ref_eql_computables>` a
+In order to refer to :ref:`computables<ref_datamodel_computables>` a
 shape must be in the same lexical statement as the expression
 referring to it.
 

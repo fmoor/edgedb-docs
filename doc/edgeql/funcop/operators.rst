@@ -75,7 +75,7 @@ Basic set operators:
     Treat a statement as an expression.
 
     Wrapping a statement into parentheses to make into expression
-    treats the entire argument set as a :eql:type:`SET-OF`.
+    treats the entire argument set as a :eql:type:`SET OF`.
 
     ``(SELECT User)`` is the same as ``{User}``.
 

@@ -76,7 +76,7 @@ CREATE TYPE
 
         :eql:inline-synopsis:`CREATE LINK`
             Define a concrete link on the object type.
-            See :eql:stmt:`CREATE LINK <CREATE-LINK>` for details.
+            See :eql:stmt:`CREATE LINK` for details.
 
 
     Examples
@@ -172,7 +172,7 @@ ALTER TYPE
 
     :eql:inline-synopsis:`CREATE LINK <link-name> ...`
         Define a new link for this object type.  See
-        :eql:stmt:`CREATE LINK <CREATE-LINK>` for details.
+        :eql:stmt:`CREATE LINK` for details.
 
     :eql:inline-synopsis:`ALTER LINK <link-name> ...`
         Alter the definition of a link for this object type.  See
