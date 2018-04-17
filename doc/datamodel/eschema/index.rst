@@ -1,7 +1,7 @@
 .. _ref_eschema:
 
-Declarative Schema
-==================
+EdgeDB Schema
+=============
 
 
 .. toctree::

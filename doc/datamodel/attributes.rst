@@ -1,4 +1,5 @@
 .. _ref_datamodel_attributes:
 
-Attributes
-==========
+=================
+Schema Attributes
+=================

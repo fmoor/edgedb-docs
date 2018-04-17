@@ -48,7 +48,7 @@ CREATE TYPE
     :eql:inline-synopsis:`<name>`
         The name (optionally module-qualified) of the new type.
 
-    :eql:inline-synopsis:`EXTENDING: EXTENDING <base> [, ...]`
+    :eql:inline-synopsis:`EXTENDING <base> [, ...]`
         Optional clause specifying the *supertypes* of the new type.
 
         Use of ``EXTENDING`` creates a persistent type relationship
