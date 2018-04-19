@@ -32,7 +32,7 @@ declaration:
 Parameters:
 
     :eql:inline-synopsis:`<link_name>`
-        Specifies the name of the link item.  Customarily, link type names
+        Specifies the name of the link item.  Customarily, link names
         are lowercase, with words separated by underscores as necessary for
         readability.
 
@@ -52,9 +52,6 @@ Parameters:
     :eql:inline-synopsis:`<property_declarations>`
         :ref:`Property <ref_datamodel_props>` declarations.
 
-    :eql:inline-synopsis:`<constraint_declarations>`
-        :ref:`Constraint <ref_datamodel_constraints>` declarations.
-
     :eql:inline-synopsis:`<attribute_declarations>`
         :ref:`Schema attribute <ref_datamodel_attributes>` declarations.
 
@@ -62,6 +59,8 @@ Parameters:
 Abstract links can also be defined using the :eql:stmt:`CREATE ABSTRACT LINK`
 EdgeQL command.
 
+
+.. _ref_datamodel_links_concrete:
 
 Concrete Links
 --------------
@@ -77,6 +76,7 @@ declaration in the context of a ``type`` declaration:
             [ expr := <computable_expr> ]
             [ default := <default_expr> ]
             [ <attribute_declarations> ]
+            [ <constraint_declarations> ]
 
     shorthand form for computable link declaration:
 
@@ -125,6 +125,9 @@ Parameters:
 
     :eql:inline-synopsis:`<attribute_declarations>`
         :ref:`Schema attribute <ref_datamodel_attributes>` declarations.
+
+    :eql:inline-synopsis:`<constraint_declarations>`
+        :ref:`Constraint <ref_datamodel_constraints>` declarations.
 
 
 Concrete links can also be defined using the

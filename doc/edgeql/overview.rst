@@ -25,8 +25,8 @@ Type system
 
 EdgeQL is a strongly typed language.  Every value in EdgeQL has a type,
 which is determined statically from the database schema and the expression
-that defines that value.  Refer to :ref:`ref_datamodel_overview` for
-details about the type system.
+that defines that value.  Refer to :ref:`Data Model <ref_datamodel_overview>`
+for details about the type system.
 
 
 .. _ref_eql_fundamentals_set:

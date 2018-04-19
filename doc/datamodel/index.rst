@@ -44,7 +44,7 @@ There are several kinds of schema items:
 Inheritance
 ===========
 
-Many items in EdgeDB schema support *inheritance* as a composition mechanism.
+Most items in EdgeDB schema support *inheritance* as a composition mechanism.
 Schema items can *extend* other item(s) of the same item kind.  When extending,
 *child* items inherit the aspects of the parent item(s) in the manner specific
 to the schema item kind.  For example, when an object type extends another
