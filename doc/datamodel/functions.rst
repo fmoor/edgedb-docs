@@ -10,12 +10,12 @@ Definition
 
 A function may be defined in EdgeDB Schema using the ``function`` declaration:
 
-.. code-block:: pseudo-eql
+.. eschema:synopsis::
 
     function <funcname> ([<argspec>] [, ...]) -> <returnspec>:
         from <language> := <functionbody>
-        [ initial value := <initial_value> ]
-        [ <attribute_declarations> ]
+        [ initial value := <initial-value> ]
+        [ <attribute-declarations> ]
 
     where <argspec> is:
 
@@ -29,15 +29,15 @@ A function may be defined in EdgeDB Schema using the ``function`` declaration:
 Parameters
 ----------
 
-*funcname*
+:eschema:synopsis:`<funcname>`
     The function name.
 
-*argname*
+:eschema:synopsis:`<argname>`
     The optional name of an argument.  If not specified, the argument
     is called a *positional argument*, if specified, the argument is called a
     *keyword argument*.  Positional arguments cannot follow keyword arguments.
 
-*argmode*
+:eschema:synopsis:`<argmode>`
     The mode of an argument: ``set of`` or ``optional`` or ``variadic``.
 
     The ``set of`` modifier indicates that the function is taking the
@@ -53,25 +53,25 @@ Parameters
     arguments will be passed as as array of the argument type.
     Positional arguments cannot follow a ``VARIADIC`` argument.
 
-*argtype*
+:eschema:synopsis:`<argtype>`
     The data type of the function's arguments
     (optionally module-qualified).
 
-*default*
+:eschema:synopsis:`<default>`
     An expression to be used as default value if the parameter is not
     specified.  The expression has to be of a type compatible with the
     type of the argument.
 
-*rettype*
+:eschema:synopsis:`<rettype>`
     The return data type (optionally module-qualified).
     The ``set of`` modifier indicates that the function will return
     a non-singleton set.
 
-*language*
+:eschema:synopsis:`<language>`
     The name of the language that the function is implemented in.
     The only currently supported value is ``edgeql``.
 
-*functionbody*
+:eschema:synopsis:`<functionbody>`
     A string constant defining the function.
 
 

@@ -44,51 +44,52 @@ Definition
 
 Object types may be defined in EdgeDB Schema using the ``type`` keyword:
 
-.. code-block:: pseudo-eql
+.. eschema:synopsis::
 
     [abstract] type <TypeName> [extending [(] <supertype> [, ...] [)]]:
-        [ <property_declarations> ]
-        [ <link_declarations> ]
-        [ <index_declarations> ]
-        [ <attribute_declarations> ]
+        [ <property-declarations> ]
+        [ <link-declarations> ]
+        [ <index-declarations> ]
+        [ <attribute-declarations> ]
         ...
 
 Parameters:
 
-    :eql:inline-synopsis:`abstract`
-        If specified, the declared type will be *abstract*.
+:eschema:synopsis:`abstract`
+    If specified, the declared type will be *abstract*.
 
-    :eql:inline-synopsis:`<TypeName>`
-        Specifies the name of the object type.  Customarily, object type names
-        use the CapWords convention.
+:eschema:synopsis:`<TypeName>`
+    Specifies the name of the object type.  Customarily, object type names
+    use the CapWords convention.
 
-    :eql:inline-synopsis:`extending <supertype> [, ...]`
-        If specified, declares the *supertypes* of the new type.
+:eschema:synopsis:`extending <supertype> [, ...]`
+    If specified, declares the *supertypes* of the new type.
 
-        Use of ``extending`` creates a persistent type relationship
-        between the new subtype and its supertype(s).  Schema modifications
-        to the supertype(s) propagate to the subtype.
+    Use of ``extending`` creates a persistent type relationship
+    between the new subtype and its supertype(s).  Schema modifications
+    to the supertype(s) propagate to the subtype.
 
-        References to supertypes in queries will also include objects of
-        the subtype.
+    References to supertypes in queries will also include objects of
+    the subtype.
 
-        If the same *link* or *property* name exists in more than one
-        supertype, or is explicitly defined in the subtype and at
-        least one supertype then the data types of the link targets must
-        be *compatible*.  If there is no conflict, the links are merged to
-        form a single link in the new type.
+    If the same *link* or *property* name exists in more than one
+    supertype, or is explicitly defined in the subtype and at
+    least one supertype then the data types of the link targets must
+    be *compatible*.  If there is no conflict, the links are merged to
+    form a single link in the new type.
 
-    :eql:inline-synopsis:`<property_declarations>`
-        :ref:`Property <ref_datamodel_props>` declarations.
+:eschema:synopsis:`<property-declarations>`
+    :ref:`Property <ref_datamodel_props>` declarations.
 
-    :eql:inline-synopsis:`<link_declarations>`
-        :ref:`Link <ref_datamodel_links>` declarations.
+:eschema:synopsis:`<link-declarations>`
+    :ref:`Link <ref_datamodel_links>` declarations.
 
-    :eql:inline-synopsis:`<index_declarations>`
-        :ref:`Index <ref_datamodel_indexes>` declarations.
+:eschema:synopsis:`<index-declarations>`
+    :ref:`Index <ref_datamodel_indexes>` declarations.
 
-    :eql:inline-synopsis:`<attribute_declarations>`
-        :ref:`Schema attribute <ref_datamodel_attributes>` declarations.
+:eschema:synopsis:`<attribute-declarations>`
+    :ref:`Schema attribute <ref_datamodel_attributes>` declarations.
+
 
 A :eql:stmt:`CREATE TYPE` EdgeQL command may also be used to define a new
 object type.

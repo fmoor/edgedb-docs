@@ -25,29 +25,30 @@ FOR
 
     [ LIMIT  <limit-expr> ] ;
 
-:eql:inline-synopsis:`FOR <variable> IN "{" <iterator-set> [, ...]  "}"`
+:eql:synopsis:`FOR <variable> IN "{" <iterator-set> [, ...]  "}"`
     The ``FOR`` clause has this general form:
 
     .. TODO: rewrite this
 
-    .. code-block:: pseudo-eql
+    .. eql:synopsis::
 
         FOR <variable> IN <iterator-expr>
 
-    where *iterator-expr* is a
+    where :eql:synopsis:`<iterator-expr>` is a
     :ref:`set constructor <ref_eql_expr_index_set_ctor>` of arbitrary
     type.
 
-:eql:inline-synopsis:`UNION <output-expr>`
+:eql:synopsis:`UNION <output-expr>`
     The ``UNION`` clause of the ``FOR`` statement has this general form:
 
     .. TODO: rewrite this
 
-    .. code-block:: pseudo-eql
+    .. eql:synopsis::
 
         UNION <output-expr>
 
-    Here, *output-expr* is an arbitrary expression that is evaluated for
+    Here, :eql:synopsis:`<output-expr>`
+    is an arbitrary expression that is evaluated for
     every element in a set produced by evaluating the ``FOR`` clause.
     The results of the evaluation are appended into the result set.
 

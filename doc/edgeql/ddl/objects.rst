@@ -36,20 +36,20 @@ in the module.
 Parameters
 ----------
 
-:eql:inline-synopsis:`ABSTRACT`
+:eql:synopsis:`ABSTRACT`
     If specified, the created type will be *abstract*.
 
-:eql:inline-synopsis:`WITH <with-item> [, ...]`
+:eql:synopsis:`WITH <with-item> [, ...]`
     Alias declarations.
 
     The ``WITH`` clause allows specifying module aliases
     that can be referenced by the command.  See :ref:`ref_eql_with`
     for more information.
 
-:eql:inline-synopsis:`<name>`
+:eql:synopsis:`<name>`
     The name (optionally module-qualified) of the new type.
 
-:eql:inline-synopsis:`EXTENDING <base> [, ...]`
+:eql:synopsis:`EXTENDING <base> [, ...]`
     Optional clause specifying the *supertypes* of the new type.
 
     Use of ``EXTENDING`` creates a persistent type relationship
@@ -65,17 +65,17 @@ Parameters
     If there is no conflict, the links are merged to form a single
     link in the new type.
 
-:eql:inline-synopsis:`<subcommand>`
+:eql:synopsis:`<subcommand>`
     Optional sequence of subcommands related to the new object type.
 
     The following subcommands are allowed in the ``CREATE TYPE``
     block:
 
-    :eql:inline-synopsis:`SET <attribute> := <value>;`
+    :eql:synopsis:`SET <attribute> := <value>;`
         Set link item's *attribute* to *value*.
         See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-    :eql:inline-synopsis:`CREATE LINK`
+    :eql:synopsis:`CREATE LINK`
         Define a concrete link on the object type.
         See :eql:stmt:`CREATE LINK` for details.
 
@@ -128,17 +128,17 @@ with a module name.
 Parameters
 ----------
 
-:eql:inline-synopsis:`WITH <with-item> [, ...]`
+:eql:synopsis:`WITH <with-item> [, ...]`
     Alias declarations.
 
     The ``WITH`` clause allows specifying module aliases
     that can be referenced by the command.  See :ref:`ref_eql_with`
     for more information.
 
-:eql:inline-synopsis:`<name>`
+:eql:synopsis:`<name>`
     The name (optionally module-qualified) of the type being altered.
 
-:eql:inline-synopsis:`EXTENDING ...`
+:eql:synopsis:`EXTENDING ...`
     Alter the supertype list.  The full syntax of this action is:
 
     .. eql:synopsis::
@@ -161,39 +161,39 @@ Parameters
     * ``AFTER <parent>`` -- insert parent(s) after an existing
       *parent*.
 
-:eql:inline-synopsis:`SET <attribute> := <value>;`
+:eql:synopsis:`SET <attribute> := <value>;`
     Set object type *attribute* to *value*.
     See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-:eql:inline-synopsis:`DROP ATTRIBUTE <attribute>;`
+:eql:synopsis:`DROP ATTRIBUTE <attribute>;`
     Remove object type *attribute*.
     See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
 
-:eql:inline-synopsis:`CREATE LINK <link-name> ...`
+:eql:synopsis:`CREATE LINK <link-name> ...`
     Define a new link for this object type.  See
     :eql:stmt:`CREATE LINK` for details.
 
-:eql:inline-synopsis:`ALTER LINK <link-name> ...`
+:eql:synopsis:`ALTER LINK <link-name> ...`
     Alter the definition of a link for this object type.  See
     :eql:stmt:`ALTER LINK` for details.
 
-:eql:inline-synopsis:`DROP LINK <link-name>;`
+:eql:synopsis:`DROP LINK <link-name>;`
     Remove a link item from this object type.  See
     :eql:stmt:`DROP LINK` for details.
 
-:eql:inline-synopsis:`CREATE PROPERTY <property-name> ...`
+:eql:synopsis:`CREATE PROPERTY <property-name> ...`
     Define a new property item for this object type.  See
     :eql:stmt:`CREATE PROPERTY` for details.
 
-:eql:inline-synopsis:`ALTER PROPERTY <property-name> ...`
+:eql:synopsis:`ALTER PROPERTY <property-name> ...`
     Alter the definition of a property item for this object type.
     See :eql:stmt:`ALTER PROPERTY` for details.
 
-:eql:inline-synopsis:`DROP PROPERTY <property-name>;`
+:eql:synopsis:`DROP PROPERTY <property-name>;`
     Remove a property item from this object type.  See
     :eql:stmt:`DROP PROPERTY` for details.
 
-:eql:inline-synopsis:`CREATE INDEX <index-name> <index-expr>;`
+:eql:synopsis:`CREATE INDEX <index-name> <index-expr>;`
     Define a new :ref:`index <ref_datamodel_indexes>` named *index-name*
     using *index-expr* for this object type.  See :eql:stmt:`CREATE INDEX`
     for details.

@@ -37,7 +37,7 @@ type or link using *index-expr*.
 Parameters
 ----------
 
-:eql:inline-synopsis:`<index-name>`
+:eql:synopsis:`<index-name>`
     The name of the index to be created.  No module name can be specified,
     indexes are always created in the same module as the parent type or
     link.
@@ -75,7 +75,7 @@ Description
 
 ``DROP INDEX`` removes an index from a schema item.
 
-:eql:inline-synopsis:`<index-name>`
+:eql:synopsis:`<index-name>`
     Refers to the name of a defined index.
 
 This statement can only be used as a subdefinition in another

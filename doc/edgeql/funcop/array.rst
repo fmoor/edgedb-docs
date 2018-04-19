@@ -11,30 +11,30 @@ Array Element Reference
 
 An element of an array can be referenced in the following form:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     <expr> "[" <index-expr> "]"
 
-Here, *expr* is any expression of array type, and *index-expr* is any
-integer expression.
+Here, :eql:synopsis:`<expr>` is any expression of array type,
+and :eql:synopsis:`<index-expr>` is any integer expression.
 
 Example:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT [1, 2, 3][0]
     {1}
 
 Negative indexing is supported:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT [1, 2, 3][-1]
     {3}
 
 Referencing a non-existent array element will result in an empty set:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT [1, 2, 3][0]
     {}
@@ -47,19 +47,22 @@ Array Slice
 
 An array slice can be referenced in the following form:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     <expr> "[" <lower-bound> : <upper-bound> "]"
 
-Here, *expr* is any expression of array type, and *lower-bound* and
-*upper-bound* are arbitrary integer expressions.  Both *lower-bound*,
-and *upper-bound* are optional.  An ommitted *lower-bound* default to zero,
-and an ommitted *upper-bound* defaults to the size of the array.
-The upper bound is non-inclusive.
+Here, :eql:synopsis:`<expr>` is any expression of array type,
+and :eql:synopsis:`<lower-bound>` and
+:eql:synopsis:`<upper-bound>` are arbitrary integer expressions.
+Both :eql:synopsis:`<lower-bound>`, and
+:eql:synopsis:`<upper-bound>` are optional.
+An omitted :eql:synopsis:`<lower-bound>` default to zero,
+and an omitted :eql:synopsis:`<upper-bound>` defaults to the
+size of the array.  The upper bound is non-inclusive.
 
 Examples:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT [1, 2, 3][0:2]
     {
@@ -83,7 +86,7 @@ Examples:
 
 Referencing a non-existent array slice will result in an empty array:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT [1, 2, 3][10:20]
     {[]}

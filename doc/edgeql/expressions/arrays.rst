@@ -12,13 +12,13 @@ An array constructor is an expression that consists of a sequence of
 comma-separated expressions *of the same type* enclosed in square brackets.
 It produces an array value:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     "[" <expr> [, ...] "]"
 
 For example:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT [1, 2, 3];
     {
@@ -29,7 +29,7 @@ An empty array can also be created, but it must be used together with
 a type case, since EdgeDB cannot determine the type of an array without
 having elements in it:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT [];
     EdgeQLError: could not determine the type of empty array

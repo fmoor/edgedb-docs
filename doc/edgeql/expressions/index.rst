@@ -95,13 +95,13 @@ Some operators have dedicated syntax, like the :eql:op:`IF..ELSE` operator.
 
 Binary infix operator syntax:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     <expression> <operator> <expression>
 
 Unary prefix operator syntax:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     <operator> <expression>
 
@@ -116,13 +116,14 @@ Function Calls
 
 The syntax for a function call is as follows:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    function_name ([argument [, argument ...]])
+    <function-name> ( [<argument> [, <argument> ...]] )
 
-Here *function_name* is a possibly qualified name of a function, and
-*argument* is an *expression* optionally prefixed with an argument name
-and a turnstile (``:=``).
+Here :eql:synopsis:`<function_name>` is a possibly qualified
+name of a function, and :eql:synopsis:`<argument>` is an
+*expression* optionally prefixed with an argument name and a
+turnstile (``:=``).
 
 A complete reference of standard EdgeQL functions can be found in
 :ref:`ref_eql_funcop`.
@@ -136,15 +137,15 @@ Type Casts
 A type cast expression converts the specified value to another value of
 the specified type:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    \<<type>\> <expression>
+    "<" <type> ">" <expression>
 
-The *type* must be a scalar or a container type.
+The :eql:synopsis:`<type>` must be a scalar or a container type.
 
 For example, the following expression casts an integer value into a string:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT <str>10;
     {"10"}
@@ -161,9 +162,9 @@ Set Constructor
 A *set constructor* is an expression that consists of a sequence of
 comma-separated expressions enclosed in curly braces:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    { <expr> [, ...] }
+    "{" <expr> [, ...] "}"
 
 A set constructor produces the result by appending its elements.  It is
 perfectly equivalent to a sequence of :eql:op:`UNION` operators.
@@ -172,7 +173,7 @@ An *empty set* can also be created by omitting all elements.
 In situations where EdgeDB cannot infer the type of an empty set,
 it must be used together with a type cast:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT {};
     EdgeQLError: could not determine the type of empty set
@@ -193,7 +194,7 @@ A tuple constructor is an expression that consists of a sequence of
 comma-separated expressions enclosed in parentheses.  It produces a
 tuple value:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     ( <expr> [, ... ] )
 
@@ -208,7 +209,7 @@ Tuple Element References
 
 An element of a tuple can be referenced in the form:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     <expr>.<element-index>
 
@@ -229,7 +230,7 @@ An array constructor is an expression that consists of a sequence of
 comma-separated expressions *of the same type* enclosed in square brackets.
 It produces an array value:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     "[" <expr> [, ...] "]"
 

@@ -37,14 +37,14 @@ into a :eql:stmt:`FOR` statement.
 
 See :ref:`Usage of FOR statement <ref_eql_forstatement>` for more details.
 
-:eql:inline-synopsis:`WITH`
+:eql:synopsis:`WITH`
     Alias declarations.
 
     The ``WITH`` clause allows specifying module aliases as well
     as expression aliases that can be referenced by the ``UPDATE``
     statement.  See :ref:`ref_eql_with` for more information.
 
-:eql:inline-synopsis:`<expression>`
+:eql:synopsis:`<expression>`
     An arbitrary expression returning a set of objects to be updated.
 
     .. eql:synopsis::

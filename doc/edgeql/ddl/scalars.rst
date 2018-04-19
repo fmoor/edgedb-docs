@@ -45,22 +45,22 @@ as its *base*.
 The most common use of ``CREATE SCALAR TYPE`` is to define a scalar
 subtype with constraints.
 
-:eql:inline-synopsis:`EXTENDING <base>`
+:eql:synopsis:`EXTENDING <base>`
     Optional clause specifying the *supertype* of the new type.
 
     Use of ``EXTENDING`` creates a persistent type relationship
     between the new subtype and its supertype(s).  Schema modifications
     to the supertype(s) propagate to the subtype.
 
-:eql:inline-synopsis:`<action>`
+:eql:synopsis:`<action>`
     The following actions are allowed in the ``CREATE SCALAR TYPE``
     block:
 
-    :eql:inline-synopsis:`SET <attribute> := <value>;`
+    :eql:synopsis:`SET <attribute> := <value>;`
         Set link item's *attribute* to *value*.
         See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-    :eql:inline-synopsis:`CREATE CONSTRAINT`
+    :eql:synopsis:`CREATE CONSTRAINT`
         Define a concrete constraint on the scalar type.
         See :eql:stmt:`CREATE CONSTRAINT` for details.
 
@@ -100,30 +100,30 @@ Description
 *name* must be a name of an existing scalar type, optionally qualified
 with a module name.
 
-:eql:inline-synopsis:`<action>`
+:eql:synopsis:`<action>`
     The following actions are allowed in the
     ``ALTER SCALAR TYPE`` block:
 
-    :eql:inline-synopsis:`RENAME TO <newname>;`
+    :eql:synopsis:`RENAME TO <newname>;`
         Change the name of the scalar type to *newname*.
 
-    :eql:inline-synopsis:`SET <attribute> := <value>;`
+    :eql:synopsis:`SET <attribute> := <value>;`
         Set scalar type's *attribute* to *value*.
         See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-    :eql:inline-synopsis:`DROP ATTRIBUTE <attribute>;`
+    :eql:synopsis:`DROP ATTRIBUTE <attribute>;`
         Remove scalar type's *attribute* to *value*.
         See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
 
-    :eql:inline-synopsis:`CREATE CONSTRAINT <constraint-name> ...`
+    :eql:synopsis:`CREATE CONSTRAINT <constraint-name> ...`
         Define a new constraint for this scalar type.  See
         :eql:stmt:`CREATE CONSTRAINT` for details.
 
-    :eql:inline-synopsis:`ALTER CONSTRAINT <constraint-name> ...`
+    :eql:synopsis:`ALTER CONSTRAINT <constraint-name> ...`
         Alter the definition of a constraint for this scalar type.  See
         :eql:stmt:`ALTER CONSTRAINT` for details.
 
-    :eql:inline-synopsis:`DROP CONSTRAINT <constraint-name>;`
+    :eql:synopsis:`DROP CONSTRAINT <constraint-name>;`
         Remove a constraint from this scalar type.  See
         :eql:stmt:`DROP CONSTRAINT` for details.
 

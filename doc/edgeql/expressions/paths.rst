@@ -11,28 +11,31 @@ sequence of links or link properties from some source set.
 
 The form of a path is:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     <expression> <path-step> [ <path-step> ... ]
 
-Here *expression* is any expression and *path-step* is:
+Here :eql:synopsis:`<expression>` is any expression and
+:eql:synopsis:`<path-step>` is:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    step-direction pointer-name [ step-target-filter ]
+    <step-direction> <pointer-name> [ <step-target-filter> ]
 
-*step-direction* is one of the following:
+:eql:synopsis:`<step-direction>` is one of the following:
 
 - ``.`` or ``.>`` for an outgoing link reference
 - ``.<`` for an incoming link reference
 - ``@`` for a link property reference
 
-*pointer-name* must be a valid link or link property name.
+:eql:synopsis:`<pointer-name>` must be a valid link or link
+property name.
 
-*step-target-filter* is an optional filter that narrows which *type* of
-objects should be included in the result.  It has the following syntax:
+:eql:synopsis:`<step-target-filter>` is an optional filter that
+narrows which :eql:synopsis:`<type>` of objects should be
+included in the result.  It has the following syntax:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
    "[" IS type "]"
 
@@ -67,21 +70,14 @@ if ``since`` is defined as a link property on the ``User.friends`` link:
 Path Interpretation
 -------------------
 
-There are two ways in which a path is intepreted in an expression:
-
-1.
+.. TODO: incomplete
 
 The manner in which a path expression is interpreted depends on the
 expression.
 
-
 When two or more paths in an expression share a common prefix
 (i.e. start the same), then their longest common path prefix is treated
 as an equivalent set reference
-
-The manner in which a path expression is intepreted depends on whether its
-
-prefix is
 
 The longest common path prefixes in an expression are treated as equivalent
 set references.

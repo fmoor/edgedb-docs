@@ -21,14 +21,14 @@ Abstract Constraints
 An *abstract constraint* may be defined in EdgeDB Schema using the
 ``abstract constraint`` declaration:
 
-.. code-block:: pseudo-eql
+.. eschema:synopsis::
 
-    abstract constraint <constr_name> [( [<argspec>] [, ...] )]
-            [on (<subject_expr>)]
-            [extending [(] <parent_constr>, [, ...] [)] ]:
-        [ expr := <constr_expression> ]
-        [ errmessage := <error_message> ]
-        [ <attribute_declarations> ]
+    abstract constraint <constr-name> [( [<argspec>] [, ...] )]
+            [on (<subject-expr>)]
+            [extending [(] <parent-constr>, [, ...] [)] ]:
+        [ expr := <constr-expression> ]
+        [ errmessage := <error-message> ]
+        [ <attribute-declarations> ]
 
     where <argspec> is:
 
@@ -38,29 +38,31 @@ An *abstract constraint* may be defined in EdgeDB Schema using the
 Parameters
 ~~~~~~~~~~
 
-:eql:inline-synopsis:`<constr_name>`
+:eschema:synopsis:`<constr-name>`
     The name of the constraint.
 
-:eql:inline-synopsis:`<argspec>`
-    An optional list of constraint arguments.  *argname* optionally specifies
-    the argument name, and *argtype* specifies the argument type.
+:eschema:synopsis:`<argspec>`
+    An optional list of constraint arguments.
+    :eschema:synopsis:`<argname>` optionally specifies
+    the argument name, and :eschema:synopsis:`<argtype>`
+    specifies the argument type.
 
-:eql:inline-synopsis:`<subject_expr>`
+:eschema:synopsis:`<subject-expr>`
     An optional expression defining the *subject* of the constraint.
     If not specified, the subject is the value of the schema item on
     which the constraint is defined.
 
-:eql:inline-synopsis:`extending <parent_constr> [, ...]`
+:eschema:synopsis:`extending <parent_constr> [, ...]`
     If specified, declares the *parent* constraints for this constraint.
 
-:eql:inline-synopsis:`expr := <constr_expression>`
+:eschema:synopsis:`expr := <constr_expression>`
     An boolean expression that returns ``true`` for valid data and
     ``false`` for invalid data.  The expression may refer to special
     variables: ``__self__`` for the value of the scalar type, link or
     property value; and ``__subject__`` which is the constraint's subject
-    expression as defined by *subject_expr*.
+    expression as defined by :eschema:synopsis:`<subject-expr>`.
 
-:eql:inline-synopsis:`errmessage := <error_message>`
+:eschema:synopsis:`errmessage := <error_message>`
     An optional string literal defining the error message template that
     is raised when the constraint is violated.  The template is a formatted
     string that may refer to constraint context variables in curly braces.
@@ -70,7 +72,7 @@ Parameters
     - ``__self__`` -- the value of the ``title`` attribute of the scalar type,
       property or link on which the constraint is defined.
 
-:eql:inline-synopsis:`<attribute_declarations>`
+:eschema:synopsis:`<attribute_declarations>`
     :ref:`Schema attribute <ref_datamodel_attributes>` declarations.
 
 
@@ -81,32 +83,32 @@ A *concrete constraint* may be defined in EdgeDB Schema using the
 ``constraint`` declaration in the context of a ``scalar type``, ``property``,
 or ``link`` declaration:
 
-.. code-block:: pseudo-eql
+.. eschema:synopsis::
 
     scalar type <typename>:
         constraint <constr_name> [( [$<argname> := ] <argvalue> [, ...] )]
-                [on (<subject_expr>)]:
-            [ <attribute_declarations> ]
+                [on (<subject-expr>)]:
+            [ <attribute-declarations> ]
 
 
 Parameters
 ~~~~~~~~~~
 
-:eql:inline-synopsis:`<constr_name>`
+:eschema:synopsis:`<constr_name>`
     The name of the previously defined abstract constraint.
 
-:eql:inline-synopsis:`<argname>`
+:eschema:synopsis:`<argname>`
     The name of an argument.
 
-:eql:inline-synopsis:`<argvalue>`
+:eschema:synopsis:`<argvalue>`
     The value of an argument as a literal constant of the correct type.
 
-:eql:inline-synopsis:`<subject_expr>`
+:eschema:synopsis:`<subject-expr>`
     An optional expression defining the *subject* of the constraint.
     If not specified, the subject is the value of the schema item on
     which the constraint is defined.
 
-:eql:inline-synopsis:`<attribute_declarations>`
+:eschema:synopsis:`<attribute-declarations>`
     :ref:`Schema attribute <ref_datamodel_attributes>` declarations.
 
 
@@ -146,7 +148,4 @@ The standard library defines the following constraints:
      scalar type starts_with_a extending str:
          constraint expression on (__subject__[0] = 'A')
 
-
-
-Examples
-========
+.. TODO: examples

@@ -12,34 +12,37 @@ describe a data graph.  Shapes are used to describe ``views``, ``insert`` and
 Shapes always follow an expression, and are a list of *shape elements*
 enclosed in curly braces:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    <expr> {
+    <expr> "{"
         <shape_element> [, ...]
-    }
+    "}"
 
 
 Shape element has the following syntax:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     [ "[" IS <object-type> "]" ] <pointer-spec>
 
-If an optional type filter is used, *pointer-spec* will only apply to
-those objects in the *expr* set that are instances of *object-type*.
+If an optional type filter is used, :eql:synopsis:`<pointer-spec>`
+will only apply to those objects in the :eql:synopsis:`<expr>`
+set that are instances of :eql:synopsis:`<object-type>`.
 
-*pointer-spec* is one of the following:
+:eql:synopsis:`<pointer-spec>` is one of the following:
 
 - a name of an existing link or link property of a type produced
-  by *expr*;
+  by :eql:synopsis:`<expr>`;
 
 - a declaration of a computable link or link property in the form
   ``[@]<name> := <ptrexpr>``;
 
-- a *subshape* in the form ``<link>: [<target-type>]{ ... }``, where *link* is
-  the name of an existing link, and *target-type* is an optional object type
-  that specifies the type of target objects selected or inserted, depending
-  on the context.
+- a *subshape* in the form
+  :eql:synopsis:`<link>: [<target-type>] "{" ... "}"`, where
+  :eql:synopsis:`<link>` is the name of an existing link, and
+  :eql:synopsis:`<target-type>` is an optional object type
+  that specifies the type of target objects selected or inserted,
+  depending on the context.
 
 
 .. _ref_eql_expr_shapes_insert:
@@ -84,7 +87,7 @@ For example, the below query returns a set of ``Issue`` objects and includes
 a ``number`` and an associated owner ``User`` object, which in turn includes
 the ``name`` and the ``email`` for that user.
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT
     ...     Issue {

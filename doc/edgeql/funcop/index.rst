@@ -9,12 +9,13 @@ EdgeDB provides a large number of operato
 
 The syntax for a function call is as follows:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    function_name ([argument [, argument ...]])
+    <function_name> "(" [<argument> [, <argument>, ...]] ")"
 
-Here *function_name* is a possibly qualified name of a function, and
-*argument* is an *expression* optionally prefixed with an argument name
+Here :eql:synopsis:`<function_name>` is a possibly qualified
+name of a function, and :eql:synopsis:`<argument>` is an
+*expression* optionally prefixed with an argument name
 and a turnstile (``:=``).
 
 For example, the following computes the length of a string ``'foo'``:

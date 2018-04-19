@@ -54,15 +54,15 @@ are called *overloaded functions*.
 Parameters
 ----------
 
-:eql:inline-synopsis:`<name>`
+:eql:synopsis:`<name>`
     The name (optionally module-qualified) of the function to create.
 
-:eql:inline-synopsis:`<argname>`
+:eql:synopsis:`<argname>`
     The optional name of an argument.  If not specified, the argument
     is called *positional*, if specified, the argument is called
     *keyword*.  Positional arguments cannot follow keyword arguments.
 
-:eql:inline-synopsis:`<argmode>`
+:eql:synopsis:`<argmode>`
     The mode of an argument: ``SET OF`` or ``OPTIONAL`` or ``VARIADIC``.
 
     The ``SET OF`` modifier indicates that the function is taking the
@@ -78,25 +78,25 @@ Parameters
     arguments will be passed as as array of the argument type.
     Positional arguments cannot follow a ``VARIADIC`` argument.
 
-:eql:inline-synopsis:`<argtype>`
+:eql:synopsis:`<argtype>`
     The data type of the function's arguments
     (optionally module-qualified).
 
-:eql:inline-synopsis:`<default>`
+:eql:synopsis:`<default>`
     An expression to be used as default value if the parameter is not
     specified.  The expression has to be of a type compatible with the
     type of the argument.
 
-:eql:inline-synopsis:`<rettype>`
+:eql:synopsis:`<rettype>`
     The return data type (optionally module-qualified).
     The ``SET OF`` modifier indicates that the function will return
     a non-singleton set.
 
-:eql:inline-synopsis:`<language>`
+:eql:synopsis:`<language>`
     The name of the language that the function is implemented in.
     Currently it can only be ``edgeql``.
 
-:eql:inline-synopsis:`<functionbody>`
+:eql:synopsis:`<functionbody>`
     A string constant defining the function.  It is often helpful
     to use :ref:`dollar quoting <ref_eql_lexical_dollar_quoting>`
     to write the function definition string.
@@ -108,11 +108,11 @@ Subcommands
 ``CREATE FUNCTION`` allows specifying the following subcommands in its
 block:
 
-:eql:inline-synopsis:`SET <attribute> := <value>;`
+:eql:synopsis:`SET <attribute> := <value>;`
     Set the functions's *attribute* to *value*.
     See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-:eql:inline-synopsis:`FROM <language> <functionbody>;`
+:eql:synopsis:`FROM <language> <functionbody>;`
     See the meaning of *language* and *functionbody* above.
 
 
@@ -188,16 +188,16 @@ can be different functions with the same name.
 Parameters
 ----------
 
-:eql:inline-synopsis:`<name>`
+:eql:synopsis:`<name>`
     The name (optionally module-qualified) of an existing function.
 
-:eql:inline-synopsis:`<argname>`
+:eql:synopsis:`<argname>`
     The name of an argument used in the function definition.
 
-:eql:inline-synopsis:`<argmode>`
+:eql:synopsis:`<argmode>`
     The mode of an argument: ``SET OF`` or ``OPTIONAL`` or ``VARIADIC``.
 
-:eql:inline-synopsis:`<argtype>`
+:eql:synopsis:`<argtype>`
     The data type(s) of the function's arguments
     (optionally module-qualified), if any.
 

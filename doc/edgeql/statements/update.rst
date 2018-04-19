@@ -22,27 +22,27 @@ UPDATE
 selected by *update-selector-expr* and, optinally, filtered by
 *filter-expr*.
 
-:eql:inline-synopsis:`WITH`
+:eql:synopsis:`WITH`
     Alias declarations.
 
     The ``WITH`` clause allows specifying module aliases as well
     as expression aliases that can be referenced by the ``UPDATE``
     statement.  See :ref:`ref_eql_with` for more information.
 
-:eql:inline-synopsis:`UPDATE <selector-expr>`
+:eql:synopsis:`UPDATE <selector-expr>`
     An arbitrary expression returning a set of objects to be updated.
 
-:eql:inline-synopsis:`FILTER <filter-expr>`
+:eql:synopsis:`FILTER <filter-expr>`
     An expression of type :eql:type:`std::bool` used to filter the
     set of updated objects.
 
-    :eql:inline-synopsis:`<filter-expr>` is an expression that has a result
+    :eql:synopsis:`<filter-expr>` is an expression that has a result
     of type :eql:type:`std::bool`.  Only objects that satisfy the filter
     expression will be updated.  See the description of the
     ``FILTER`` clause of the :eql:stmt:`SELECT` statement for more
     information.
 
-:eql:inline-synopsis:`SET <shape>`
+:eql:synopsis:`SET <shape>`
     A :ref:`shape <ref_eql_expr_shapes_update>` expression with
     the new values for the links of the updated object.
 

@@ -13,14 +13,14 @@ DELETE
     [ WITH <with-spec> [ , ... ] ]
     DELETE <expr> ;
 
-:eql:inline-synopsis:`WITH`
+:eql:synopsis:`WITH`
     Alias declarations.
 
     The ``WITH`` clause allows specifying module aliases as well
     as expression aliases that can be referenced by the ``UPDATE``
     statement.  See :ref:`ref_eql_with` for more information.
 
-:eql:inline-synopsis:`DELETE <expr>`
+:eql:synopsis:`DELETE <expr>`
     Remove objects returned by *expr* from the database.
 
 

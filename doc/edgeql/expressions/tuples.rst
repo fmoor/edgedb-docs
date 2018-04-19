@@ -12,22 +12,22 @@ A tuple constructor is an expression that consists of a sequence of
 comma-separated expressions enclosed in parentheses.  It produces a
 tuple value:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    ( <expr> [, ... ] )
+    "(" <expr> [, ... ] ")"
 
 Named tuples are created using the following syntax:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    ( <identifier> := <expr> [, ... ] )
+    "(" <identifier> := <expr> [, ... ] ")"
 
 Note that *all* elements in a named tuple must have a name.
 
 A tuple constructor automatically creates a corresponding
 :eql:type:`std::tuple` type:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT ('foo', 42).__type__.name;
     std::tuple<std::str, std::int64>
@@ -40,7 +40,7 @@ Tuple Element Reference
 
 An element of a tuple can be referenced in the form:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     <expr>.<element-index>
 
@@ -50,7 +50,7 @@ the name of an element in a named tuple.
 
 Examples:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT (1, 'EdgeDB').0;
     {1}
@@ -60,14 +60,14 @@ Examples:
 
 Tuples can be nested:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT (nested_tuple := (1, 2),).nested_tuple.0;
     {1}
 
 Referencing a non-existent tuple element will result in an error:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT (1, 2).5;
     EdgeQLError: 5 is not a member of a tuple

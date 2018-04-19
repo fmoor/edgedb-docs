@@ -36,7 +36,7 @@ in the module.
 *typename* is a possibly fully-qualified name specifying the data type
 of the new attribute; it must refer to a primitive type.
 
-:eql:inline-synopsis:`<subdefinition>`
+:eql:synopsis:`<subdefinition>`
     Optional sequence of subdefinitions related to the new attribute.
 
     The following subdefinitions are allowed in the ``CREATE ATTRIBUTE``

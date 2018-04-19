@@ -40,7 +40,7 @@ An expression is evaluated recursively using the following procedure:
 
 Below is an example of element-wise multiplication:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> WITH A := {1, 2}, B := {3, 4}
     ... SELECT A * B;
@@ -49,7 +49,7 @@ Below is an example of element-wise multiplication:
 
 An example of whole-set function:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> WITH A := {1, 2}
     ... SELECT count(A);
@@ -58,7 +58,7 @@ An example of whole-set function:
 
 An example of both:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> WITH A := {1, 2}, B := {3, 4}
     ... SELECT (A, count(B));
@@ -72,7 +72,7 @@ references are replaced with a corresponding element, so when the below
 expression is evaluated, ``count(A)`` is essentially ``count({a})`` and
 is always equal to ``1``:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> WITH A := {1, 2}, B := {3, 4, 5}
     ... SELECT (A, count(A), count(B));
@@ -102,7 +102,7 @@ empty set.  In this situation there are two possible scenarios:
 
 For example, the following query returns an empty set:
 
-.. code-block:: pseudo-eql
+.. code-block:: edgeql-repl
 
     db> SELECT {2} * {};
     {}

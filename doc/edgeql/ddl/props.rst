@@ -33,14 +33,14 @@ is created in that module, otherwise it is created in the current module.
 The property name must be distinct from that of any existing schema
 item in the module.
 
-:eql:inline-synopsis:`EXTENDING <base> [, ...]`
+:eql:synopsis:`EXTENDING <base> [, ...]`
     Optional clause specifying the *parents* of the new property item.
 
     Use of ``EXTENDING`` creates a persistent schema relationship
     between the new property and its parents.  Schema modifications
     to the parent(s) propagate to the child.
 
-:eql:inline-synopsis:`<action>`
+:eql:synopsis:`<action>`
     The following actions are allowed in the
     ``CREATE ABSTRACT PROPERTY`` block:
 
@@ -72,16 +72,16 @@ Description
 property item.  *name* must be a name of an existing abstract
 property, optionally qualified with a module name.
 
-:eql:inline-synopsis:`<action>`
+:eql:synopsis:`<action>`
     The following actions are allowed in the
     ``ALTER ABSTRACT PROPERTY`` block:
 
-    :eql:inline-synopsis:`RENAME TO <newname>;`
+    :eql:synopsis:`RENAME TO <newname>;`
         Change the name of the property item to *newname*.  All
         concrete link properties inheriting from this property are
         also renamed.
 
-    :eql:inline-synopsis:`EXTENDING ...`
+    :eql:synopsis:`EXTENDING ...`
         Alter the property parent list.
         The full syntax of this action is:
 
@@ -106,26 +106,26 @@ property, optionally qualified with a module name.
         * ``AFTER <parent>`` -- insert parent(s) after an existing
           *parent*.
 
-    :eql:inline-synopsis:`SET <attribute> := <value>;`
+    :eql:synopsis:`SET <attribute> := <value>;`
         Set link item's *attribute* to *value*.
         See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-    :eql:inline-synopsis:`DROP ATTRIBUTE <attribute>;`
+    :eql:synopsis:`DROP ATTRIBUTE <attribute>;`
         Remove link item's *attribute* to *value*.
         See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
 
-    :eql:inline-synopsis:`ALTER TARGET <typename>`
+    :eql:synopsis:`ALTER TARGET <typename>`
         Change the target type of the property to the specified type.
 
-    :eql:inline-synopsis:`CREATE CONSTRAINT <constraint-name> ...`
+    :eql:synopsis:`CREATE CONSTRAINT <constraint-name> ...`
         Define a new constraint for this property.
         See :eql:stmt:`CREATE CONSTRAINT` for details.
 
-    :eql:inline-synopsis:`ALTER CONSTRAINT <constraint-name> ...`
+    :eql:synopsis:`ALTER CONSTRAINT <constraint-name> ...`
         Alter the definition of a constraint for this property.
         See :eql:stmt:`ALTER CONSTRAINT` for details.
 
-    :eql:inline-synopsis:`DROP CONSTRAINT <constraint-name>;`
+    :eql:synopsis:`DROP CONSTRAINT <constraint-name>;`
         Remove a constraint from this property.
         See :eql:stmt:`DROP CONSTRAINT` for details.
 
@@ -204,11 +204,11 @@ as the containing link.  *Inherited* link properties form a persistent
 connections in the schema.  Schema modifications to parent link properties
 propagate to the child property.
 
-:eql:inline-synopsis:`<action>`
+:eql:synopsis:`<action>`
     The following actions are allowed in the
     ``CREATE PROPERTY`` block:
 
-    :eql:inline-synopsis:`SET <attribute> := <value>;`
+    :eql:synopsis:`SET <attribute> := <value>;`
         Set link item's *attribute* to *value*.
         See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
@@ -248,34 +248,34 @@ The first is the canonical form, which allows specifying multiple
 alter actions, while the second form is a shorthand for a single
 alter action.
 
-:eql:inline-synopsis:`<action>`
+:eql:synopsis:`<action>`
     The following actions are allowed in the
     ``ALTER PROPERTY`` block:
 
-    :eql:inline-synopsis:`RENAME TO <newname>;`
+    :eql:synopsis:`RENAME TO <newname>;`
         Change the name of the concrete link to *newname*.  Renaming
         *inherited* links is not allowed, only non-inherited concrete
         links can be renamed.  When a concrete or abstract link is
         renamed, all concrete links that inherit from it are also
         renamed.
 
-    :eql:inline-synopsis:`SET <attribute> := <value>;`
+    :eql:synopsis:`SET <attribute> := <value>;`
         Set link item's *attribute* to *value*.
         See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
 
-    :eql:inline-synopsis:`DROP ATTRIBUTE <attribute>;`
+    :eql:synopsis:`DROP ATTRIBUTE <attribute>;`
         Remove link item's *attribute* to *value*.
         See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
 
-    :eql:inline-synopsis:`CREATE PROPERTY <property-name> ...`
+    :eql:synopsis:`CREATE PROPERTY <property-name> ...`
         Define a new property item for this link.  See
         :eql:stmt:`CREATE PROPERTY` for details.
 
-    :eql:inline-synopsis:`ALTER PROPERTY <property-name> ...`
+    :eql:synopsis:`ALTER PROPERTY <property-name> ...`
         Alter the definition of a property item for this link.  See
         :eql:stmt:`ALTER PROPERTY` for details.
 
-    :eql:inline-synopsis:`DROP PROPERTY <property-name>;`
+    :eql:synopsis:`DROP PROPERTY <property-name>;`
         Remove a property item from this link.  See
         :eql:stmt:`DROP PROPERTY` for details.
 

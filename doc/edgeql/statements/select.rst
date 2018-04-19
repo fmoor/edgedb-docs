@@ -22,8 +22,8 @@ SELECT
 
     [ LIMIT  <limit-expr> ] ;
 
-:eql:inline-synopsis:`FILTER <filter-expr>`
-    The optional ``FILTER`` clause, where :eql:inline-synopsis:`<filter-expr>`
+:eql:synopsis:`FILTER <filter-expr>`
+    The optional ``FILTER`` clause, where :eql:synopsis:`<filter-expr>`
     is any expression that has a result of type :eql:type:`std::bool`.
     The condition is evaluated for every element in the set produced by
     the ``SELECT`` clause.  The result of the evaluation of the
@@ -31,7 +31,7 @@ SELECT
     in this set is ``True``, the input element is included, otherwise
     it is eliminated from the output.
 
-:eql:inline-synopsis:`ORDER BY <order-expr> [direction] [THEN ...]`
+:eql:synopsis:`ORDER BY <order-expr> [direction] [THEN ...]`
     The optional ``ORDER BY`` clause has this general form:
 
     .. eql:synopsis::
@@ -65,9 +65,9 @@ SELECT
     ``EMPTY FIRST`` is assumed when ``ASC`` is specified or implied,
     and ``EMPTY LAST`` when ``DESC`` is specified.
 
-:eql:inline-synopsis:`OFFSET <offset-expr>`
+:eql:synopsis:`OFFSET <offset-expr>`
     The optional ``OFFSET`` clause, where
-    :eql:inline-synopsis:`<offset-expr>`
+    :eql:synopsis:`<offset-expr>`
     is a *singleton expression* of an integer type.
     This expression is evaluated once and its result is used
     to skip the first *element-count* elements of the input set
@@ -77,8 +77,8 @@ SELECT
     to a value that is larger then the cardinality of the input set,
     an empty set is produced as the result.
 
-:eql:inline-synopsis:`LIMIT <limit-expr>`
-    The optional ``LIMIT`` clause, where :eql:inline-synopsis:`<limit-expr>`
+:eql:synopsis:`LIMIT <limit-expr>`
+    The optional ``LIMIT`` clause, where :eql:synopsis:`<limit-expr>`
     is a *singleton expression* of an integer
     type.  This expression is evaluated once and its result is used
     to include only the first *element-count* elements of the input set
@@ -92,7 +92,7 @@ Description
 ``SELECT`` retrieves or computes a set of values.  The data
 flow of a ``SELECT`` block can be conceptualized like this:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
     WITH MODULE example
 
