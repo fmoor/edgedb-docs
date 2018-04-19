@@ -350,24 +350,6 @@ class EQLTypedParamField(EQLField):
         return node
 
 
-class EdgeSphinxExtensionError(Exception):
-    pass
-
-
-class DirectiveParseError(EdgeSphinxExtensionError):
-
-    def __init__(self, directive, msg, *, cause=None):
-        fn, lineno = directive.state_machine.get_source_and_line()
-        msg = f'{msg} in {fn}:{lineno}'
-        if cause is not None:
-            msg = f'{msg}\nCause: {type(cause).__name__}\n{cause}'
-        super().__init__(msg)
-
-
-class DomainError(EdgeSphinxExtensionError):
-    pass
-
-
 class BaseEQLDirective(s_directives.ObjectDescription):
 
     @staticmethod
@@ -384,25 +366,25 @@ class BaseEQLDirective(s_directives.ObjectDescription):
                 desc_cnt = child
                 break
         if desc_cnt is None or not desc_cnt.children:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, 'the directive must include a description')
 
         first_node = desc_cnt.children[0]
         if isinstance(first_node, d_nodes.field_list):
             if len(desc_cnt.children) < 2:
-                raise DirectiveParseError(
+                raise shared.DirectiveParseError(
                     self, 'the directive must include a description')
 
             first_node = desc_cnt.children[1]
 
         if not isinstance(first_node, d_nodes.paragraph):
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self,
                 'there must be a short text paragraph after directive fields')
 
         summary = self.strip_ws(first_node.astext())
         if len(summary) > 79:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self,
                 f'First paragraph is expected to be shorter than 80 '
                 f'characters, got {len(summary)}: {summary!r}')
@@ -436,7 +418,7 @@ class BaseEQLDirective(s_directives.ObjectDescription):
                 desc_cnt = child
                 break
         if desc_cnt is None or not desc_cnt.children:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, 'the directive must include a description')
 
         fields = None
@@ -446,7 +428,7 @@ class BaseEQLDirective(s_directives.ObjectDescription):
 
         for child in desc_cnt.children[1:]:
             if isinstance(child, d_nodes.field_list):
-                raise DirectiveParseError(
+                raise shared.DirectiveParseError(
                     self, f'fields must be specified before all other content')
 
         if fields:
@@ -480,7 +462,7 @@ class BaseEQLDirective(s_directives.ObjectDescription):
                             f'check your ReST source.\n\n'
                         )
 
-                raise DirectiveParseError(self, msg)
+                raise shared.DirectiveParseError(self, msg)
 
     def run(self):
         indexnode, node = super().run()
@@ -492,7 +474,7 @@ class BaseEQLDirective(s_directives.ObjectDescription):
         target = name.replace(' ', '-')
 
         if target in self.state.document.ids:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, f'duplicate {self.objtype} {name} description')
 
         signode['names'].append(target)
@@ -503,7 +485,7 @@ class BaseEQLDirective(s_directives.ObjectDescription):
         objects = self.env.domaindata['eql']['objects']
 
         if target in objects:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, f'duplicate {self.objtype} {name} description')
         objects[target] = (self.env.docname, self.objtype)
 
@@ -582,7 +564,7 @@ class EQLOperatorDirective(BaseEQLDirective):
         try:
             name, sig = sig.split(':', 1)
         except Exception as ex:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self,
                 f':eql:operator signature must match "NAME: SIGNATURE" '
                 f'template',
@@ -591,7 +573,7 @@ class EQLOperatorDirective(BaseEQLDirective):
         name = name.strip()
         sig = sig.strip()
         if not name or not sig:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, f'invalid :eql:operator: signature')
 
         signode['eql-name'] = name
@@ -634,19 +616,19 @@ class EQLFunctionDirective(BaseEQLDirective):
             astnode = parser.parse(
                 f'CREATE FUNCTION {sig} FROM SQL FUNCTION "xxx";')[0]
         except Exception as ex:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, f'could not parse function signature {sig!r}',
                 cause=ex)
 
         if (not isinstance(astnode, ql_ast.CreateFunction) or
                 not isinstance(astnode.name, ql_ast.ObjectRef)):
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, f'EdgeQL parser returned unsupported AST')
 
         modname = astnode.name.module
         funcname = astnode.name.name
         if not modname:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, f'EdgeQL function declaration is missing namespace')
 
         func_repr = ql_gen.EdgeQLSourceGenerator.to_source(astnode)
@@ -658,7 +640,7 @@ class EQLFunctionDirective(BaseEQLDirective):
             .*$
         ''', func_repr)
         if not m or not m.group('f'):
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, f'could not recreate function signature from AST')
         func_repr = m.group('f')
 
@@ -785,13 +767,13 @@ class EdgeQLDomain(s_domains.Domain):
                     raise
         except KeyError:
             if not node.get('eql-auto-link'):
-                raise DomainError(
+                raise shared.DomainError(
                     f'cannot resolve :eql:{type}: targeting {target!r}')
             else:
                 return
 
         if obj_type != expected_type:
-            raise DomainError(
+            raise shared.DomainError(
                 f'cannot resolve :eql:{type}: targeting {target!r}: '
                 f'the type of referred object {expected_type!r} '
                 f'does not match the reftype')
@@ -818,7 +800,7 @@ class EdgeQLDomain(s_domains.Domain):
     def get_full_qualified_name(self, node):
         fn = node.get('eql-fullname')
         if not fn:
-            raise DirectiveParseError(
+            raise shared.DirectiveParseError(
                 self, 'no eql-fullname attribute')
         return fn
 
@@ -837,7 +819,7 @@ class StatementTransform(s_transforms.SphinxTransform):
 
             title = x.xpath('title/text()')[0]
             if not re.match(r'^([A-Z]+\s?)+$', title):
-                raise EdgeSphinxExtensionError(
+                raise shared.EdgeSphinxExtensionError(
                     f'section {title!r} is marked with an :eql-statement: '
                     f'field, but does not satisfy pattern for valid titles: '
                     f'UPPERCASE WORDS separated by single space characters')
@@ -845,19 +827,19 @@ class StatementTransform(s_transforms.SphinxTransform):
             nested_statements = x.xpath(
                 '//field_list/field/field_name[text()="eql-statement"]')
             if len(nested_statements) > 1:
-                raise EdgeSphinxExtensionError(
+                raise shared.EdgeSphinxExtensionError(
                     f'section {title!r} has a nested section with '
                     f'a :eql-statement: field set')
 
             first_para = x.xpath('paragraph/text()')
             if len(first_para) < 1:
-                raise EdgeSphinxExtensionError(
+                raise shared.EdgeSphinxExtensionError(
                     f'section {title!r} is marked with an :eql-statement: '
                     f'and is required to have at least one paragraph')
             first_para = first_para[0]
             summary = BaseEQLDirective.strip_ws(first_para)
             if len(summary) > 79:
-                raise EdgeSphinxExtensionError(
+                raise shared.EdgeSphinxExtensionError(
                     f'section {title!r} is marked with an :eql-statement: '
                     f'and its first paragraph is longer than 79 characters')
 
@@ -870,7 +852,7 @@ class StatementTransform(s_transforms.SphinxTransform):
             target = 'statement::' + title.replace(' ', '-')
 
             if target in objects:
-                raise EdgeSphinxExtensionError(
+                raise shared.EdgeSphinxExtensionError(
                     f'duplicate {title!r} statement')
 
             objects[target] = (self.env.docname, 'statement')

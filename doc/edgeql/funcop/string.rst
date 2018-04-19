@@ -4,10 +4,10 @@
 String
 ======
 
-    .. TODO::
+.. TODO::
 
-        This whole section will need more explanation and details with
-        rules, flags, etc.
+    This whole section will need more explanation and details with
+    rules, flags, etc.
 
 .. eql:function:: std::lower(str) -> str
 

@@ -674,7 +674,7 @@ class TestEqlInlineCode(unittest.TestCase, BaseDomainTest):
 
     def test_eql_inline_role_1(self):
         src = '''
-        a test of :eql:inline-synopsis:`WITH <aaaa>`.
+        a test of :eql:synopsis:`WITH <aaaa>`.
         '''
 
         out = self.build(src, format='xml')
@@ -682,6 +682,23 @@ class TestEqlInlineCode(unittest.TestCase, BaseDomainTest):
 
         self.assertEqual(
             x.xpath('''
-                //literal[@eql-lang="eql-synopsis"] / text()
+                //literal[@eql-lang="edgeql-synopsis"] / text()
             '''),
             ['WITH <aaaa>'])
+
+
+class TestBlockquote(unittest.TestCase, BaseDomainTest):
+
+    def test_eql_blockquote_1(self):
+        src = '''
+        blah
+
+         * list
+         * item
+        '''
+
+        with self.assert_fails('block_quote found'):
+            self.build(src, format='xml')
+
+        with self.assert_fails('block_quote found'):
+            self.build(src, format='html')

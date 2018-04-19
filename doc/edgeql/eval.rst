@@ -29,12 +29,12 @@ An expression is evaluated recursively using the following procedure:
 
 3. Iterate over the input product tuple, and on every iteration:
 
-    - replace set references in the expression and all subexpressions
-      with the corresponding value from the input tuple;
+   - replace set references in the expression and all subexpressions
+     with the corresponding value from the input tuple;
 
-    - compute the values of all ``SET OF`` arguments recursively;
+   - compute the values of all ``SET OF`` arguments recursively;
 
-    - apply the function and store the result.
+   - apply the function and store the result.
 
 4. Append the results of all iterations to obtain the final result.
 
