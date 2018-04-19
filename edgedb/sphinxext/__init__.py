@@ -82,69 +82,52 @@ To reference an operator use the :eql:op: role along with OPERATOR_ID:
 Statements
 ----------
 
-Use ".. eql:statement:" directive to declare a statement, along with
-".. eql:clause:" to describe individual clauses, and ".. eql:synopsis:"
-to showcase the syntax.
+Use ":eql-statement:" field for sections that describe a statement.
 
-A :haswith: flag should be used if the statement supports a WITH block.
+A :eql-haswith: field should be used if the statement supports a WITH block.
 
 Example:
 
-    .. eql:statement:: SELECT
+    SELECT
+    ------
 
-        :haswith:
+    :eql-statement:
+    :eql-haswith:
 
-        SELECT is used to select stuff.
-
-
-        .. eql:synopsis::
-
-            [WITH [MODULE name]]
-            SELECT expr
-            FILTER expr
+    SELECT is used to select stuff.
 
 
-        .. eql:clause:: FILTER: A FILTER B
+    .. eql:synopsis::
 
-            :paramtype A: any
-            :paramtype B: SET OF any
-            :returntype: any
-
-            FILTER should be used to filter stuff.
+        [WITH [MODULE name]]
+        SELECT expr
+        FILTER expr
 
 
-        More paragraphs describing intricacies of SELECT go here...
+    .. eql:clause:: FILTER: A FILTER B
 
-        More paragraphs describing intricacies of SELECT go here...
+        :paramtype A: any
+        :paramtype B: SET OF any
+        :returntype: any
 
-        More paragraphs describing intricacies of SELECT go here...
+        FILTER should be used to filter stuff.
+
+
+    More paragraphs describing intricacies of SELECT go here...
+
+    More paragraphs describing intricacies of SELECT go here...
+
+    More paragraphs describing intricacies of SELECT go here...
 
 Notes:
-
-* If a statement consists of a few keywords they should be separated
-  by a dash:
-
-    .. eql:statement:: CREATE-FUNCTION
 
 * To reference a statement use the ":eql:stmt:" role.  For instance:
 
   - :eql:stmt:`SELECT`
   - :eql:stmt:`my fav statement <SELECT>`
   - :eql:stmt:`select`
-  - :eql:stmt:`CREATE-FUNCTION`
-  - :eql:stmt:`create function <CREATE-FUNCTION>`
-
-* Nested "eql:clause" directives are similar to "eql:operator".
-  The first argument of the directive should be in the following format:
-  "CLAUSE_ID: CLAUSE SIGNATURE", for instance
-  ".. eql:clause:: FILTER: A FILTER B".
-
-* To reference a clause use the ":eql:clause:" role.  The target should
-  be in the form of "STATEMENT_ID:CLAUSE_ID", e.g. for the above
-  SELECT example we could do:
-
-  - :eql:clause:`SELECT:FILTER`
-  - :eql:clause:`FILTER clause <SELECT:FILTER>`
+  - :eql:stmt:`CREATE FUNCTION`
+  - :eql:stmt:`create function <CREATE FUNCTION>`
 
 * Synopsis section, denoted with ".. eql:synopsis::" should follow the
   format used in PostgreSQL documentation:

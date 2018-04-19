@@ -194,12 +194,12 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
 
     def test_eql_type_8(self):
         src = '''
-        .. eql:type:: SET-OF
+        .. eql:type:: SET OF
 
             An integer.
 
-        Testing :eql:type:`SET-OF`.
-        Testing :eql:type:`XXX <SET-OF>`.
+        Testing :eql:type:`SET OF`.
+        Testing :eql:type:`XXX <SET OF>`.
         '''
 
         out = self.build(src, format='xml')
@@ -462,13 +462,13 @@ class TestEqlKeyword(unittest.TestCase, BaseDomainTest):
 
     def test_eql_kw_1(self):
         src = '''
-        .. eql:keyword:: SET-OF
+        .. eql:keyword:: SET OF
 
             blah
 
         some text
 
-        :eql:kw:`XXX <SET-OF>`
+        :eql:kw:`XXX <SET OF>`
         '''
 
         out = self.build(src, format='xml')
@@ -478,7 +478,7 @@ class TestEqlKeyword(unittest.TestCase, BaseDomainTest):
             len(x.xpath('''
                 //desc[@desctype="keyword"] /
 
-                desc_signature[@eql-name="SET-OF"] /
+                desc_signature[@eql-name="SET OF"] /
                 *[
                     (self::desc_annotation and text()="keyword") or
                     (self::desc_name and text()="SET OF")
