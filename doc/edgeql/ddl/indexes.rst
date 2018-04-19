@@ -19,12 +19,12 @@ type or link.
 
 .. eql:synopsis::
 
-    CREATE INDEX <index-name> := <index-expr>;
+    CREATE INDEX <index-name> := <index-expr> ;
 
-    CREATE INDEX <index-name> \{
+    CREATE INDEX <index-name> "{"
         SET expr := <index-expr>;
         [ <action >; ... ]
-    \};
+    "}" ;
 
 
 Description
@@ -68,7 +68,7 @@ Remove an index from a given schema item.
 
 .. eql:synopsis::
 
-    DROP INDEX <index-name>;
+    DROP INDEX <index-name> ;
 
 Description
 -----------

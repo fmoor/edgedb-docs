@@ -11,7 +11,7 @@ INSERT
 .. eql:synopsis::
 
     [ WITH <with-spec> [ ,  ... ] ]
-    INSERT <expression> [ <insert-shape> ];
+    INSERT <expression> [ <insert-shape> ] ;
 
 
 Description

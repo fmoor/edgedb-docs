@@ -20,7 +20,7 @@ Define a new :ref:`abstract link <ref_datamodel_links>`.
 
     [ WITH <with-item> [, ...] ]
     CREATE ABSTRACT LINK <name> [ EXTENDING <base> [, ...] ]
-    [ \{ <action>; [...] \} ];
+    [ "{" <action>; [...] "}" ] ;
 
 Description
 -----------
@@ -75,7 +75,7 @@ Change the definition of an :ref:`abstract link <ref_datamodel_links>`.
 
     [ WITH <with-item> [, ...] ]
     ALTER ABSTRACT LINK <name>
-    \{ <action>; [...] \};
+    "{" <action>; [...] "}" ;
 
 
 Description
@@ -165,7 +165,7 @@ Remove an :ref:`abstract link <ref_datamodel_links>` from the schema.
 .. eql:synopsis::
 
     [ WITH <with-item> [, ...] ]
-    DROP ABSTRACT LINK <name>;
+    DROP ABSTRACT LINK <name> ;
 
 
 Description
@@ -200,10 +200,10 @@ specified *object type*.
 
     [ WITH <with-item> [, ...] ]
     CREATE [ REQUIRED ] [ INHERITED ] LINK <name> TO <typename>
-    [ \{ <action>; [...] \} ];
+    [ "{" <action>; [...] "}" ] ;
 
     [ WITH <with-item> [, ...] ]
-    CREATE [ INHERITED ] LINK <name> := <expression>;
+    CREATE [ INHERITED ] LINK <name> := <expression> ;
 
 
 Description
@@ -279,10 +279,10 @@ on a given object type.
 
     [ WITH <with-item> [, ...] ]
     ALTER LINK <name>
-    \{ <action>; [...] \};
+    "{" <action>; [...] "}" ;
 
     [ WITH <with-item> [, ...] ]
-    ALTER LINK <name> <action>;
+    ALTER LINK <name> <action> ;
 
 
 Description
@@ -372,7 +372,7 @@ Remove a concrete link from the specified object type.
 .. eql:synopsis::
 
     [ WITH <with-item> [, ...] ]
-    DROP LINK <name>;
+    DROP LINK <name> ;
 
 Description
 -----------

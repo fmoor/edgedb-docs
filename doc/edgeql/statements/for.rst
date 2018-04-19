@@ -23,7 +23,7 @@ FOR
 
     [ OFFSET <offset-expr> ]
 
-    [ LIMIT  <limit-expr> ];
+    [ LIMIT  <limit-expr> ] ;
 
 :eql:inline-synopsis:`FOR <variable> IN "{" <iterator-set> [, ...]  "}"`
     The ``FOR`` clause has this general form:

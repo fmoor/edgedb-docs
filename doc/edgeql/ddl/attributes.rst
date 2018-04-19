@@ -19,7 +19,7 @@ Define a new :ref:`schema attribute <ref_datamodel_attributes>`.
 
     [ WITH <with-item> [, ...] ]
     CREATE ATTRIBUTE <name> <typename>
-    [ \{ <subdefinition>; [...] \} ];
+    [ "{" <subdefinition>; [...] "}" ] ;
 
 
 Description
@@ -65,7 +65,7 @@ Remove a :ref:`schema attribute <ref_datamodel_attributes>`.
 .. eql:synopsis::
 
     [ WITH <with-item> [, ...] ]
-    DROP ATTRIBUTE <name>;
+    DROP ATTRIBUTE <name> ;
 
 Description
 -----------
@@ -131,7 +131,7 @@ Remove an attribute value from a given schema item.
 
 .. eql:synopsis::
 
-    DROP ATTRIBUTE <attribute>;
+    DROP ATTRIBUTE <attribute> ;
 
 Description
 -----------

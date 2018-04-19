@@ -20,7 +20,7 @@ Define a new :ref:`scalar type <ref_datamodel_scalar_types>`.
 
     [ WITH <with-item> [, ...] ]
     CREATE [ABSTRACT] SCALAR TYPE <name> [ EXTENDING <base> ]
-    [ \{ <action>; [...] \} ];
+    [ "{" <action>; [...] "}" ] ;
 
 
 Description
@@ -90,7 +90,7 @@ Alter the definition of a :ref:`scalar type <ref_datamodel_scalar_types>`.
 
     [ WITH <with-item> [, ...] ]
     ALTER SCALAR TYPE <name>
-    \{ <action>; [...] \};
+    "{" <action>; [...] "}" ;
 
 
 Description
@@ -152,7 +152,7 @@ Remove a scalar type.
 .. eql:synopsis::
 
     [ WITH <with-item> [, ...] ]
-    DROP SCALAR TYPE <name>;
+    DROP SCALAR TYPE <name> ;
 
 
 Description

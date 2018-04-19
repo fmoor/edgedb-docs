@@ -20,7 +20,7 @@ Define a new :ref:`abstract property <ref_datamodel_props>`.
 
     [ WITH <with-item> [, ...] ]
     CREATE ABSTRACT PROPERTY <name> [ EXTENDING <base> [, ...] ]
-    [ \{ <action>; [...] \} ];
+    [ "{" <action>; [...] "}" ] ;
 
 Description
 -----------
@@ -63,7 +63,7 @@ Change the definition of an
 
     [ WITH <with-item> [, ...] ]
     ALTER ABSTRACT PROPERTY <name>
-    \{ <action>; [...] \};
+    "{" <action>; [...] "}" ;
 
 Description
 -----------
@@ -142,7 +142,7 @@ schema.
 .. eql:synopsis::
 
     [ WITH <with-item> [, ...] ]
-    DROP ABSTRACT PROPERTY <name>;
+    DROP ABSTRACT PROPERTY <name> ;
 
 
 Description
@@ -174,10 +174,10 @@ Define a concrete property on the specified link.
 
     [ WITH <with-item> [, ...] ]
     CREATE [ INHERITED ] PROPERTY <name> TO <typename>
-    [ \{ <action>; [...] \} ];
+    [ "{" <action>; [...] "}" ] ;
 
     [ WITH <with-item> [, ...] ]
-    CREATE [ INHERITED ] PROPERTY <name> := <expression>;
+    CREATE [ INHERITED ] PROPERTY <name> := <expression> ;
 
 Description
 -----------
@@ -234,11 +234,10 @@ Alter the definition of a concrete property on the specified link.
 
     [ WITH <with-item> [, ...] ]
     ALTER PROPERTY <name>
-    \{ <action>; [...] \}
-    ;
+    "{" <action>; [...] "}" ;
 
     [ WITH <with-item> [, ...] ]
-    ALTER PROPERTY <name> <action>;
+    ALTER PROPERTY <name> <action> ;
 
 
 Description
@@ -305,7 +304,7 @@ Remove a concrete property from the specified link.
 .. eql:synopsis::
 
     [ WITH <with-item> [, ...] ]
-    DROP PROPERTY <name>;
+    DROP PROPERTY <name> ;
 
 Description
 -----------

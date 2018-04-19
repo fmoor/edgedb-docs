@@ -11,7 +11,7 @@ DELETE
 .. eql:synopsis::
 
     [ WITH <with-spec> [ , ... ] ]
-    DELETE <expr>;
+    DELETE <expr> ;
 
 :eql:inline-synopsis:`WITH`
     Alias declarations.

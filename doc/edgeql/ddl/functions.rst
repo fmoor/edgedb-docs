@@ -21,13 +21,13 @@ Define a new function.
 
     [ WITH <with-item> [, ...] ]
     CREATE FUNCTION <name> ([ <argspec> ] [, ... ]) -> <returnspec>
-    FROM <language> <functionbody>;
+    FROM <language> <functionbody> ;
 
     [ WITH <with-item> [, ...] ]
     CREATE FUNCTION <name> ([ <argspec> ] [, ... ]) -> <returnspec>
-    \{
+    "{"
         <subcommand> [, ...]
-    \};
+    "}" ;
 
     where <argspec> is:
 

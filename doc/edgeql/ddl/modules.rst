@@ -17,7 +17,7 @@ Create a new module.
 
 .. eql:synopsis::
 
-    CREATE MODULE <name>;
+    CREATE MODULE <name> ;
 
 Description
 -----------
@@ -46,7 +46,7 @@ Remove a module.
 
 .. eql:synopsis::
 
-    DROP MODULE <name>;
+    DROP MODULE <name> ;
 
 
 Description

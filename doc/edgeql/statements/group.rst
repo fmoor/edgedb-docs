@@ -54,7 +54,7 @@ The data flow of a ``GROUP`` block can be conceptualized like this:
 
     [ OFFSET <offset-expr> ]
 
-    [ LIMIT <limit-expr> ];
+    [ LIMIT <limit-expr> ] ;
 
 Notice that defining aliases in ``USING`` clause is
 mandatory. Only the names defined in ``USING`` clause are legal in the

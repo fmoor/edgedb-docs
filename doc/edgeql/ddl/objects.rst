@@ -21,7 +21,7 @@ Define a new :ref:`object type <ref_datamodel_object_types>`.
 
     [ WITH <with-item> [, ...] ]
     CREATE [ABSTRACT] TYPE <name> [ EXTENDING <base> [, ...] ]
-    [ \{ <subcommand>; [...] \} ];
+    [ "{" <subcommand>; [...] "}" ] ;
 
 Description
 -----------
@@ -97,10 +97,10 @@ Change the definition of an
 
     [ WITH <with-item> [, ...] ]
     ALTER TYPE <name>
-    [ \{ <action>; [...] \} ];
+    [ "{" <action>; [...] "}" ] ;
 
     [ WITH <with-item> [, ...] ]
-    ALTER TYPE <name> <action>;
+    ALTER TYPE <name> <action> ;
 
     where <action> is one of
 
@@ -213,7 +213,7 @@ Remove the specified object type from the schema.
 
 .. eql:synopsis::
 
-    DROP TYPE <name>;
+    DROP TYPE <name> ;
 
 Description
 -----------

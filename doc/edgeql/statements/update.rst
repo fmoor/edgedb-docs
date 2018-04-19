@@ -16,7 +16,7 @@ UPDATE
 
     [ FILTER <filter-expr> ]
 
-    SET <shape>;
+    SET <shape> ;
 
 ``UPDATE`` changes the values of the specified links in all objects
 selected by *update-selector-expr* and, optinally, filtered by

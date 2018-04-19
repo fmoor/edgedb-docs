@@ -20,7 +20,7 @@ SELECT
 
     [ OFFSET <offset-expr> ]
 
-    [ LIMIT  <limit-expr> ];
+    [ LIMIT  <limit-expr> ] ;
 
 :eql:inline-synopsis:`FILTER <filter-expr>`
     The optional ``FILTER`` clause, where :eql:inline-synopsis:`<filter-expr>`

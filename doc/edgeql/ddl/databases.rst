@@ -17,7 +17,7 @@ Create a new database.
 
 .. eql:synopsis::
 
-    CREATE DATABASE <name>;
+    CREATE DATABASE <name> ;
 
 Description
 -----------
@@ -45,7 +45,7 @@ Remove a database.
 
 .. eql:synopsis::
 
-    DROP DATABASE <name>;
+    DROP DATABASE <name> ;
 
 Description
 -----------
