@@ -497,120 +497,6 @@ class TestEqlKeyword(unittest.TestCase, BaseDomainTest):
 
 class TestEqlStatement(unittest.TestCase, BaseDomainTest):
 
-    def test_eql_stmt_1(self):
-        src = '''
-        .. eql:clause:: FILTER: aaa
-
-            blah
-        '''
-
-        with self.assert_fails(
-                'directive must be nested in a :eql:statement:'):
-            self.build(src)
-
-    def test_eql_stmt_2(self):
-        src = '''
-        .. eql:synopsis::
-
-            blah
-        '''
-
-        with self.assert_fails(
-                'directive must be nested in a :eql:statement:'):
-            self.build(src)
-
-    def test_eql_stmt_3(self):
-        src = '''
-
-        .. eql:type:: any
-
-            123
-
-        .. eql:statement:: CREATE FUNCTION
-            :haswith:
-
-            A short CREATE FUNCTION desc.
-
-            .. eql:synopsis::
-
-                code-syn-sample
-
-            .. eql:clause:: FILTER: A FILTER B
-
-                :paramtype A: any
-                :paramtype B: SET OF any
-                :returntype: any
-
-                blah
-
-        A ref to :eql:stmt:`CREATE FUNCTION`
-
-        A ref to :eql:clause:`FLT <CREATE FUNCTION:FILTER>`.
-        '''
-
-        out = self.build(src, format='xml')
-        x = requests_xml.XML(xml=out)
-
-        self.assertEqual(
-            x.xpath('''
-                //desc[@desctype="statement"] // desc[@desctype="clause"] /
-                desc_signature[@eql-fullname="FILTER"] / * / text()
-            '''),
-            ['clause', 'A FILTER B'])
-
-        self.assertEqual(
-            x.xpath('''
-                //desc_content /
-                literal_block[@language="pseudo-eql"] / text()
-            '''),
-            ['code-syn-sample'])
-
-        self.assertEqual(
-            x.xpath('''
-                //paragraph /
-                reference[@eql-type="statement" and
-                          @refid="statement::CREATE-FUNCTION"] /
-                literal / text()
-            '''),
-            ['CREATE FUNCTION'])
-
-        self.assertEqual(
-            x.xpath('''
-                //paragraph /
-                reference[@eql-type="clause" and
-                          @refid="clause::CREATE-FUNCTION::FILTER"] /
-                literal / text()
-            '''),
-            ['FLT'])
-
-    def test_eql_stmt_4(self):
-        src = '''
-
-        .. eql:statement:: SELECT
-
-            A short SELECT desc.
-
-            test
-            ====
-
-            123123
-        '''
-
-        out = self.build(src, format='xml')
-        x = requests_xml.XML(xml=out)
-
-        self.assertEqual(
-            x.xpath('''
-                //desc_content / section / title / text()
-            '''),
-            ['test'])
-
-        self.assertEqual(
-            x.xpath('''
-                //desc_content / section / paragraph / text()
-            '''),
-            ['123123'])
-
     def test_eql_stmt_5(self):
         src = '''
 
@@ -740,6 +626,48 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
 
         with self.assert_fails("duplicate 'AA AA' statement"):
             self.build(src)
+
+    def test_eql_stmt_10(self):
+        src = '''
+        =========
+        Functions
+        =========
+
+        This section describes the DDL commands ...
+
+
+        CREATE FUNCTION
+        ===============
+
+        :eql-statement:
+
+        Define a new function.
+
+
+        DROP FUNCTION
+        =============
+
+        :eql-statement:
+        :eql-haswith:
+
+        Remove a function.
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //section[@eql-statement="true"]/title/text()
+            '''),
+            ['CREATE FUNCTION', 'DROP FUNCTION'])
+
+        self.assertEqual(
+            x.xpath('''
+                //section[@eql-statement="true" and @eql-haswith="true"]
+                    /title/text()
+            '''),
+            ['DROP FUNCTION'])
 
 
 class TestEqlInlineCode(unittest.TestCase, BaseDomainTest):

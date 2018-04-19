@@ -11,57 +11,57 @@ This section describes the DDL commands pertaining to
 CREATE DATABASE
 ===============
 
-.. eql:statement:: CREATE DATABASE
+:eql-statement:
 
-    Create a new database.
+Create a new database.
 
-    .. eql:synopsis::
+.. eql:synopsis::
 
-        CREATE DATABASE <name>;
+    CREATE DATABASE <name>;
 
-    Description
-    -----------
+Description
+-----------
 
-    ``CREATE DATABASE`` creates a new EdgeDB database.
+``CREATE DATABASE`` creates a new EdgeDB database.
 
-    The new database will be created with all standard schemas prepopulated.
+The new database will be created with all standard schemas prepopulated.
 
-    Examples
-    --------
+Examples
+--------
 
-    Create a new database:
+Create a new database:
 
-    .. code-block:: edgeql
+.. code-block:: edgeql
 
-        CREATE DATABASE appdb;
+    CREATE DATABASE appdb;
 
 
 DROP DATABASE
 =============
 
-.. eql:statement:: DROP DATABASE
+:eql-statement:
 
-    Remove a database.
+Remove a database.
 
-    .. eql:synopsis::
+.. eql:synopsis::
 
-        DROP DATABASE <name>;
+    DROP DATABASE <name>;
 
-    Description
-    -----------
+Description
+-----------
 
-    ``DROP DATABASE`` removes an existing database.  It cannot be executed
-    while there are existing connections to the target database.
+``DROP DATABASE`` removes an existing database.  It cannot be executed
+while there are existing connections to the target database.
 
-    .. warning::
+.. warning::
 
-        ``DROP DATABASE`` removes data permanently and cannot be undone.
+    ``DROP DATABASE`` removes data permanently and cannot be undone.
 
-    Examples
-    --------
+Examples
+--------
 
-    Remove a database:
+Remove a database:
 
-    .. code-block:: edgeql
+.. code-block:: edgeql
 
-        DROP DATABASE appdb;
+    DROP DATABASE appdb;

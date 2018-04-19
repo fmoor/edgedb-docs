@@ -10,22 +10,22 @@ This section describes the DDL commands pertaining to
 CREATE CONSTRAINT
 -----------------
 
-.. eql:statement:: CREATE CONSTRAINT
+:eql-statement:
 
-    Define a concrete constraint on the specified schema item.
+Define a concrete constraint on the specified schema item.
 
 
 ALTER CONSTRAINT
 ----------------
 
-.. eql:statement:: ALTER CONSTRAINT
+:eql-statement:
 
-    Alter the definition of a concrete constraint on the specified schema item.
+Alter the definition of a concrete constraint on the specified schema item.
 
 
 DROP CONSTRAINT
 ---------------
 
-.. eql:statement:: DROP CONSTRAINT
+:eql-statement:
 
-    Remove a concrete constraint from the specified schema item.
+Remove a concrete constraint from the specified schema item.

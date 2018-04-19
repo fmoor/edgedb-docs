@@ -11,55 +11,56 @@ This section describes the DDL commands pertaining to
 CREATE MODULE
 =============
 
-.. eql:statement:: CREATE MODULE
+:eql-statement:
 
-    Create a new module.
+Create a new module.
 
-    .. eql:synopsis::
+.. eql:synopsis::
 
-        CREATE MODULE <name>;
+    CREATE MODULE <name>;
 
-    Description
-    -----------
+Description
+-----------
 
-    ``CREATE MODULE`` defines a new module for the current database.
-    The name of the new module must be distinct from any existing module
-    in the current database.
+``CREATE MODULE`` defines a new module for the current database.
+The name of the new module must be distinct from any existing module
+in the current database.
 
-    Examples
-    --------
+Examples
+--------
 
-    Create a new module:
+Create a new module:
 
-    .. code-block:: edgeql
+.. code-block:: edgeql
 
-        CREATE MODULE payments;
+    CREATE MODULE payments;
 
 
 DROP MODULE
 ===========
 
-.. eql:statement:: DROP MODULE
-
-    Remove a module.
-
-    .. eql:synopsis::
-
-        DROP MODULE <name>;
+:eql-statement:
 
 
-    Description
-    -----------
+Remove a module.
 
-    ``DROP MODULE`` removes an existing module from the current database.
-    All schema items and data contained in the module is removed as well.
+.. eql:synopsis::
+
+    DROP MODULE <name>;
 
 
-    Examples
-    --------
+Description
+-----------
 
-    Remove a module:
+``DROP MODULE`` removes an existing module from the current database.
+All schema items and data contained in the module is removed as well.
 
-    .. code-block:: edgeql
 
-        DROP MODULE payments;
+Examples
+--------
+
+Remove a module:
+
+.. code-block:: edgeql
+
+    DROP MODULE payments;

@@ -3,63 +3,56 @@
 FOR
 ===
 
-.. eql:statement:: FOR
-    :haswith:
+:eql-statement:
+:eql-haswith:
 
-    ``FOR``--compute a union of subsets based on values of another set
 
-    .. eql:synopsis::
+``FOR``--compute a union of subsets based on values of another set
 
-        [ WITH <with-item> [, ...] ]
+.. eql:synopsis::
 
-        FOR <variable> IN "{" <iterator-set> [, ...]  "}"
+    [ WITH <with-item> [, ...] ]
+
+    FOR <variable> IN "{" <iterator-set> [, ...]  "}"
+
+    UNION <output-expr>
+
+    [ FILTER <filter-expr> ]
+
+    [ ORDER BY <order-expr> [direction] [THEN ...] ]
+
+    [ OFFSET <offset-expr> ]
+
+    [ LIMIT  <limit-expr> ];
+
+:eql:inline-synopsis:`FOR <variable> IN "{" <iterator-set> [, ...]  "}"`
+    The ``FOR`` clause has this general form:
+
+    .. TODO: rewrite this
+
+    .. code-block:: pseudo-eql
+
+        FOR <variable> IN <iterator-expr>
+
+    where *iterator-expr* is a
+    :ref:`set constructor <ref_eql_expr_index_set_ctor>` of arbitrary
+    type.
+
+:eql:inline-synopsis:`UNION <output-expr>`
+    The ``UNION`` clause of the ``FOR`` statement has this general form:
+
+    .. TODO: rewrite this
+
+    .. code-block:: pseudo-eql
 
         UNION <output-expr>
 
-        [ FILTER <expr> ]
+    Here, *output-expr* is an arbitrary expression that is evaluated for
+    every element in a set produced by evaluating the ``FOR`` clause.
+    The results of the evaluation are appended into the result set.
 
-        [ ORDER BY <expr> [direction] [THEN ...] ]
-
-        [ OFFSET <expr> ]
-
-        [ LIMIT  <expr> ]
-
-    .. eql:clause:: FOR: FOR var IN A
-
-        :paramtype A: SET OF any
-        :returntype: any
-
-        The ``FOR`` clause has this general form:
-
-        .. code-block:: pseudo-eql
-
-            FOR <variable> IN <iterator-expr>
-
-        where *iterator-expr* is a
-        :ref:`set constructor <ref_eql_expr_index_set_ctor>` of arbitrary
-        type.
-
-    .. eql:clause:: UNION: A UNION B
-
-        :paramtype A: any
-        :paramtype B: SET OF any
-        :returntype: any
-
-        The ``UNION`` clause of the ``FOR`` statement has this general form:
-
-        .. code-block:: pseudo-eql
-
-            UNION <output-expr>
-
-        Here, *output-expr* is an arbitrary expression that is evaluated for
-        every element in a set produced by evaluating the ``FOR`` clause.
-        The results of the evaluation are appended into the result set.
-
-    The optional :eql:clause:`FILTER <SELECT:FILTER>`,
-    :eql:clause:`ORDER <SELECT:ORDER>`, :eql:clause:`OFFSET <SELECT:OFFSET>`,
-    and :eql:clause:`LIMIT <SELECT:LIMIT>` apply to the result of the
-    ``FOR .. UNION`` evaluation and have the same meaning as in the
-    :eql:stmt:`SELECT` statement.
+For details about ``FILTER``, ``ORDER BY``, ``OFFSET``, and ``LIMIT``
+clauses see the documentation of the :eql:stmt:`SELECT` statement.
 
 
 .. _ref_eql_forstatement:

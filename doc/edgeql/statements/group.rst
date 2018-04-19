@@ -5,6 +5,9 @@
 GROUP
 =====
 
+:eql-statement:
+:eql-haswith:
+
 A ``GROUP`` statement is used to allow operations on set partitions.
 The input set is partitioned using expressions in the ``USING`` and
 ``BY`` clauses, and then for each partition the expression in the
@@ -18,47 +21,40 @@ aggregate functions to compute various properties of set partitions.
 
 The data flow of a ``GROUP`` block can be conceptualized like this:
 
-.. code-block:: pseudo-eql
+.. eql:synopsis::
 
-    WITH MODULE example
+    [ WITH <with-item> [, ...] ]
 
     GROUP
-        <alias0> := <expr>      # define a set to partition
+        <alias0> := <expr0>     define a set to partition
 
     USING
 
-        <alias1> := <expr>,     # define parameters to use for
-        <alias2> := <expr>,     # grouping
+        <alias1> := <expr1>,    define parameters to use for
+        <alias2> := <expr2>,    grouping
         ...
-        <aliasN> := <expr>
+        <aliasN> := <exprN>
 
     BY
-        <alias1>, ... <aliasN>  # specify which parameters will
-                                # be used to partition the set
+        <alias1>, ... <aliasN>  specify which parameters will
+                                be used to partition the set
 
     INTO
-        <sub_alias> # provide an alias to refer to the subsets
-                    # in expressions
+        <sub_alias>             provide an alias to refer to
+                                the subsets in expressions
 
     UNION
-        <expr>  # map every grouped set onto a result set,
-                # merging them all with a UNION
+        <union-expr>            map every grouped set onto a
+                                result set, merging them all with
+                                a UNION
 
-    # optional clause
-    FILTER
-        <expr>  # filter the returned set of values
+    [ FILTER <filter-expr> ]
 
-    # optional clause
-    ORDER BY
-        <expr>  # define ordering of the filtered set
+    [ ORDER BY <order-expr> ]
 
-    # optional clause
-    OFFSET
-        <expr>  # slice the filtered/ordered set
+    [ OFFSET <offset-expr> ]
 
-    # optional clause
-    LIMIT
-        <expr>  # slice the filtered/ordered set
+    [ LIMIT <limit-expr> ];
 
 Notice that defining aliases in ``USING`` clause is
 mandatory. Only the names defined in ``USING`` clause are legal in the

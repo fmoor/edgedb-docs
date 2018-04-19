@@ -11,80 +11,84 @@ This section describes the DDL commands pertaining to
 CREATE INDEX
 ============
 
-.. eql:statement:: CREATE INDEX
-
-    Define an new :ref:`index <ref_datamodel_indexes>` for a given object
-    type or link.
-
-    .. eql:synopsis::
-
-        CREATE INDEX <index-name> := <index-expr>;
-
-        CREATE INDEX <index-name> \{
-            SET expr := <index-expr>;
-            [ <action >; ... ]
-        \};
+:eql-statement:
 
 
-    Description
-    -----------
+Define an new :ref:`index <ref_datamodel_indexes>` for a given object
+type or link.
 
-    ``CREATE INDEX`` constructs a new index *index-name* for a given object
-    type or link using *index-expr*.
+.. eql:synopsis::
 
+    CREATE INDEX <index-name> := <index-expr>;
 
-    Parameters
-    ----------
-
-    :eql:inline-synopsis:`<index-name>`
-        The name of the index to be created.  No module name can be specified,
-        indexes are always created in the same module as the parent type or
-        link.
+    CREATE INDEX <index-name> \{
+        SET expr := <index-expr>;
+        [ <action >; ... ]
+    \};
 
 
-    Examples
-    --------
+Description
+-----------
 
-    Create an object type ``User`` and set its ``title`` attribute to
-    ``"User type"``.
+``CREATE INDEX`` constructs a new index *index-name* for a given object
+type or link using *index-expr*.
 
-    .. code-block:: edgeql
 
-        CREATE TYPE User {
-            SET title := 'User type';
-        };
+Parameters
+----------
+
+:eql:inline-synopsis:`<index-name>`
+    The name of the index to be created.  No module name can be specified,
+    indexes are always created in the same module as the parent type or
+    link.
+
+
+Examples
+--------
+
+Create an object type ``User`` with an indexed ``title`` property:
+
+.. code-block:: edgeql
+
+    CREATE TYPE User {
+        CREATE PROPERTY title -> std::str {
+            SET default := '';
+        }
+
+        CREATE INDEX title_name ON __self__.title;
+    };
 
 
 DROP INDEX
 ==========
 
-.. eql:statement:: DROP INDEX
+:eql-statement:
 
-    Remove an attribute value from a given schema item.
+Remove an index from a given schema item.
 
-    .. eql:synopsis::
+.. eql:synopsis::
 
-        DROP ATTRIBUTE <attribute>;
+    DROP INDEX <index-name>;
 
-    Description
-    -----------
+Description
+-----------
 
-    ``DROP ATTRIBUTE`` removes an attribute value from a schema item.
+``DROP INDEX`` removes an index from a schema item.
 
-    *attribute* refers to the name of a defined attribute.  The attribute
-    value does not have to exist on a schema item.
+:eql:inline-synopsis:`<index-name>`
+    Refers to the name of a defined index.
 
-    This statement can only be used as a subdefinition in another
-    DDL statement.
+This statement can only be used as a subdefinition in another
+DDL statement.
 
 
-    Examples
-    --------
+Examples
+--------
 
-    Drop the ``title`` attribute from the ``User`` object type:
+Drop the ``title`` index from the ``User`` object type:
 
-    .. code-block:: edgeql
+.. code-block:: edgeql
 
-        ALTER TYPE User {
-            DROP ATTRIBUTE title;
-        };
+    ALTER TYPE User {
+        DROP INDEX title;
+    };

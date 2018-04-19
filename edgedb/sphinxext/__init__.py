@@ -571,115 +571,6 @@ class EQLKeywordDirective(BaseEQLDirective):
             f'keyword::{name}', sig, signode)
 
 
-class EQLStatementDirective(BaseEQLDirective):
-
-    option_spec = BaseEQLDirective.option_spec.copy()
-    option_spec.update({
-        'haswith': d_directives.flag,
-    })
-
-    def handle_signature(self, sig, signode):
-        signode['eql-name'] = sig
-        signode['eql-fullname'] = sig
-
-        display = sig.replace('-', ' ')
-        signode += s_nodes.desc_annotation('statement', 'statement')
-        signode += d_nodes.Text(' ')
-        signode += s_nodes.desc_name(display, display)
-
-        return sig
-
-    def add_target_and_index(self, name, sig, signode):
-        return super().add_target_and_index(
-            f'statement::{name}', sig, signode)
-
-    def before_content(self):
-        if 'eql:statement' in self.env.ref_context:
-            raise DirectiveParseError(
-                self,
-                ':eql:statement: directives cannot be nested')
-
-        self.env.ref_context['eql:statement'] = self.names[-1]
-
-        if not hasattr(self.state.nested_parse.__func__, 'eql-wrapped'):
-            func = self.state.nested_parse.__func__
-
-            def nested_parse_wrapper(*args, **kwargs):
-                func(self.state, *args, match_titles=True, **kwargs)
-
-            setattr(nested_parse_wrapper, 'eql-wrapped', True)
-            setattr(nested_parse_wrapper, 'eql-func', func)
-            setattr(nested_parse_wrapper, 'eql-owner', self)
-            self.state.nested_parse = nested_parse_wrapper
-
-    def after_content(self):
-        del self.env.ref_context['eql:statement']
-
-        if getattr(self.state.nested_parse, 'eql-owner') is self:
-            self.state.nested_parse = types.MethodType(
-                getattr(self.state.nested_parse, 'eql-func'),
-                self.state)
-
-
-class EQLStatementClauseDirective(BaseEQLDirective):
-
-    doc_field_types = [
-        EQLTypedField(
-            'parameter',
-            label='Parameter',
-            names=('paramtype',),
-            typerolename='type'),
-
-        EQLTypedField(
-            'returntype',
-            label='Return',
-            has_arg=False,
-            names=('returntype',),
-            typerolename='type'),
-    ]
-
-    def run(self):
-        env = self.state.document.settings.env
-
-        if 'eql:statement' not in env.ref_context:
-            raise DirectiveParseError(
-                self,
-                ':eql:clause: directive must be nested in a :eql:statement:')
-
-        return super().run()
-
-    def handle_signature(self, sig, signode):
-        try:
-            name, sig = sig.split(':', 1)
-        except Exception as ex:
-            raise DirectiveParseError(
-                self,
-                f':eql:clause signature must match "NAME: SIGNATURE" '
-                f'template',
-                cause=ex)
-
-        name = name.strip()
-        sig = sig.strip()
-        if not name or not sig:
-            raise DirectiveParseError(
-                self, f'invalid :eql:clause: signature')
-
-        signode['eql-name'] = name
-        signode['eql-fullname'] = name
-        signode['eql-signature'] = sig
-
-        signode += s_nodes.desc_annotation('clause', 'clause')
-        signode += d_nodes.Text(' ')
-        signode += s_nodes.desc_name(sig, sig)
-
-        return name
-
-    def add_target_and_index(self, name, sig, signode):
-        stmt = self.env.ref_context['eql:statement']
-        refname = f'clause::{stmt}::{name}'
-        return super().add_target_and_index(refname, sig, signode)
-
-
 class EQLStatementSynopsisDirective(s_code.CodeBlock):
 
     has_content = True
@@ -688,13 +579,6 @@ class EQLStatementSynopsisDirective(s_code.CodeBlock):
     option_spec = {}
 
     def run(self):
-        env = self.state.document.settings.env
-
-        if 'eql:statement' not in env.ref_context:
-            raise DirectiveParseError(
-                self,
-                ':eql:synopsis: directive must be nested in a :eql:statement:')
-
         self.arguments = ['pseudo-eql']
         return super().run()
 
@@ -870,7 +754,6 @@ class EdgeQLDomain(s_domains.Domain):
         'keyword': s_domains.ObjType('keyword', 'kw'),
         'operator': s_domains.ObjType('operator', 'op'),
         'statement': s_domains.ObjType('statement', 'stmt'),
-        'clause': s_domains.ObjType('clause', 'clause'),
     }
 
     _role_to_object_type = {
@@ -883,8 +766,6 @@ class EdgeQLDomain(s_domains.Domain):
         'type': EQLTypeDirective,
         'keyword': EQLKeywordDirective,
         'operator': EQLOperatorDirective,
-        'statement': EQLStatementDirective,
-        'clause': EQLStatementClauseDirective,
         'synopsis': EQLStatementSynopsisDirective,
     }
 
@@ -894,7 +775,6 @@ class EdgeQLDomain(s_domains.Domain):
         'kw': s_roles.XRefRole(),
         'op': s_roles.XRefRole(),
         'stmt': s_roles.XRefRole(),
-        'clause': s_roles.XRefRole(),
     }
 
     initial_data = {
@@ -905,7 +785,6 @@ class EdgeQLDomain(s_domains.Domain):
                      type, target, node, contnode):
 
         objects = self.data['objects']
-        print(objects)
         expected_type = self._role_to_object_type[type]
 
         target = target.replace(' ', '-')
@@ -915,13 +794,6 @@ class EdgeQLDomain(s_domains.Domain):
             target = f'operator::{target}'
         elif expected_type == 'statement':
             target = f'statement::{target}'
-        elif expected_type == 'clause':
-            if ':' not in target:
-                raise DomainError(
-                    f'cannot resolve :eql:{type}: targeting {target!r}: '
-                    f'target must be in form of STATEMENT:CLAUSE')
-            stmt, cl = target.split(':')
-            target = f'clause::{stmt}::{cl}'
 
         try:
             try:
@@ -1005,7 +877,9 @@ class StatementTransform(s_transforms.SphinxTransform):
                     f'field, but does not satisfy pattern for valid titles: '
                     f'UPPERCASE WORDS separated by single space characters')
 
-            if len(x.xpath('//field_list/field/field_name/text()')) > 1:
+            nested_statements = x.xpath(
+                '//field_list/field/field_name[text()="eql-statement"]')
+            if len(nested_statements) > 1:
                 raise EdgeSphinxExtensionError(
                     f'section {title!r} has a nested section with '
                     f'a :eql-statement: field set')
@@ -1023,6 +897,8 @@ class StatementTransform(s_transforms.SphinxTransform):
                     f'and its first paragraph is longer than 79 characters')
 
             section['eql-statement'] = 'true'
+            section['eql-haswith'] = ('true' if 'eql-haswith' in fields
+                                      else 'false')
             section['summary'] = summary
 
             objects = self.env.domaindata['eql']['objects']

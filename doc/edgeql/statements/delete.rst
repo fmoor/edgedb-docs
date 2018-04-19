@@ -3,47 +3,41 @@
 DELETE
 ======
 
-.. eql:statement:: DELETE
-    :haswith:
+:eql-statement:
+:eql-haswith:
 
-    ``DELETE`` -- remove objects from a database
+``DELETE`` -- remove objects from a database.
 
-    .. eql:synopsis::
+.. eql:synopsis::
 
-        [ WITH <with-spec> [ , ... ] ]
+    [ WITH <with-spec> [ , ... ] ]
+    DELETE <expr>;
 
-        DELETE <expr>
+:eql:inline-synopsis:`WITH`
+    Alias declarations.
 
-    .. eql:clause:: WITH: WITH
+    The ``WITH`` clause allows specifying module aliases as well
+    as expression aliases that can be referenced by the ``UPDATE``
+    statement.  See :ref:`ref_eql_with` for more information.
 
-        Alias declarations.
-
-        The ``WITH`` clause allows specifying module aliases as well
-        as expression aliases that can be referenced by the ``UPDATE``
-        statement.  See :ref:`ref_eql_with` for more information.
-
-    .. eql:clause:: DELETE: DELETE
-
-        Remove objects returned by *expr* from the database.
-
-        .. eql:synopsis::
-
-            DELETE <expr>
-
-    Output
-    ~~~~~~
-
-    On successful completion, a ``DELETE`` statement returns the set
-    of deleted objects.
+:eql:inline-synopsis:`DELETE <expr>`
+    Remove objects returned by *expr* from the database.
 
 
-    Examples
-    ~~~~~~~~
+Output
+~~~~~~
 
-    Here's a simple example of deleting a specific user:
+On successful completion, a ``DELETE`` statement returns the set
+of deleted objects.
 
-    .. code-block:: edgeql
 
-        WITH MODULE example
-        DELETE (SELECT User
-                FILTER User.name = 'Alice Smith');
+Examples
+~~~~~~~~
+
+Here's a simple example of deleting a specific user:
+
+.. code-block:: edgeql
+
+    WITH MODULE example
+    DELETE (SELECT User
+            FILTER User.name = 'Alice Smith');

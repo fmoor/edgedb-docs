@@ -11,147 +11,147 @@ This section describes the DDL commands pertaining to
 CREATE ATTRIBUTE
 ================
 
-.. eql:statement:: CREATE ATTRIBUTE
+:eql-statement:
 
-    Define a new :ref:`schema attribute <ref_datamodel_attributes>`.
+Define a new :ref:`schema attribute <ref_datamodel_attributes>`.
 
-    .. eql:synopsis::
+.. eql:synopsis::
 
-        [ WITH <with-item> [, ...] ]
-        CREATE ATTRIBUTE <name> <typename>
-        [ \{ <subdefinition>; [...] \} ];
-
-
-    Description
-    -----------
-
-    ``CREATE ATTRIBUTE`` defines a new schema attribute for use in the
-    current database.
-
-    If *name* is qualified with a module name, then the attribute is created
-    in that module, otherwise it is created in the current module.
-    The attribute name must be distinct from that of any existing schema item
-    in the module.
-
-    *typename* is a possibly fully-qualified name specifying the data type
-    of the new attribute; it must refer to a primitive type.
-
-    .. eql:clause:: SUBDEF: subdefinitions
-
-        Optional sequence of subdefinitions related to the new attribute.
-
-        The following subdefinitions are allowed in the ``CREATE ATTRIBUTE``
-        block:
-
-        * :eql:stmt:`SET <SET ATTRIBUTE>`
+    [ WITH <with-item> [, ...] ]
+    CREATE ATTRIBUTE <name> <typename>
+    [ \{ <subdefinition>; [...] \} ];
 
 
-    Examples
-    --------
+Description
+-----------
 
-    Set the attribute ``title`` of object type ``User`` to ``"User"``:
+``CREATE ATTRIBUTE`` defines a new schema attribute for use in the
+current database.
 
-    .. code-block:: edgeql
+If *name* is qualified with a module name, then the attribute is created
+in that module, otherwise it is created in the current module.
+The attribute name must be distinct from that of any existing schema item
+in the module.
 
-        ALTER TYPE User SET title := "User";
+*typename* is a possibly fully-qualified name specifying the data type
+of the new attribute; it must refer to a primitive type.
+
+:eql:inline-synopsis:`<subdefinition>`
+    Optional sequence of subdefinitions related to the new attribute.
+
+    The following subdefinitions are allowed in the ``CREATE ATTRIBUTE``
+    block:
+
+    * :eql:stmt:`SET <SET ATTRIBUTE>`
+
+
+Examples
+--------
+
+Set the attribute ``title`` of object type ``User`` to ``"User"``:
+
+.. code-block:: edgeql
+
+    ALTER TYPE User SET title := "User";
 
 
 DROP ATTRIBUTE
 ==============
 
-.. eql:statement:: DROP ATTRIBUTE
+:eql-statement:
 
-    Remove a :ref:`schema attribute <ref_datamodel_attributes>`.
+Remove a :ref:`schema attribute <ref_datamodel_attributes>`.
 
-    .. eql:synopsis::
+.. eql:synopsis::
 
-        [ WITH <with-item> [, ...] ]
-        DROP ATTRIBUTE <name>;
+    [ WITH <with-item> [, ...] ]
+    DROP ATTRIBUTE <name>;
 
-    Description
-    -----------
+Description
+-----------
 
-    ``DROP ATTRIBUTE`` removes an existing schema attribute from the database
-    schema.
+``DROP ATTRIBUTE`` removes an existing schema attribute from the database
+schema.
 
-    Examples
-    --------
+Examples
+--------
 
-    Drop the attribute ``extrainfo``:
+Drop the attribute ``extrainfo``:
 
-    .. code-block:: edgeql
+.. code-block:: edgeql
 
-        DROP ATTRIBUTE extrainfo;
+    DROP ATTRIBUTE extrainfo;
 
 
 SET ATTRIBUTE
 =============
 
-.. eql:statement:: SET ATTRIBUTE
+:eql-statement:
 
-    Define an attribute value for a given schema item.
+Define an attribute value for a given schema item.
 
-    .. eql:synopsis::
+.. eql:synopsis::
 
-        SET <attribute> := <value>
+    SET <attribute> := <value>
 
-    Description
-    -----------
+Description
+-----------
 
-    ``SET`` defines an attribute value for a schema item.
+``SET`` defines an attribute value for a schema item.
 
-    *attribute* refers to the name of a defined attribute, and
-    *value* must be a constant EdgeQL expression of the type matching
-    the attribute data type declaration.
+*attribute* refers to the name of a defined attribute, and
+*value* must be a constant EdgeQL expression of the type matching
+the attribute data type declaration.
 
-    This statement can only be used as a subdefinition in another
-    DDL statement.
-
-
-    Examples
-    --------
-
-    Create an object type ``User`` and set its ``title`` attribute to
-    ``"User type"``.
-
-    .. code-block:: edgeql
-
-        CREATE TYPE User {
-            SET title := 'User type';
-        };
+This statement can only be used as a subdefinition in another
+DDL statement.
 
 
+Examples
+--------
 
-DROP ATTRIBUTE (sub-action)
-===========================
+Create an object type ``User`` and set its ``title`` attribute to
+``"User type"``.
 
-.. eql:statement:: DROP ATTRIBUTE VALUE
+.. code-block:: edgeql
 
-    Remove an attribute value from a given schema item.
-
-    .. eql:synopsis::
-
-        DROP ATTRIBUTE <attribute>;
-
-    Description
-    -----------
-
-    ``DROP ATTRIBUTE`` removes an attribute value from a schema item.
-
-    *attribute* refers to the name of a defined attribute.  The attribute
-    value does not have to exist on a schema item.
-
-    This statement can only be used as a subdefinition in another
-    DDL statement.
+    CREATE TYPE User {
+        SET title := 'User type';
+    };
 
 
-    Examples
-    --------
 
-    Drop the ``title`` attribute from the ``User`` object type:
+DROP ATTRIBUTE VALUE
+====================
 
-    .. code-block:: edgeql
+:eql-statement:
 
-        ALTER TYPE User {
-            DROP ATTRIBUTE title;
-        };
+
+Remove an attribute value from a given schema item.
+
+.. eql:synopsis::
+
+    DROP ATTRIBUTE <attribute>;
+
+Description
+-----------
+
+``DROP ATTRIBUTE`` removes an attribute value from a schema item.
+
+*attribute* refers to the name of a defined attribute.  The attribute
+value does not have to exist on a schema item.
+
+This statement can only be used as a subdefinition in another
+DDL statement.
+
+
+Examples
+--------
+
+Drop the ``title`` attribute from the ``User`` object type:
+
+.. code-block:: edgeql
+
+    ALTER TYPE User {
+        DROP ATTRIBUTE title;
+    };
