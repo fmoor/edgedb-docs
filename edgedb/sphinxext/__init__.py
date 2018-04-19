@@ -197,6 +197,7 @@ To reference a keyword use a ":eql:kw:" role.  For instance:
 """
 
 
+import lxml.etree
 import re
 import types
 
@@ -218,6 +219,7 @@ from sphinx import addnodes as s_nodes
 from sphinx import directives as s_directives
 from sphinx import domains as s_domains
 from sphinx import roles as s_roles
+from sphinx import transforms as s_transforms
 from sphinx.directives import code as s_code
 from sphinx.util import docfields as s_docfields
 from sphinx.util import nodes as s_nodes_utils
@@ -370,7 +372,11 @@ class EQLTypedParamField(EQLField):
         return node
 
 
-class DirectiveParseError(Exception):
+class EdgeSphinxExtensionError(Exception):
+    pass
+
+
+class DirectiveParseError(EdgeSphinxExtensionError):
 
     def __init__(self, directive, msg, *, cause=None):
         fn, lineno = directive.state_machine.get_source_and_line()
@@ -380,11 +386,18 @@ class DirectiveParseError(Exception):
         super().__init__(msg)
 
 
-class DomainError(Exception):
+class DomainError(EdgeSphinxExtensionError):
     pass
 
 
 class BaseEQLDirective(s_directives.ObjectDescription):
+
+    @staticmethod
+    def strip_ws(text):
+        text = text.strip()
+        text = ' '.join(
+            line.strip() for line in text.split() if line.strip())
+        return text
 
     def _validate_and_extract_summary(self, node):
         desc_cnt = None
@@ -409,10 +422,7 @@ class BaseEQLDirective(s_directives.ObjectDescription):
                 self,
                 'there must be a short text paragraph after directive fields')
 
-        summary = first_node.astext().strip()
-        summary = ' '.join(
-            line.strip() for line in summary.split() if line.strip())
-
+        summary = self.strip_ws(first_node.astext())
         if len(summary) > 79:
             raise DirectiveParseError(
                 self,
@@ -895,6 +905,7 @@ class EdgeQLDomain(s_domains.Domain):
                      type, target, node, contnode):
 
         objects = self.data['objects']
+        print(objects)
         expected_type = self._role_to_object_type[type]
 
         target = target.replace(' ', '-')
@@ -975,6 +986,55 @@ class InlineCodeRole:
         return [node], []
 
 
+class StatementTransform(s_transforms.SphinxTransform):
+
+    default_priority = 5  # before ReferencesResolver
+
+    def apply(self):
+        for section in self.document.traverse(d_nodes.section):
+            x = lxml.etree.XML(section.asdom().toxml())
+
+            fields = set(x.xpath('field_list/field/field_name/text()'))
+            if 'eql-statement' not in fields:
+                continue
+
+            title = x.xpath('title/text()')[0]
+            if not re.match(r'^([A-Z]+\s?)+$', title):
+                raise EdgeSphinxExtensionError(
+                    f'section {title!r} is marked with an :eql-statement: '
+                    f'field, but does not satisfy pattern for valid titles: '
+                    f'UPPERCASE WORDS separated by single space characters')
+
+            if len(x.xpath('//field_list/field/field_name/text()')) > 1:
+                raise EdgeSphinxExtensionError(
+                    f'section {title!r} has a nested section with '
+                    f'a :eql-statement: field set')
+
+            first_para = x.xpath('paragraph/text()')
+            if len(first_para) < 1:
+                raise EdgeSphinxExtensionError(
+                    f'section {title!r} is marked with an :eql-statement: '
+                    f'and is required to have at least one paragraph')
+            first_para = first_para[0]
+            summary = BaseEQLDirective.strip_ws(first_para)
+            if len(summary) > 79:
+                raise EdgeSphinxExtensionError(
+                    f'section {title!r} is marked with an :eql-statement: '
+                    f'and its first paragraph is longer than 79 characters')
+
+            section['eql-statement'] = 'true'
+            section['summary'] = summary
+
+            objects = self.env.domaindata['eql']['objects']
+            target = 'statement::' + title.replace(' ', '-')
+
+            if target in objects:
+                raise EdgeSphinxExtensionError(
+                    f'duplicate {title!r} statement')
+
+            objects[target] = (self.env.docname, 'statement')
+
+
 def setup(app):
     app.add_lexer("eschema", EdgeSchemaLexer())
     app.add_lexer("edgeql", EdgeQLLexer())
@@ -984,3 +1044,5 @@ def setup(app):
     app.add_role('eql:inline-synopsis', InlineCodeRole('eql-synopsis'))
 
     app.add_domain(EdgeQLDomain)
+
+    app.add_transform(StatementTransform)

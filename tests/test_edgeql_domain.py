@@ -611,6 +611,136 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
             '''),
             ['123123'])
 
+    def test_eql_stmt_5(self):
+        src = '''
+
+        CREATE FUNCTION
+        ===============
+
+        :eql-statement:
+
+        Creates a function.
+
+        Subhead
+        -------
+
+        asdasdas
+
+
+        CREATE TYPE
+        ===========
+
+        :eql-statement:
+
+        blah.
+
+
+        Test
+        ====
+
+        A ref to :eql:stmt:`CREATE FUNCTION`
+
+        A ref to :eql:stmt:`ttt <CREATE TYPE>`
+        '''
+
+        out = self.build(src, format='xml')
+
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //paragraph /
+                reference[@eql-type="statement" and
+                          @refid="statement::CREATE-FUNCTION"] /
+                literal / text()
+            '''),
+            ['CREATE FUNCTION'])
+
+        self.assertEqual(
+            x.xpath('''
+                //paragraph /
+                reference[@eql-type="statement" and
+                          @refid="statement::CREATE-TYPE"] /
+                literal / text()
+            '''),
+            ['ttt'])
+
+    def test_eql_stmt_6(self):
+        src = '''
+
+        AAAAAA
+        ======
+
+        :eql-statement:
+
+        aa aaaaaa aaaaa aaaa aa aaaaaa aaaaa aaaa aa aaaaaa aaaaa aaaa aa
+        aa aaaaaa aaaaa aaaa aa aaaaaa aaaaa aaaa.
+        '''
+
+        with self.assert_fails(
+                'first paragraph is longer than 79 characters'):
+            self.build(src)
+
+    def test_eql_stmt_7(self):
+        src = '''
+
+        AA aa
+        =====
+
+        :eql-statement:
+
+        aa aaaaaa aaaaa aaaa aa.
+
+        aa aaaaaa aaaaa aaaa aa aaaaaa aaaaa aaaa.
+        '''
+
+        with self.assert_fails(
+                'but does not satisfy pattern for valid'):
+            self.build(src)
+
+    def test_eql_stmt_8(self):
+        src = '''
+
+        AA AA
+        =====
+
+        :eql-statement:
+
+        aa aaaaaa aaaaa aaaa aa.
+
+        BB
+        --
+
+        :eql-statement:
+
+        bbb.
+        '''
+
+        with self.assert_fails(
+                ' has a nested section with a :eql-statement:'):
+            self.build(src)
+
+    def test_eql_stmt_9(self):
+        src = '''
+
+        AA AA
+        =====
+
+        :eql-statement:
+
+        aa aaaaaa aaaaa aaaa aa.
+
+        AA AA
+        =====
+
+        :eql-statement:
+
+        aa aaaaaa aaaaa aaaa aa.
+        '''
+
+        with self.assert_fails("duplicate 'AA AA' statement"):
+            self.build(src)
+
 
 class TestEqlInlineCode(unittest.TestCase, BaseDomainTest):
 
