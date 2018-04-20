@@ -17,11 +17,11 @@ A function may be defined in EdgeDB Schema using the ``function`` declaration:
         [ initial value := <initial-value> ]
         [ <attribute-declarations> ]
 
-    where <argspec> is:
+    # where <argspec> is:
 
     [ $<argname>: ] [ <argmode> ] <argtype> [ = <default> ]
 
-    and <returnspec> is:
+    # and <returnspec> is:
 
     [ set of ] <rettype>
 

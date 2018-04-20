@@ -72,12 +72,12 @@ declaration in the context of a ``type`` or ``abstract link`` declaration:
             [ default := <default-expr> ]
             [ <attribute-declarations> ]
 
-    shorthand form for computable property declaration:
+    # shorthand form for computable property declaration:
 
     type <TypeName>:
         [inherited] property <prop-name> := <computable-expr>
 
-    link property declaration:
+    # link property declaration:
 
     abstract link <link-name>:
         [readonly] [inherited] property <prop-name>:
@@ -85,7 +85,7 @@ declaration in the context of a ``type`` or ``abstract link`` declaration:
             [ default := <default-expr> ]
             [ <attribute-declarations> ]
 
-    shorthand form for computable link property declaration:
+    # shorthand form for computable link property declaration:
 
     abstract link <link-name>:
         [inherited] property <prop_name> := <computable-expr>

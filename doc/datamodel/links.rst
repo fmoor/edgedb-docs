@@ -78,7 +78,7 @@ declaration in the context of a ``type`` declaration:
             [ <attribute-declarations> ]
             [ <constraint-declarations> ]
 
-    shorthand form for computable link declaration:
+    # shorthand form for computable link declaration:
 
     type <TypeName>:
         [inherited] link <link-name> := <computable-expr>

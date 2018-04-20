@@ -118,7 +118,7 @@ The syntax for a function call is as follows:
 
 .. eql:synopsis::
 
-    <function-name> ( [<argument> [, <argument> ...]] )
+    <function-name> "(" [<argument> [, <argument> ...]] ")"
 
 Here :eql:synopsis:`<function_name>` is a possibly qualified
 name of a function, and :eql:synopsis:`<argument>` is an
@@ -196,7 +196,7 @@ tuple value:
 
 .. eql:synopsis::
 
-    ( <expr> [, ... ] )
+    "(" <expr> [, ... ] ")"
 
 See :ref:`tuple expression reference <ref_eql_expr_tuple_ctor>` for more
 information on tuple constructors.
@@ -211,7 +211,7 @@ An element of a tuple can be referenced in the form:
 
 .. eql:synopsis::
 
-    <expr>.<element-index>
+    <expr> "." <element-index>
 
 Here, *expr* is any expression that has a tuple type, and *element-name* is
 either the *zero-based index* of the element, if the tuple is unnamed, or

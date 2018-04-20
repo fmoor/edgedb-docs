@@ -29,11 +29,11 @@ Define a new function.
         <subcommand> [, ...]
     "}" ;
 
-    where <argspec> is:
+    # where <argspec> is:
 
     [ $<argname>: ] [ <argmode> ] <argtype> [ = <default> ]
 
-    and <returnspec> is:
+    # and <returnspec> is:
 
     [ SET OF ] <rettype>
 
@@ -172,7 +172,7 @@ Remove a function.
     [ WITH <with-item> [, ...] ]
     DROP FUNCTION <name> ([ <argspec> ] [, ... ]);
 
-    where <argspec> is:
+    # where <argspec> is:
 
     [ $<argname>: ] [ <argmode> ] <argtype>
 

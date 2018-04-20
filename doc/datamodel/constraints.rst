@@ -30,7 +30,7 @@ An *abstract constraint* may be defined in EdgeDB Schema using the
         [ errmessage := <error-message> ]
         [ <attribute-declarations> ]
 
-    where <argspec> is:
+    # where <argspec> is:
 
     [ $<argname>: ] <argtype>
 

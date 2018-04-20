@@ -102,7 +102,7 @@ Change the definition of an
     [ WITH <with-item> [, ...] ]
     ALTER TYPE <name> <action> ;
 
-    where <action> is one of
+    # where <action> is one of
 
         RENAME TO <newname>;
         EXTENDING <parent> [, ...]

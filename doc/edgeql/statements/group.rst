@@ -26,27 +26,27 @@ The data flow of a ``GROUP`` block can be conceptualized like this:
     [ WITH <with-item> [, ...] ]
 
     GROUP
-        <alias0> := <expr0>     define a set to partition
+        <alias0> := <expr0>     # define a set to partition
 
     USING
 
-        <alias1> := <expr1>,    define parameters to use for
-        <alias2> := <expr2>,    grouping
+        <alias1> := <expr1>,    # define parameters to use for
+        <alias2> := <expr2>,    # grouping
         ...
         <aliasN> := <exprN>
 
     BY
-        <alias1>, ... <aliasN>  specify which parameters will
-                                be used to partition the set
+        <alias1>, ... <aliasN>  # specify which parameters will
+                                # be used to partition the set
 
     INTO
-        <sub_alias>             provide an alias to refer to
-                                the subsets in expressions
+        <sub_alias>             # provide an alias to refer to
+                                # the subsets in expressions
 
     UNION
-        <union-expr>            map every grouped set onto a
-                                result set, merging them all with
-                                a UNION
+        <union-expr>            # map every grouped set onto a
+                                # result set, merging them all with
+                                # a UNION
 
     [ FILTER <filter-expr> ]
 
