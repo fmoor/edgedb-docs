@@ -857,6 +857,8 @@ class StatementTransform(s_transforms.SphinxTransform):
 
             objects[target] = (self.env.docname, 'statement')
 
+            section['ids'].append(target)
+
 
 def setup_domain(app):
     app.add_lexer("edgeql", EdgeQLLexer())

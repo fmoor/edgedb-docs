@@ -530,7 +530,6 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
         '''
 
         out = self.build(src, format='xml')
-
         x = requests_xml.XML(xml=out)
 
         self.assertEqual(
@@ -550,6 +549,13 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
                 literal / text()
             '''),
             ['ttt'])
+
+        self.assertEqual(
+            x.xpath('''
+                //section[@eql-statement="true"]/@ids
+            '''),
+            ['create-function statement::CREATE-FUNCTION',
+             'create-type statement::CREATE-TYPE'])
 
     def test_eql_stmt_6(self):
         src = '''
