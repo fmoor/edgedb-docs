@@ -1,5 +1,6 @@
 .. _ref_datamodel_modules:
 
+=======
 Modules
 =======
 
@@ -16,4 +17,10 @@ Every EdgeDB schema contains the following standard modules:
 
 - ``std``: all standard types, functions and other declarations;
 - ``schema``: types describing the introspection schema;
-- ``graphql``: GraphQL-related types
+- ``__graphql__``: GraphQL-related types
+
+
+DDL
+===
+
+Module can be defined using the :eql:stmt:`CREATE MODULE` EdgeQL command.

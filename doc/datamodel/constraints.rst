@@ -137,8 +137,8 @@ The standard library defines the following constraints:
 
   .. code-block:: eschema
 
-     scalar type max_100 extending int:
-        contraint max(100)
+     scalar type maxex_100 extending int:
+        contraint maxexclusive(100)
 
 - ``std::expression`` -- uses the constraint subject directly as a constraint
   expression, the subject expression needs to be specified:

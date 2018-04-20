@@ -18,7 +18,9 @@ and is a low-level equivalent to
     scalars
     links
     props
+    views
     indexes
     constraints
     functions
     attributes
+    migrations

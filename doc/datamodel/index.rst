@@ -45,12 +45,12 @@ Inheritance
 ===========
 
 Most items in EdgeDB schema support *inheritance* as a composition mechanism.
-Schema items can *extend* other item(s) of the same item kind.  When extending,
-*child* items inherit the aspects of the parent item(s) in the manner specific
+Schema items can *extend* other item(s) of the same kind.  When extending,
+*child* items inherit the aspects of the *parent* item(s) in a manner specific
 to the schema item kind.  For example, when an object type extends another
 object type, it inherits all parent properties, links, constraints and other
 aspects.  Additionally, for instances of the child type
-``object IS ParentType`` is ``True`` (see :eql:op:`IS operator <IS>`), and
+``object IS ParentType`` is ``True`` (see :eql:op:`IS operator <IS>`).  Also,
 instances of the child type are included in the set of all instances of
 the parent type.
 
@@ -60,5 +60,5 @@ EdgeDB Schema
 
 :ref:`EdgeDB Schema <ref_eschema>` is a high-level declarative alternative to
 :ref:`EdgeQL data definition<ref_eql_ddl>` commands.  It is designed to
-be consise and readable.  Most of the examples and synopses in this section
-use the EdgeDB Schema notation.
+be a consise and readable representation of schema state.  Most of the examples
+and synopses in this section use the EdgeDB Schema notation.

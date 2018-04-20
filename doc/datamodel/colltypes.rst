@@ -1,9 +1,10 @@
 .. _ref_datamodel_collection_types:
 
-Collection types
+================
+Collection Types
 ================
 
-Collection types are special generic types used to group homogeneous or
+*Collection types* are special generic types used to group homogeneous or
 heterogeneous data.
 
 
@@ -35,7 +36,6 @@ heterogeneous data.
 
     .. code-block:: edgeql-repl
 
-        # a simple 2-tuple made of a str and int
         db> SELECT ('foo', 42).__type__.name;
         {"std::tuple<std::str, std::int64>"}
 
@@ -53,9 +53,9 @@ heterogeneous data.
 
     Arrays represent a one-dimensional homogeneous ordered list.
 
-    Array indexing starts at 0.
+    Array indexing starts at zero.
 
-    A tuple type can be explicitly declared in an expression or schema
+    An array type can be explicitly defined in an expression or schema
     declaration using the following syntax:
 
     .. eql:synopsis::

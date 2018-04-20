@@ -10,7 +10,7 @@ EdgeQL input consists of a sequence of *commands*, and the database
 returns a specific response to each command in sequence.
 
 For example, the following EdgeQL :eql:stmt:`SELECT` command would return a
-set of all ``User`` objects with the value of the ``name`` link equal to
+set of all ``User`` objects with the value of the ``name`` property equal to
 ``"John"``.
 
 .. code-block:: edgeql
@@ -48,15 +48,14 @@ A set cannot contain elements of different base types.  Mixing objects and
 primitive types, as well as primitive types with different base type, is
 not allowed.
 
-Traditional relational databases deal with tables and use ``NULL`` as
-a special *value* denoting absence of data.  EdgeDB works with *sets*,
-so the absence of data is just an empty set.
+In SQL databases ``NULL`` is special *value* denoting absence of data.
+EdgeDB works with *sets*, so the absence of data is just an empty set.
 
 
 .. _ref_eql_fundamentals_functional:
 
-EdgeQL is Functional
---------------------
+EdgeQL is Functional and Composable
+-----------------------------------
 
 EdgeQL is a functional language in the sense that every expression can
 be represented as a composition of functions.
