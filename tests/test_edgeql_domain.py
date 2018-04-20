@@ -113,7 +113,8 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
         Testing refs :eql:type:`int1`
         '''
 
-        with self.assert_fails("cannot resolve :eql:type: targeting 'int1'"):
+        with self.assert_fails(
+                "cannot resolve :eql:type: targeting 'type::std::int1'"):
             self.build(src)
 
     def test_eql_type_4(self):
@@ -262,7 +263,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
 
         self.assertEqual(
             param.xpath('''
-                //reference[@eql-type="type" and @refid="std::int"] /
+                //reference[@eql-type="type" and @refid="type::std::int"] /
                     literal_emphasis/text()
             '''),
             ['int'])
@@ -270,7 +271,8 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
         self.assertEqual(
             x.xpath('''
                 //paragraph /
-                reference[@eql-type="function" and @refid="std::test"] /
+                reference[@eql-type="function" and
+                    @refid="function::std::test"] /
                 literal / text()
             '''),
             ['XXX', 'test()'])

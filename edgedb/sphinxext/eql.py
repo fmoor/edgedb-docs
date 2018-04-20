@@ -512,6 +512,10 @@ class EQLTypeDirective(BaseEQLDirective):
         signode += s_nodes.desc_name(display, display)
         return fullname
 
+    def add_target_and_index(self, name, sig, signode):
+        return super().add_target_and_index(
+            f'type::{name}', sig, signode)
+
 
 class EQLKeywordDirective(BaseEQLDirective):
 
@@ -672,6 +676,10 @@ class EQLFunctionDirective(BaseEQLDirective):
 
         return fullname
 
+    def add_target_and_index(self, name, sig, signode):
+        return super().add_target_and_index(
+            f'function::{name}', sig, signode)
+
 
 class EQLTypeXRef(s_roles.XRefRole):
 
@@ -749,23 +757,27 @@ class EdgeQLDomain(s_domains.Domain):
 
         target = target.replace(' ', '-')
         if expected_type == 'keyword':
-            target = f'keyword::{target}'
+            targets = [f'keyword::{target}']
         elif expected_type == 'operator':
-            target = f'operator::{target}'
+            targets = [f'operator::{target}']
         elif expected_type == 'statement':
-            target = f'statement::{target}'
+            targets = [f'statement::{target}']
+        elif expected_type in {'type', 'function'}:
+            targets = [f'{expected_type}::{target}']
+            if '::' not in target:
+                targets.append(f'{expected_type}::std::{target}')
+        else:
+            targets = [target]
 
-        try:
+        docname = None
+        obj_type = None
+        for target in targets:
             try:
                 docname, obj_type = objects[target]
             except KeyError:
-                if '::' not in target:
-                    new_target = f'std::{target}'
-                    docname, obj_type = objects[new_target]
-                    target = new_target
-                else:
-                    raise
-        except KeyError:
+                continue
+
+        if docname is None:
             if not node.get('eql-auto-link'):
                 raise shared.DomainError(
                     f'cannot resolve :eql:{type}: targeting {target!r}')
