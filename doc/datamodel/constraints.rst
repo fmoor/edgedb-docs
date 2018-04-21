@@ -86,13 +86,21 @@ or ``link`` declaration:
 .. eschema:synopsis::
 
     scalar type <typename>:
-        constraint <constr_name> [( [$<argname> := ] <argvalue> [, ...] )]
+        [ delegated ] constraint <constr_name>
+                [( [$<argname> := ] <argvalue> [, ...] )]
                 [on (<subject-expr>)]:
             [ <attribute-declarations> ]
 
 
 Parameters
 ~~~~~~~~~~
+
+:eschema:synopsis:`delegated`
+    If specified, the constraint is defined as *delegated*, which means
+    that it will not be enforced on the type it's declared on, and
+    the enforcement will be delegated to the subtypes of this type.
+    This is particularly useful for ``unique`` constraints in abstract
+    types.
 
 :eschema:synopsis:`<constr_name>`
     The name of the previously defined abstract constraint.

@@ -23,7 +23,7 @@ Define a new :ref:`view <ref_datamodel_views>`.
 
     [ WITH <with-item> [, ...] ]
     CREATE VIEW <view-name> "{"
-        expr := <view-expr>;
+        SET expr := <view-expr>;
         [ SET <attr-name> := <attr-value>; ... ]
     "}" ;
 

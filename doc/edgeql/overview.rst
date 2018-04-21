@@ -48,14 +48,14 @@ A set cannot contain elements of different base types.  Mixing objects and
 primitive types, as well as primitive types with different base type, is
 not allowed.
 
-In SQL databases ``NULL`` is special *value* denoting absence of data.
+In SQL databases ``NULL`` is a special *value* denoting the absence of data.
 EdgeDB works with *sets*, so the absence of data is just an empty set.
 
 
 .. _ref_eql_fundamentals_functional:
 
-EdgeQL is Functional and Composable
------------------------------------
+EdgeQL is Functional
+--------------------
 
 EdgeQL is a functional language in the sense that every expression can
 be represented as a composition of functions.
