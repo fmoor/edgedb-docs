@@ -6,6 +6,12 @@ Overview
 
 EdgeDB is an object-relational database with strongly typed schema.
 
+
+.. _ref_datamodel_typesystem:
+
+Type System
+===========
+
 An EdgeDB schema is primarily composed from *object type* definitions, which
 describe entities in a specific domain.  An *object type* is a collection
 of named *properties* and *links* to other types.
@@ -21,7 +27,9 @@ Here is an example of a simple EdgeDB type using the Edge Schema notation:
 
 ``str`` in the above example is a
 :ref:`scalar type <ref_datamodel_scalar_types>`.  EdgeDB also supports
-several :ref:`collection types <ref_datamodel_collection_types>`.
+several :ref:`collection types <ref_datamodel_collection_types>`.  Scalar
+types and collection types are collectively called *primitive types* in
+contrast with object types.
 
 
 Modules and Items

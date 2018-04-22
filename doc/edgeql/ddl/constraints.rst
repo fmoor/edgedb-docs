@@ -315,6 +315,8 @@ Alter the definition of a concrete constraint on the specified schema item.
         <action>; [ ... ]
     "}" ;
 
+    # -- or --
+
     [ WITH [ <module-alias> := ] MODULE <module-name> [, ...] ]
     ALTER CONSTRAINT <name> <action> ;
 

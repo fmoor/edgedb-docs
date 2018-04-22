@@ -136,35 +136,140 @@ Standard Constraints
 
 The standard library defines the following constraints:
 
-- ``std::enum(array<any>)`` -- specifies the list of allowed values
-  directly:
+.. eql:constraint:: std::enum(array<any>)
 
-  .. code-block:: eschema
+    :param $0: allowed values
+    :paramtype $1: array<any>
 
-     scalar type status_t extending str:
-         constraint enum (['Open', 'Closed', 'Merged'])
+    Specifies the list of allowed values directly.
 
-- ``std::max(any)`` -- specifies the maximum value for the subject:
+    Example:
 
-  .. code-block:: eschema
+    .. code-block:: eschema
 
-     scalar type max_100 extending int:
-        contraint max(100)
+        scalar type status_t extending str:
+            constraint enum (['Open', 'Closed', 'Merged'])
 
-- ``std::maxexclusive(any)`` -- specifies the maximum value
-  (as an open interval) for the subject:
+.. eql:constraint:: std::expression on (expr)
 
-  .. code-block:: eschema
+    Arbitrary constraint expression.
 
-     scalar type maxex_100 extending int:
-        contraint maxexclusive(100)
+    Example:
 
-- ``std::expression`` -- uses the constraint subject directly as a constraint
-  expression, the subject expression needs to be specified:
+    .. code-block:: eschema
 
-  .. code-block:: eschema
+        scalar type starts_with_a extending str:
+            constraint expression on (__subject__[1] = 'A')
 
-     scalar type starts_with_a extending str:
-         constraint expression on (__subject__[0] = 'A')
+.. eql:constraint:: std::max(any)
 
-.. TODO: examples
+    :param $0: maximum value
+    :paramtype $1: any
+
+    Specifies the maximum value for the subject.
+
+    Example:
+
+    .. code-block:: eschema
+
+        scalar type max_100 extending int64:
+            constraint max(100)
+
+.. eql:constraint:: std::maxexclusive(any)
+
+    :param $0: maximum value
+    :paramtype $1: any
+
+    Specifies the maximum value (as an open interval) for the subject.
+
+    Example:
+
+    .. code-block:: eschema
+
+        scalar type maxex_100 extending int64:
+            constraint maxexclusive(100)
+
+.. eql:constraint:: std::maxlength(int64)
+
+    :param $0: maximum length value
+    :paramtype $1: int64
+
+    Specifies the maximum length of subject string representation.
+
+    Example:
+
+    .. code-block:: eschema
+
+        scalar type username_t extending str:
+            constraint maxlength(30)
+
+.. eql:constraint:: std::min(any)
+
+    :param $0: minimum value
+    :paramtype $1: any
+
+    Specifies the minimum value for the subject.
+
+    Example:
+
+    .. code-block:: eschema
+
+        scalar type non_negative extending int64:
+            constraint min(0)
+
+.. eql:constraint:: std::minexclusive(any)
+
+    :param $0: minimum value
+    :paramtype $1: any
+
+    Specifies the minimum value (as an open interval) for the subject.
+
+    Example:
+
+    .. code-block:: eschema
+
+        scalar type positive_float extending float64:
+            constraint minexclusive(0)
+
+.. eql:constraint:: std::minlength(int64)
+
+    :param $0: minimum length value
+    :paramtype $1: int64
+
+    Specifies the minimum length of subject string representation.
+
+    Example:
+
+    .. code-block:: eschema
+
+        scalar type four_decimal_places extending int64:
+            constraint minlength(4)
+
+.. eql:constraint:: std::regexp(str)
+
+    :param $0: regular expression
+    :paramtype $1: str
+
+    Specifies that the string representation of the subject must match a
+    regexp.
+
+    Example:
+
+    .. code-block:: eschema
+
+        scalar type letters_only_t extending str:
+            constraint regexp('[A-Za-z]*')
+
+.. eql:constraint:: std::unique
+
+    Specifies that the subject value must be unique.
+
+    ``unique`` constraints can only be defined on concrete links or properties.
+
+    Example:
+
+    .. code-block:: eschema
+
+        type User:
+            required property name -> str:
+                constraint unique
