@@ -239,7 +239,7 @@ class TestDocSnippets(unittest.TestCase):
         self.assertEqual(blocks[0].code, 'SELECT 122 + foo();')
         self.run_block_test(blocks[0])
 
-        with self.assertRaisesRegex(AssertionError, 'unable to parse eql'):
+        with self.assertRaisesRegex(AssertionError, 'unable to parse edgeql'):
             self.run_block_test(blocks[1])
 
     @unittest.skipIf(docutils is None, 'docutils is missing')

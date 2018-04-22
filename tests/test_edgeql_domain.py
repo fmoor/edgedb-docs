@@ -383,6 +383,84 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
             ['std::test(OPTIONAL str, SET OF str, str) -> SET OF str'])
 
 
+class TestEqlConstraint(unittest.TestCase, BaseDomainTest):
+
+    def test_eql_constr_1(self):
+        src = '''
+        .. eql:type:: std::int
+
+            An integer.
+
+        .. eql:type:: any
+
+            any.
+
+        .. eql:constraint:: std::maxlength(any)
+
+            :param $0: param
+            :paramtype $0: any
+
+            blah
+
+        Testing :eql:constraint:`XXX <maxlength>` ref.
+        Testing :eql:constraint:`maxlength` ref.
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        constr = x.xpath('//desc[@desctype="constraint"]')
+        self.assertEqual(len(constr), 1)
+        constr = constr[0]
+        param, = constr.xpath('//field')
+
+        self.assertEqual(constr.attrs['summary'], 'blah')
+
+        self.assertEqual(
+            param.attrs,
+            {'eql-name': 'parameter', 'eql-paramname': '$0',
+             'eql-paramtype': 'any'})
+
+        self.assertEqual(
+            param.xpath('''
+                //reference[@eql-type="type" and @refid="type::std::any"] /
+                    literal_emphasis/text()
+            '''),
+            ['any'])
+
+        self.assertEqual(
+            x.xpath('''
+                //paragraph /
+                reference[@eql-type="constraint" and
+                    @refid="constraint::std::maxlength"] /
+                literal / text()
+            '''),
+            ['XXX', 'maxlength'])
+
+    def test_eql_constr_2(self):
+        src = '''
+        .. eql:constraint:: std::length on (len(<std::str>__subject__))
+
+            blah
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        constr = x.xpath('//desc[@desctype="constraint"]')
+        self.assertEqual(len(constr), 1)
+        constr = constr[0]
+        sig = constr.xpath('//desc_signature')[0]
+
+        self.assertEqual(
+            sig.xpath('@eql-signature'),
+            ['std::length ON (len(<std::str>__subject__))'])
+
+        self.assertEqual(
+            sig.xpath('@eql-subjexpr'),
+            ['len(<std::str>__subject__)'])
+
+
 class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 
     def test_eql_op_1(self):

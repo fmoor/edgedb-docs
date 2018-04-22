@@ -681,6 +681,84 @@ class EQLFunctionDirective(BaseEQLDirective):
             f'function::{name}', sig, signode)
 
 
+class EQLConstraintDirective(BaseEQLDirective):
+
+    doc_field_types = [
+        EQLTypedParamField(
+            'parameter',
+            label='Parameter',
+            names=('param',),
+            typerolename='type',
+            typenames=('paramtype',)),
+    ]
+
+    def handle_signature(self, sig, signode):
+        parser = edgeql_parser.EdgeQLBlockParser()
+        try:
+            astnode = parser.parse(
+                f'CREATE CONSTRAINT {sig};')[0]
+        except Exception as ex:
+            raise shared.DirectiveParseError(
+                self, f'could not parse constraint signature {sig!r}',
+                cause=ex)
+
+        if (not isinstance(astnode, ql_ast.CreateConstraint) or
+                not isinstance(astnode.name, ql_ast.ObjectRef)):
+            raise shared.DirectiveParseError(
+                self, f'EdgeQL parser returned unsupported AST')
+
+        modname = astnode.name.module
+        constr_name = astnode.name.name
+        if not modname:
+            raise shared.DirectiveParseError(
+                self, f'Missing module in EdgeQL constraint declaration')
+
+        constr_repr = ql_gen.EdgeQLSourceGenerator.to_source(astnode)
+
+        m = re.match(r'''(?xs)
+            ^
+            CREATE\sCONSTRAINT\s
+            (?P<f>.*?)(?:\s*ON(?P<subj>.*))?
+            $
+        ''', constr_repr)
+        if not m or not m.group('f'):
+            raise shared.DirectiveParseError(
+                self, f'could not recreate constraint signature from AST')
+        constr_repr = m.group('f')
+
+        signode['eql-module'] = modname
+        signode['eql-name'] = constr_name
+        signode['eql-fullname'] = fullname = f'{modname}::{constr_name}'
+        signode['eql-signature'] = constr_repr
+        subject = m.group('subj')
+        if subject:
+            subject = subject.strip()[1:-1]
+            signode['eql-subjexpr'] = subject
+            signode['eql-signature'] += f' ON ({subject})'
+
+        signode += s_nodes.desc_annotation('constraint', 'constraint')
+        signode += d_nodes.Text(' ')
+        signode += s_nodes.desc_name(fullname, fullname)
+
+        params = s_nodes.desc_parameterlist()
+        for idx, param in enumerate(astnode.args):
+            name = param.name
+            if not name:
+                name = f'${idx}'
+
+            param_repr = ql_gen.EdgeQLSourceGenerator.to_source(param)
+            param_node = s_nodes.desc_parameter(param_repr, param_repr)
+            param_node['eql-name'] = name
+            params += param_node
+        signode += params
+
+        return fullname
+
+    def add_target_and_index(self, name, sig, signode):
+        return super().add_target_and_index(
+            f'constraint::{name}', sig, signode)
+
+
 class EQLTypeXRef(s_roles.XRefRole):
 
     @staticmethod
@@ -711,6 +789,10 @@ class EQLFunctionXRef(s_roles.XRefRole):
             env, refnode, has_explicit_title, title, target)
 
 
+class EQLConstraintXRef(s_roles.XRefRole):
+    pass
+
+
 class EdgeQLDomain(s_domains.Domain):
 
     name = "eql"
@@ -718,6 +800,7 @@ class EdgeQLDomain(s_domains.Domain):
 
     object_types = {
         'function': s_domains.ObjType('function', 'func'),
+        'constraint': s_domains.ObjType('constraint', 'constraint'),
         'type': s_domains.ObjType('type', 'type'),
         'keyword': s_domains.ObjType('keyword', 'kw'),
         'operator': s_domains.ObjType('operator', 'op'),
@@ -731,6 +814,7 @@ class EdgeQLDomain(s_domains.Domain):
 
     directives = {
         'function': EQLFunctionDirective,
+        'constraint': EQLConstraintDirective,
         'type': EQLTypeDirective,
         'keyword': EQLKeywordDirective,
         'operator': EQLOperatorDirective,
@@ -739,6 +823,7 @@ class EdgeQLDomain(s_domains.Domain):
 
     roles = {
         'func': EQLFunctionXRef(),
+        'constraint': EQLConstraintXRef(),
         'type': EQLTypeXRef(),
         'kw': s_roles.XRefRole(),
         'op': s_roles.XRefRole(),
@@ -762,7 +847,7 @@ class EdgeQLDomain(s_domains.Domain):
             targets = [f'operator::{target}']
         elif expected_type == 'statement':
             targets = [f'statement::{target}']
-        elif expected_type in {'type', 'function'}:
+        elif expected_type in {'type', 'function', 'constraint'}:
             targets = [f'{expected_type}::{target}']
             if '::' not in target:
                 targets.append(f'{expected_type}::std::{target}')

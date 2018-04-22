@@ -1,3 +1,4 @@
 -r requirements.txt
 requests-xml
 pytest
+flake8

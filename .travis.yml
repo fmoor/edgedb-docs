@@ -1,0 +1,28 @@
+language: generic
+
+matrix:
+    include:
+        - os: linux
+          dist: trusty
+          sudo: false
+          language: python
+          python: "3.6"
+
+branches:
+    # Avoid building PR branches.
+    only:
+        - master
+        - ci
+        - releases
+        - /^v\d+(\.\d+)*$/
+
+cache:
+    pip: true
+
+# Only cache the parser build products.
+before_cache:
+    - find build -type f ! -wholename '*.pickle' -delete
+    - find build -type d -empty -delete
+
+script:
+    - .ci/travis-tests.sh
