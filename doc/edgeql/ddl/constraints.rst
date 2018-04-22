@@ -256,7 +256,11 @@ Parameters
     to resolve all unqualified names.
 
 :eql:synopsis:`DELEGATED`
-    If specified, the created constraint is a delegated constraint.
+    If specified, the constraint is defined as *delegated*, which means
+    that it will not be enforced on the type it's declared on, and
+    the enforcement will be delegated to the subtypes of this type.
+    This is particularly useful for ``unique`` constraints in abstract
+    types.
 
 :eql:synopsis:`<name>`
     The name (optionally module-qualified) of the abstract constraint
@@ -303,13 +307,122 @@ ALTER CONSTRAINT
 
 Alter the definition of a concrete constraint on the specified schema item.
 
+.. eql:synopsis::
+
+    [ WITH [ <module-alias> := ] MODULE <module-name> [, ...] ]
+    ALTER CONSTRAINT <name>
+    "{"
+        <action>; [ ... ]
+    "}" ;
+
+    [ WITH [ <module-alias> := ] MODULE <module-name> [, ...] ]
+    ALTER CONSTRAINT <name> <action> ;
+
+    # where <action> is one of:
+
+        SET DELEGATED ;
+        DROP DELEGATED ;
+        SET errmessage := <error-message> ;
+        SET <attr-name> := <attr-value> ;
 
 
+Description
+-----------
+
+``ALTER CONSTRAINT`` changes the definition of a concrete constraint.
+As for most ``ALTER`` commands, both single- and multi-action forms are
+supported.
+
+
+Parameters
+----------
+
+:eql:synopsis:`[ <module-alias> := ] MODULE <module-name>`
+    An optional list of module alias declarations to be used in the
+    migration definition.  When *module-alias* is not specified,
+    *module-name* becomes the effective current module and is used
+    to resolve all unqualified names.
+
+:eql:synopsis:`<name>`
+    The name (optionally module-qualified) of the concrete constraint
+    that is being altered.
+
+:eql:synopsis:`SET DELEGATED`
+    Makes the constraint delegated.
+
+:eql:synopsis:`DROP DELEGATED`
+    Makes the constraint non-delegated.
+
+:eql:synopsis:`SET errmessage := <error_message>`
+    Changes the message template of an error which is raised when
+    the constraint is violated.  See the relevant paragraph in
+    :eql:stmt:`CREATE ABSTRACT CONSTRAINT` for the rules of error
+    message template syntax.
+
+:eql:synopsis:`SET <attr-name> := <attr-value>;`
+    Set constraint *attribute* to *value*.
+    See :eql:stmt:`SET <SET ATTRIBUTE>` for details.
+
+:eql:synopsis:`DROP ATTRIBUTE <attribute>;`
+    Remove constraint *attribute*.
+    See :eql:stmt:`DROP ATTRIBUTE <DROP ATTRIBUTE VALUE>` for details.
+
+
+Examples
+--------
+
+Change the error message on a maximum length constraint on the property
+"name" of the "User" type:
+
+.. code-block:: edgeql
+
+    ALTER TYPE User ALTER PROPERTY name
+    ALTER CONSTRAINT std::maxlength
+    SET errmessage := 'User name too long';
 
 
 DROP CONSTRAINT
 ===============
 
 :eql-statement:
+:eql-haswith:
 
 Remove a concrete constraint from the specified schema item.
+
+.. eql:synopsis::
+
+    [ WITH [ <module-alias> := ] MODULE <module-name> [, ...] ]
+    DROP CONSTRAINT <name>;
+
+
+Description
+-----------
+
+``DROP CONSTRAINT`` removes the specified constraint from its
+containing schema item.
+
+
+Parameters
+----------
+
+:eql:synopsis:`[ <module-alias> := ] MODULE <module-name>`
+    An optional list of module alias declarations to be used in the
+    migration definition.  When *module-alias* is not specified,
+    *module-name* becomes the effective current module and is used
+    to resolve all unqualified names.
+
+:eql:synopsis:`<name>`
+    The name (optionally module-qualified) of the concrete constraint
+    to remove.
+
+
+Examples
+--------
+
+Remove constraint "maxlength" from the property "name" of the
+"User" type:
+
+.. code-block:: edgeql
+
+    ALTER TYPE User ALTER PROPERTY name
+    DROP CONSTRAINT std::maxlength;

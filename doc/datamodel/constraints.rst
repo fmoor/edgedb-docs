@@ -85,12 +85,23 @@ or ``link`` declaration:
 
 .. eschema:synopsis::
 
-    scalar type <typename>:
+    { scalar type | type | abstract link } <subject-item>:
+        <constraint-declaration>
+
+    type <TypeName>:
+        { link | property } <link-or-prop-name>:
+            <constraint-declaration>
+
+    abstract link <link-name>:
+        property <prop-name>:
+            <constraint-declaration>
+
+    # where <constraint-declaration> is:
+
         [ delegated ] constraint <constr_name>
                 [( [$<argname> := ] <argvalue> [, ...] )]
                 [on (<subject-expr>)]:
             [ <attribute-declarations> ]
-
 
 Parameters
 ~~~~~~~~~~
