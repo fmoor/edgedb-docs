@@ -2,14 +2,24 @@
 
 .. _ref_eql_expr_paths:
 
+=====
 Paths
 =====
 
 A *path expression* (or simply a *path*) is a special kind of set reference.
 It represents a set of values that are reachable when traversing a given
-sequence of links or link properties from some source set.
+sequence of links or properties from some source set.
 
-The form of a path is:
+The result of a path expression is:
+
+a) if a path *does not* end with a property reference, then it represents a
+   unique set of objects reachable from the set at the root of the path;
+
+b) if a path *does* end with a property reference, then it represents a
+   concatenation of property values for every element in the unique set of
+   objects reachable from the set at the root of the path.
+
+The syntactic form of a path is:
 
 .. eql:synopsis::
 
@@ -61,34 +71,5 @@ if ``since`` is defined as a link property on the ``User.friends`` link:
 
 .. note::
 
-    Link properties cannot point to objects, hence the ``@`` indirection
-    will always be the last step in a path.
-
-
-.. _ref_eql_expr_paths_interp:
-
-Path Interpretation
--------------------
-
-.. TODO: incomplete
-
-The manner in which a path expression is interpreted depends on the
-expression.
-
-When two or more paths in an expression share a common prefix
-(i.e. start the same), then their longest common path prefix is treated
-as an equivalent set reference
-
-The longest common path prefixes in an expression are treated as equivalent
-set references.
-
-.. code-block:: edgeql
-
-    SELECT (User.friends.first_name, User.friends.last_name)
-
-The canonical form of the above query is:
-
-.. code-block:: edgeql
-
-    WITH UserFriends := User.friends
-    SELECT (UserFriends.first_name, UserFriends.last_name)
+    Properties cannot refer to objects, so a reference to an object
+    property or a link property will always be the last step in a path.

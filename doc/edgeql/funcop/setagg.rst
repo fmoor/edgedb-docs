@@ -1,8 +1,8 @@
 .. _ref_eql_functions_setagg:
 
-
-Aggregates
-==========
+===================
+Aggregate Functions
+===================
 
 .. eql:function:: std::count(SET OF any) -> int
 

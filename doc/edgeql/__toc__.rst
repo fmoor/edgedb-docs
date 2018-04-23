@@ -12,4 +12,3 @@ EdgeQL
     ddl/index
     funcop/index
     lexical
-    eval

@@ -1,15 +1,8 @@
-.. _ref_eql_functions_random:
+.. _ref_eql_functions_uuid:
 
-
-Random/UUID
-===========
-
-.. eql:function:: std::random() -> float64
-
-    :return: pseudo-random number in the range `[0, 1)`
-    :returntype: float64
-
-    Return a pseudo-random number in the range `[0, 1)`.
+==============
+UUID Functions
+==============
 
 .. eql:function:: std::uuid_generate_v1mc() -> uuid
 

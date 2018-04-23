@@ -1,11 +1,13 @@
 .. _ref_eql_funcop:
 
-
+=======================
 Functions and Operators
 =======================
 
-EdgeDB provides a large number of operato
-
+EdgeDB provides a number of functions operators for the standard data types.
+Custom functions can be created using
+:ref:`function declarations <ref_datamodel_functions>` or
+:eql:stmt:`CREATE FUNCTION` DDL statements.
 
 The syntax for a function call is as follows:
 
@@ -52,11 +54,16 @@ singletons. Examples of aggregate functions include built-ins such as
     :maxdepth: 3
     :hidden:
 
+    logical
+    comparison
+    conditional
+    string
+    mathop
+    mathfunc
+    type
     array
     datetime
     polymorphic
-    random
+    set
     setagg
-    string
-    operators
-    logical
+    uuid

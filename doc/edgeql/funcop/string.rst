@@ -1,13 +1,40 @@
 .. _ref_eql_functions_string:
 
 
-String
-======
+String Functions and Operators
+==============================
 
-.. TODO::
 
-    This whole section will need more explanation and details with
-    rules, flags, etc.
+.. eql:operator:: STRPLUS: A + B
+
+    :optype A: str
+    :optype B: str
+    :resulttype: str
+
+    String concatenation.
+
+
+.. eql:operator:: LIKE: A LIKE B
+
+    :optype A: str or bytes
+    :optype B: str or bytes
+    :resulttype: bool
+
+    Case-sensitive simple string matching.
+
+    :eql:op:`LIKE` works exactly the same way as in SQL.
+
+
+.. eql:operator:: ILIKE: A ILIKE B
+
+    :optype A: str or bytes
+    :optype B: str or bytes
+    :resulttype: bool
+
+    Case-insensitive simple string matching.
+
+    :eql:op:`ILIKE` works exactly the same way as in SQL.
+
 
 .. eql:function:: std::lower(str) -> str
 

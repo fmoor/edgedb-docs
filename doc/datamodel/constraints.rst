@@ -159,7 +159,7 @@ The standard library defines the following constraints:
     .. code-block:: eschema
 
         scalar type starts_with_a extending str:
-            constraint expression on (__subject__[1] = 'A')
+            constraint expression on (__subject__[0] = 'A')
 
 .. eql:constraint:: std::max(any)
 

@@ -127,3 +127,33 @@ Comments
 --------
 
 .. TODO
+
+
+Operator Precedence
+-------------------
+
+EdgeQL operators listed in order of precedence from lowest to highest:
+
+.. list-table::
+    :widths: auto
+    :header-rows: 1
+
+    * - operator
+    * - :eql:op:`UNION`
+    * - :eql:op:`IF..ELSE`
+    * - :eql:op:`OR`
+    * - :eql:op:`AND`
+    * - :eql:op:`NOT`
+    * - :eql:op:`=<EQ>`, :eql:op:`\!=<NEQ>`, :eql:op:`?=<COALEQ>`,
+        :eql:op:`?\!=<COALNEQ>`
+    * - :eql:op:`\<<LT>`, :eql:op:`><GT>`, :eql:op:`\<=<LTEQ>`,
+        :eql:op:`>=<GTEQ>`
+    * - :eql:op:`LIKE`, :eql:op:`ILIKE`
+    * - :eql:op:`IN`, :eql:op:`NOT IN <IN>`
+    * - :eql:op:`IS`, :eql:op:`IS NOT <IS>`
+    * - :eql:op:`+<PLUS>`, :eql:op:`-<MINUS>`
+    * - :eql:op:`/<DIV>`, :eql:op:`*<MULT>`, :eql:op:`%<MOD>`
+    * - :eql:op:`??<COALESCE>`
+    * - :eql:op:`DISTINCT`, unary :eql:op:`-<UMINUS>`
+    * - :eql:op:`^<POW>`
+    * - :ref:`type cast <ref_eql_expr_typecast>`

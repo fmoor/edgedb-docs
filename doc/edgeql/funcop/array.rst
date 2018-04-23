@@ -1,13 +1,14 @@
 .. _ref_eql_functions_array:
 
 
+=====
 Array
 =====
 
 .. _ref_eql_expr_array_elref:
 
 Array Element Reference
------------------------
+=======================
 
 An element of an array can be referenced in the following form:
 
@@ -43,7 +44,7 @@ Referencing a non-existent array element will result in an empty set:
 .. _ref_eql_expr_array_slice:
 
 Array Slice
------------
+===========
 
 An array slice can be referenced in the following form:
 
@@ -93,7 +94,7 @@ Referencing a non-existent array slice will result in an empty array:
 
 
 Functions
----------
+=========
 
 .. eql:function:: std::array_agg(SET OF any) -> array<any>
 
