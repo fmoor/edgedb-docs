@@ -265,6 +265,13 @@ class EQLField(s_docfields.Field):
         return results
 
 
+INDEX_FIELD = EQLField(
+    'index',
+    label='Index Keywords',
+    names=('index',),
+    has_arg=False)
+
+
 class EQLTypedField(EQLField):
 
     ignored_types = {
@@ -550,6 +557,8 @@ class EQLSynopsisDirective(s_code.CodeBlock):
 class EQLOperatorDirective(BaseEQLDirective):
 
     doc_field_types = [
+        INDEX_FIELD,
+
         EQLTypedField(
             'operand',
             label='Operand',
@@ -598,6 +607,8 @@ class EQLOperatorDirective(BaseEQLDirective):
 class EQLFunctionDirective(BaseEQLDirective):
 
     doc_field_types = [
+        INDEX_FIELD,
+
         EQLTypedParamField(
             'parameter',
             label='Parameter',
@@ -684,6 +695,8 @@ class EQLFunctionDirective(BaseEQLDirective):
 class EQLConstraintDirective(BaseEQLDirective):
 
     doc_field_types = [
+        INDEX_FIELD,
+
         EQLTypedParamField(
             'parameter',
             label='Parameter',
@@ -696,7 +709,7 @@ class EQLConstraintDirective(BaseEQLDirective):
         parser = edgeql_parser.EdgeQLBlockParser()
         try:
             astnode = parser.parse(
-                f'CREATE CONSTRAINT {sig};')[0]
+                f'CREATE ABSTRACT CONSTRAINT {sig};')[0]
         except Exception as ex:
             raise shared.DirectiveParseError(
                 self, f'could not parse constraint signature {sig!r}',
@@ -717,7 +730,7 @@ class EQLConstraintDirective(BaseEQLDirective):
 
         m = re.match(r'''(?xs)
             ^
-            CREATE\sCONSTRAINT\s
+            CREATE\sABSTRACT\sCONSTRAINT\s
             (?P<f>.*?)(?:\s*ON(?P<subj>.*))?
             $
         ''', constr_repr)

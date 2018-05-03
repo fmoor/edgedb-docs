@@ -235,6 +235,8 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
             :return: something
             :returntype: any
 
+            :index: xxx YyY
+
             blah
 
         Testing :eql:func:`XXX <test>` ref.
@@ -247,7 +249,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
         func = x.xpath('//desc[@desctype="function"]')
         self.assertEqual(len(func), 1)
         func = func[0]
-        param, ret = func.xpath('//field')
+        param, ret, _ = func.xpath('//field')
 
         self.assertEqual(func.attrs['summary'], 'blah')
 
@@ -276,6 +278,12 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
                 literal / text()
             '''),
             ['XXX', 'test()'])
+
+        self.assertEqual(
+            x.xpath('''
+                //field[@eql-name="index"] / field_body / paragraph / text()
+            '''),
+            ['xxx YyY'])
 
     def test_eql_func_2(self):
         src = '''
@@ -783,8 +791,20 @@ class TestBlockquote(unittest.TestCase, BaseDomainTest):
          * item
         '''
 
-        with self.assert_fails('block_quote found'):
+        with self.assert_fails('blockquote found'):
             self.build(src, format='xml')
 
-        with self.assert_fails('block_quote found'):
+        with self.assert_fails('blockquote found'):
+            self.build(src, format='html')
+
+    def test_eql_singlebacktick_1(self):
+        src = '''
+        Another use case is for giving short aliases to long module names
+        (especially if module names contain `.`).
+        '''
+
+        with self.assert_fails('title reference'):
+            self.build(src, format='xml')
+
+        with self.assert_fails('title reference'):
             self.build(src, format='html')

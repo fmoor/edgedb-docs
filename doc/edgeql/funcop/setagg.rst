@@ -4,6 +4,8 @@
 Aggregate Functions
 ===================
 
+:index: set aggregate
+
 .. eql:function:: std::count(SET OF any) -> int
 
     :param $0: input set
@@ -11,6 +13,8 @@ Aggregate Functions
 
     :return: number of elements in the input set
     :returntype: int64
+
+    :index: aggregate
 
     Return the number of elements in a set.
 
@@ -29,6 +33,8 @@ Aggregate Functions
 
     :return: sum of the input set of numbers
     :returntype: numeric
+
+    :index: aggregate
 
     Return the sum of the set of numbers.
 

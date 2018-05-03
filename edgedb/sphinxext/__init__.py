@@ -7,7 +7,7 @@ from . import graphql
 from . import shared
 
 
-class BlockquoteTransform(s_transforms.SphinxTransform):
+class ProhibitedNodeTransform(s_transforms.SphinxTransform):
 
     default_priority = 1  # before ReferencesResolver
 
@@ -15,7 +15,14 @@ class BlockquoteTransform(s_transforms.SphinxTransform):
         bqs = list(self.document.traverse(d_nodes.block_quote))
         if bqs:
             raise shared.EdgeSphinxExtensionError(
-                f'block_quote found: {bqs[0].asdom().toxml()!r}')
+                f'blockquote found: {bqs[0].asdom().toxml()!r}')
+
+        trs = list(self.document.traverse(d_nodes.title_reference))
+        if trs:
+            raise shared.EdgeSphinxExtensionError(
+                f'title reference (single backticks quote) found: '
+                f'{trs[0].asdom().toxml()!r}; perhaps you wanted to use '
+                f'double backticks?')
 
 
 def setup(app):
@@ -23,4 +30,4 @@ def setup(app):
     eschema.setup_domain(app)
     graphql.setup_domain(app)
 
-    app.add_transform(BlockquoteTransform)
+    app.add_transform(ProhibitedNodeTransform)

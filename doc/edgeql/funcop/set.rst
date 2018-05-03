@@ -4,6 +4,8 @@
 Set Operators
 =============
 
+:index: set
+
 This section describes EdgeQL operators that work on whole sets.
 
 
@@ -29,6 +31,8 @@ IN
     :optype A: any
     :optype B: SET OF any
     :resulttype: bool
+
+    :index: in
 
     Test the membership of an element in a set.
 

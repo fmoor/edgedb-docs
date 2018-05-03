@@ -70,7 +70,7 @@ corresponding to concepts defined in two different modules.
     FILTER .name = f::Foo.name;
 
 Another use case is for giving short aliases to long module names
-(especially if module names contain `.`).
+(especially if module names contain ``.``).
 
 .. code-block:: edgeql
 

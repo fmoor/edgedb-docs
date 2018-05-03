@@ -61,6 +61,8 @@ String Functions and Operators
     :return: first matched groups as :eql:type:`array\<str\>`
     :returntype: array<str>
 
+    :index: regex regexp regular
+
     Find the first regular expression match in a string.
 
     Given an input string and a regular expression string find the
@@ -78,6 +80,8 @@ String Functions and Operators
     :return: set of all matched groups as :eql:type:`array\<str\>`
     :returntype: SET OF array<str>
 
+    :index: regex regexp regular
+
     Find all regular expression matches in a string.
 
     Given an input string and a regular expression string repeatedly
@@ -94,6 +98,8 @@ String Functions and Operators
 
     :return: ``TRUE`` if there is a match, ``FALSE`` otherwise
     :returntype: bool
+
+    :index: regex regexp regular match
 
     Test if a regular expression has a match in a string.
 

@@ -121,8 +121,8 @@ Shapes define the *relationships structure* of the data that is
 retrieved from the DB. Thus shapes themselves are a lexical
 specification used with valid expressions denoting objects.
 
-Shapes allow retrieving a set of objects as a `forest`, where each
-base object is the root of a `tree`. Technically, this set of trees is
+Shapes allow retrieving a set of objects as a *forest*, where each
+base object is the root of a *tree*. Technically, this set of trees is
 a directed graph possibly even containing cycles. However, the
 serialized representation is based on a set of trees (or nested JSON).
 
