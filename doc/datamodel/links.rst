@@ -65,6 +65,8 @@ EdgeQL command.
 Concrete Links
 --------------
 
+:index: cardinality
+
 A *concrete link* may be defined in EdgeDB Schema using the ``link``
 declaration in the context of a ``type`` declaration:
 

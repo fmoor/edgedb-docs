@@ -9,6 +9,7 @@ GROUP
 :eql-haswith:
 
 A ``GROUP`` statement is used to allow operations on set partitions.
+
 The input set is partitioned using expressions in the ``USING`` and
 ``BY`` clauses, and then for each partition the expression in the
 ``UNION`` clause is evaluated and merged with the rest of the results

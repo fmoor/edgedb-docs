@@ -12,6 +12,7 @@ provided by EdgeDB.
     :optype A: numeric
     :optype B: numeric
     :resulttype: numeric
+    :index: plus add
 
     Arithmetic addition.
 
@@ -21,6 +22,7 @@ provided by EdgeDB.
     :optype A: numeric
     :optype B: numeric
     :resulttype: numeric
+    :index: minus subtract
 
     Arithmetic subtraction.
 
@@ -29,6 +31,7 @@ provided by EdgeDB.
 
     :optype A: numeric
     :resulttype: numeric
+    :index: unary minus subtract
 
     Arithmetic negation.
 
@@ -38,6 +41,7 @@ provided by EdgeDB.
     :optype A: numeric
     :optype B: numeric
     :resulttype: numeric
+    :index: multiply multiplication
 
     Arithmetic multiplication.
 
@@ -47,6 +51,7 @@ provided by EdgeDB.
     :optype A: numeric
     :optype B: numeric
     :resulttype: numeric
+    :index: divide division
 
     Arithmetic division.
 
@@ -56,6 +61,7 @@ provided by EdgeDB.
     :optype A: numeric
     :optype B: numeric
     :resulttype: numeric
+    :index: modulo mod division
 
     Remainder from division (modulo).
 
@@ -65,5 +71,6 @@ provided by EdgeDB.
     :optype A: numeric
     :optype B: numeric
     :resulttype: numeric
+    :index: power pow
 
     Power operation.

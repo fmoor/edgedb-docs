@@ -941,12 +941,12 @@ class StatementTransform(s_transforms.SphinxTransform):
                     f'section {title!r} has a nested section with '
                     f'a :eql-statement: field set')
 
-            first_para = x.xpath('paragraph/text()')
-            if len(first_para) < 1:
+            first_para = x.xpath('paragraph[1]/descendant-or-self::*/text()')
+            if not len(first_para):
                 raise shared.EdgeSphinxExtensionError(
                     f'section {title!r} is marked with an :eql-statement: '
                     f'and is required to have at least one paragraph')
-            first_para = first_para[0]
+            first_para = ''.join(first_para)
             summary = BaseEQLDirective.strip_ws(first_para)
             if len(summary) > 79:
                 raise shared.EdgeSphinxExtensionError(

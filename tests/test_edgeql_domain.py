@@ -593,7 +593,9 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
 
         :eql-statement:
 
-        Creates a function.
+        ``CREATE FUNCTION``--creates a function.
+
+        fooing and baring.
 
         Subhead
         -------
@@ -644,6 +646,12 @@ class TestEqlStatement(unittest.TestCase, BaseDomainTest):
             '''),
             ['create-function statement::CREATE-FUNCTION',
              'create-type statement::CREATE-TYPE'])
+
+        self.assertEqual(
+            x.xpath('''
+                //section[@eql-statement="true"]/@summary
+            '''),
+            ['CREATE FUNCTION--creates a function.', 'blah.'])
 
     def test_eql_stmt_6(self):
         src = '''
