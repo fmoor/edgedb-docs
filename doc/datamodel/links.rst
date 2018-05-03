@@ -4,6 +4,8 @@
 Links
 =====
 
+:index: link
+
 Link items define a specific relationship between two object types.  Link
 instances relate one *object* to one or more different objects.
 

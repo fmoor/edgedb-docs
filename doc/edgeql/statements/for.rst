@@ -6,6 +6,8 @@ FOR
 :eql-statement:
 :eql-haswith:
 
+:index: for union filter order offset limit
+
 
 ``FOR``--compute a union of subsets based on values of another set
 

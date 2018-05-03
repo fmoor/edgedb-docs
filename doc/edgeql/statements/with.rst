@@ -3,6 +3,8 @@
 WITH block
 ==========
 
+:index: cardinality alias module view detached
+
 .. eql:keyword:: WITH
 
     The ``WITH`` block in EdgeQL is used to define aliases.
