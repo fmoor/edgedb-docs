@@ -499,6 +499,10 @@ class BaseEQLDirective(s_directives.ObjectDescription):
 
 class EQLTypeDirective(BaseEQLDirective):
 
+    doc_field_types = [
+        INDEX_FIELD,
+    ]
+
     def handle_signature(self, sig, signode):
         if '::' in sig:
             mod, name = sig.strip().split('::')

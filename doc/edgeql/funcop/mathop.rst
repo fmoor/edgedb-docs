@@ -9,9 +9,9 @@ provided by EdgeDB.
 
 .. eql:operator:: PLUS: A + B
 
-    :optype A: numeric
-    :optype B: numeric
-    :resulttype: numeric
+    :optype A: anyreal
+    :optype B: anyreal
+    :resulttype: anyreal
     :index: plus add
 
     Arithmetic addition.
@@ -19,9 +19,9 @@ provided by EdgeDB.
 
 .. eql:operator:: MINUS: A - B
 
-    :optype A: numeric
-    :optype B: numeric
-    :resulttype: numeric
+    :optype A: anyreal
+    :optype B: anyreal
+    :resulttype: anyreal
     :index: minus subtract
 
     Arithmetic subtraction.
@@ -29,8 +29,8 @@ provided by EdgeDB.
 
 .. eql:operator:: UMINUS: -A
 
-    :optype A: numeric
-    :resulttype: numeric
+    :optype A: anyreal
+    :resulttype: anyreal
     :index: unary minus subtract
 
     Arithmetic negation.
@@ -38,9 +38,9 @@ provided by EdgeDB.
 
 .. eql:operator:: MULT: A * B
 
-    :optype A: numeric
-    :optype B: numeric
-    :resulttype: numeric
+    :optype A: anyreal
+    :optype B: anyreal
+    :resulttype: anyreal
     :index: multiply multiplication
 
     Arithmetic multiplication.
@@ -48,9 +48,9 @@ provided by EdgeDB.
 
 .. eql:operator:: DIV: A / B
 
-    :optype A: numeric
-    :optype B: numeric
-    :resulttype: numeric
+    :optype A: anyreal
+    :optype B: anyreal
+    :resulttype: anyreal
     :index: divide division
 
     Arithmetic division.
@@ -58,9 +58,9 @@ provided by EdgeDB.
 
 .. eql:operator:: MOD: A % B
 
-    :optype A: numeric
-    :optype B: numeric
-    :resulttype: numeric
+    :optype A: anyreal
+    :optype B: anyreal
+    :resulttype: anyreal
     :index: modulo mod division
 
     Remainder from division (modulo).
@@ -68,9 +68,9 @@ provided by EdgeDB.
 
 .. eql:operator:: POW: A ^ B
 
-    :optype A: numeric
-    :optype B: numeric
-    :resulttype: numeric
+    :optype A: anyreal
+    :optype B: anyreal
+    :resulttype: anyreal
     :index: power pow
 
     Power operation.

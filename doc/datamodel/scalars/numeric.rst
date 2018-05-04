@@ -1,9 +1,11 @@
 .. _ref_datamodel_scalars_numeric:
 
-Numeric Types
-=============
+Number Types
+============
 
-.. eql:type:: std::numeric
+.. eql:type:: std::decimal
+
+    :index: numeric float
 
     Any number of arbitrary precision.
 
@@ -13,17 +15,25 @@ Numeric Types
 
 .. eql:type:: std::int16
 
+    :index: int
+
     A 16-bit signed integer.
 
 .. eql:type:: std::int32
+
+    :index: int
 
     A 32-bit signed integer.
 
 .. eql:type:: std::int64
 
+    :index: int
+
     A 64-bit signed integer.
 
 .. eql:type:: std::float32
+
+    :index: float
 
     A variable precision, inexact number.
 
@@ -31,6 +41,33 @@ Numeric Types
 
 .. eql:type:: std::float64
 
+    :index: float
+
     A variable precision, inexact number.
 
     Minimal guaranteed precision is at least 15 decimal digits.
+
+
+Abstract Number Types
+=====================
+
+.. eql:type:: std::anyint
+
+    :index: any int
+
+    Abstract base scalar type for
+    :eql:type:`int16`, :eql:type:`int32`, and :eql:type:`int64`.
+
+.. eql:type:: std::anyfloat
+
+    :index: any float
+
+    Abstract base scalar type for
+    :eql:type:`float32` and :eql:type:`float64`.
+
+.. eql:type:: std::anyreal
+
+    :index: any
+
+    Abstract base scalar type for
+    :eql:type:`anyint`, :eql:type:`anyfloat`, and :eql:type:`decimal`.

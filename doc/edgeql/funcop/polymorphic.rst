@@ -6,7 +6,9 @@ Polymorphic
 
 .. eql:type:: any
 
-    Generic type
+    :index: any
+
+    Generic type.
 
 
 .. eql:function:: std::len(any) -> int64
