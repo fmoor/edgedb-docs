@@ -26,19 +26,19 @@ Aggregate Functions
         SELECT count(User);
         # returns the number of User objects in the DB
 
-.. eql:function:: std::sum(SET OF numeric) -> numeric
+.. eql:function:: std::sum(SET OF anyreal) -> anyreal
 
     :param $0: input set
-    :paramtype $0: SET OF numeric
+    :paramtype $0: SET OF anyreal
 
     :return: sum of the input set of numbers
-    :returntype: numeric
+    :returntype: anyreal
 
     :index: aggregate
 
     Return the sum of the set of numbers.
 
-    The numbers have to be either :eql:type:`numeric` or any type that
+    The numbers have to be either :eql:type:`anyreal` or any type that
     can be cast into it, such as :eql:type:`float64` or
     :eql:type:`int64`.
 
