@@ -17,6 +17,8 @@ IF..ELSE
     :optype B: SET OF any
     :resulttype: SET OF any
 
+    :index: if else ifelse elif ternary
+
     Conditionally provide one or the other result.
 
     IF *C* is ``true``, then the value of the ``IF..ELSE`` expression

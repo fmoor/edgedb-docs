@@ -106,7 +106,7 @@ Functions
     :return: array made of input set elements
     :returntype: array<any>
 
-    :index: array aggregate
+    :index: aggregate
 
     Return the array made from all of the input set elements.
 
@@ -131,8 +131,6 @@ Functions
     :return: ``TRUE`` if the array contains the specified element
     :returntype: bool
 
-    :index: array
-
     Return ``TRUE`` if the array contains the specified element.
 
     .. code-block:: edgeql
@@ -152,7 +150,7 @@ Functions
     :return: set of tuples of the form ``(element, index)``
     :returntype: SET OF tuple<any, int64>
 
-    :index: array enum
+    :index: enum
 
     Return a set of tuples of the form ``(element, index)``.
 
@@ -178,7 +176,7 @@ Functions
     :return: input array elements as a set
     :returntype: SET OF any
 
-    :index: array set
+    :index: set
 
     Return array elements as a set.
 

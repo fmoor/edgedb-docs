@@ -10,6 +10,8 @@ heterogeneous data.
 
 .. eql:type:: std::tuple
 
+    :index: tuple
+
     A tuple type is a heterogeneous sequence of other types.
 
     Tuple elements can optionally have names,
@@ -51,6 +53,8 @@ heterogeneous data.
 
 .. eql:type:: std::array
 
+    :index: array
+
     Arrays represent a one-dimensional homogeneous ordered list.
 
     Array indexing starts at zero.
@@ -76,6 +80,8 @@ heterogeneous data.
 
 
 .. eql:type:: std::map
+
+    :index: map
 
     Maps are homogeneous key-value types.
 
