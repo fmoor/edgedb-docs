@@ -250,6 +250,8 @@ The standard library defines the following constraints:
     :param $0: regular expression
     :paramtype $1: str
 
+    :index: regex regexp regular
+
     Specifies that the string representation of the subject must match a
     regexp.
 
