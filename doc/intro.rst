@@ -4,6 +4,8 @@ Introduction
 EdgeDB is an object-relational database that stores and describes the data
 as strongly typed objects and relationships between them.
 
+.. eql:react-element:: DocsNavTable
+
 EdgeDB features:
 
 - strict, strongly typed schema;

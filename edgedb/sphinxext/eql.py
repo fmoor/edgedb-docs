@@ -190,6 +190,7 @@ from edgedb.lang.edgeql import codegen as ql_gen
 from edgedb.lang.common import markup  # NoQA
 
 from docutils import nodes as d_nodes
+from docutils.parsers import rst as d_rst
 
 from sphinx import addnodes as s_nodes
 from sphinx import directives as s_directives
@@ -558,6 +559,18 @@ class EQLSynopsisDirective(s_code.CodeBlock):
         return super().run()
 
 
+class EQLReactElement(d_rst.Directive):
+
+    has_content = False
+    optional_arguments = 0
+    required_arguments = 1
+
+    def run(self):
+        node = d_nodes.container()
+        node['react-element'] = self.arguments[0]
+        return [node]
+
+
 class EQLOperatorDirective(BaseEQLDirective):
 
     doc_field_types = [
@@ -836,6 +849,7 @@ class EdgeQLDomain(s_domains.Domain):
         'keyword': EQLKeywordDirective,
         'operator': EQLOperatorDirective,
         'synopsis': EQLSynopsisDirective,
+        'react-element': EQLReactElement,
     }
 
     roles = {
