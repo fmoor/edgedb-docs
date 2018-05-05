@@ -559,6 +559,35 @@ class EQLSynopsisDirective(s_code.CodeBlock):
         return super().run()
 
 
+class EQLMigrationDirective(s_code.CodeBlock):
+
+    has_content = True
+    optional_arguments = 0
+    required_arguments = 1
+    option_spec = {}
+
+    def run(self):
+        migration_name = self.arguments[0]
+        self.arguments = ['eschema']
+
+        pre = f'CREATE MIGRATION {migration_name} TO eschema $$\n\n'
+        suf = f'\n\n$$;\nCOMMIT MIGRATION {migration_name};'
+
+        pre_node = d_nodes.literal_block(pre, pre)
+        pre_node['language'] = 'edgeql'
+        suf_node = d_nodes.literal_block(suf, suf)
+        suf_node['language'] = 'edgeql'
+
+        cnt = d_nodes.container()
+        cnt['eql-migration'] = 'true'
+        cnt += [
+            pre_node,
+            *super().run(),
+            suf_node,
+        ]
+        return [cnt]
+
+
 class EQLReactElement(d_rst.Directive):
 
     has_content = False
@@ -849,6 +878,7 @@ class EdgeQLDomain(s_domains.Domain):
         'keyword': EQLKeywordDirective,
         'operator': EQLOperatorDirective,
         'synopsis': EQLSynopsisDirective,
+        'migration': EQLMigrationDirective,
         'react-element': EQLReactElement,
     }
 

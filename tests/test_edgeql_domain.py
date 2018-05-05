@@ -816,3 +816,27 @@ class TestBlockquote(unittest.TestCase, BaseDomainTest):
 
         with self.assert_fails('title reference'):
             self.build(src, format='html')
+
+
+class TestEQLMigration(unittest.TestCase, BaseDomainTest):
+
+    def test_eql_migration_1(self):
+        src = '''
+        .. eql:migration:: foobar
+
+            type User:
+                property name -> str
+        '''
+
+        out = self.build(src, format='xml')
+        x = requests_xml.XML(xml=out)
+
+        self.assertEqual(
+            x.xpath('''
+                //container[@eql-migration="true"] / literal_block / text()
+            '''),
+            [
+                'CREATE MIGRATION foobar TO eschema $$\n\n',
+                'type User:\n    property name -> str',
+                '\n\n$$;\nCOMMIT MIGRATION foobar;'
+            ])

@@ -52,11 +52,8 @@ The schema can be applied either via a migration tool or directly
 using ``CREATE MIGRATION`` and ``COMMIT MIGRATION`` commands. Let's do it in
 the interactive console via the low level EdgeQL commands.
 
-.. code-block:: edgeql
+.. eql:migration:: d1
 
-    CREATE MODULE example;
-
-    CREATE MIGRATION example::d1 TO eschema $$
     type User:
         required property name -> str
 
@@ -83,9 +80,6 @@ the interactive console via the low level EdgeQL commands.
             # the timestap will be automatically set to the current
             # time if it is not specified at the point of comment
             # creation
-    $$;
-
-    COMMIT MIGRATION example::d1;
 
 Now we can start populating the DB with actual objects. For
 consistency with examples in other parts of the documentation let's
