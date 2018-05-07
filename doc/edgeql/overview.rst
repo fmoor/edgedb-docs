@@ -157,13 +157,13 @@ An implicit ``SELECT`` subquery is assumed in the following situations:
 - the right side of turnstile (``:=``) in expression aliases and
   :ref:`shape element declarations <ref_eql_expr_shapes>`;
 
-- certain clauses of statements;
+- the majority of statement clauses;
 
 - in a :ref:`set constructor <ref_eql_expr_index_set_ctor>` expression.
 
 .. _ref_eql_fundamentals_eval_algo:
 
-An query is evaluated recursively using the following procedure:
+A query is evaluated recursively using the following procedure:
 
 1. Replace all common path prefixes in a query and all its subqueries
    with equivalent set references.
@@ -178,10 +178,7 @@ An query is evaluated recursively using the following procedure:
    - replace set references in the query and all its subqueries
      with the corresponding value from the input tuple;
 
-   - compute the values of all direct subqueries, and treat
-     the results as set references;
-
-   - compute the results of all function calls in the query, and treat
+   - compute the values of all subqueries and function calls, and treat
      the results as set references;
 
    - make another cartesian product from the input tuple and the

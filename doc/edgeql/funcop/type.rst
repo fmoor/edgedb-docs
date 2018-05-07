@@ -28,7 +28,7 @@ IS
 
     .. code-block:: edgeql
 
-        SELECT 1 IS int;
+        SELECT 1 IS int64;
         # returns [True]
 
         SELECT User IS NOT SystemUser
@@ -68,7 +68,7 @@ Examples:
 .. code-block:: edgeql
 
     # cast a string literal into an integer
-    SELECT <int>"42";
+    SELECT <int64>"42";
 
     # cast an array of integers into an array of str
     SELECT <array<str>>[1, 2 , 3];
@@ -81,7 +81,7 @@ element names for convenience.
 
 .. code-block:: edgeql
 
-    SELECT <tuple<int, str>>(1, 3);
+    SELECT <tuple<int64, str>>(1, 3);
     # returns [[1, '3']]
 
     WITH
@@ -90,7 +90,7 @@ element names for convenience.
         stuff := (1, 'foo', 42)
     SELECT (
         # cast the tuple into something more convenient
-        <tuple<a: int, name: str, b: int>>stuff
+        <tuple<a: int64, name: str, b: int64>>stuff
     ).name;  # access the 'name' element
 
 An important use of *casting* is in defining the type of an empty

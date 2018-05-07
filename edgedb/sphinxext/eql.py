@@ -17,10 +17,10 @@ things must be defined:
   If a parameter is anonymous, its number should be used instead (e.g. $1).
 
 * ":paramtype $name: type": for every :param: there must be a
-  corresponding :paramtype field.  For example: ":paramtype $name: int"
-  declares that the type of the $name parameter is `int`.  If a parameter
+  corresponding :paramtype field.  For example: ":paramtype $name: int64"
+  declares that the type of the $name parameter is `int64`.  If a parameter
   has more than one valid types list them separated by "or":
-  ":paramtype $name: int or str".
+  ":paramtype $name: int64 or str".
 
 * :return: and :returntype: are similar to :param: and
   :paramtype: but lack parameter names.  They must be used to document
@@ -38,7 +38,7 @@ Example:
         :paramtype $1: SET OF any
 
         :param $a: description of this param
-        :paramtype $a: int or str
+        :paramtype $a: int64 or str
 
         :return: array made of input set elements
         :returntype: array<any>
@@ -69,7 +69,7 @@ operator it would be "PLUS: A + B":
 
     .. eql:operator:: PLUS: A + B
 
-        :optype A: int or str or bytes
+        :optype A: int64 or str or bytes
         :optype B: any
         :resulttype: any
 
@@ -154,8 +154,8 @@ To reference a type use a ":eql:type:" role, e.g.:
 - :eql:type:`std::bytes`
 - :eql:type:`SET OF any`
 - :eql:type:`SET OF array\<any\>`
-- :eql:type:`array of \<int\> <array<int>>`
-- :eql:type:`array\<int\>`
+- :eql:type:`array of \<int64\> <array<int64>>`
+- :eql:type:`array\<int64\>`
 
 Keywords
 --------

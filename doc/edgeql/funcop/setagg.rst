@@ -6,7 +6,7 @@ Aggregate Functions
 
 :index: set aggregate
 
-.. eql:function:: std::count(SET OF any) -> int
+.. eql:function:: std::count(SET OF any) -> int64
 
     :param $0: input set
     :paramtype $0: SET OF any

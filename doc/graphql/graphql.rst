@@ -23,7 +23,7 @@ For the purposes of this section we will use the following schema:
         link isbn to str:
             constraint maxlength(10)
         link pub_date to datetime
-        link price to float
+        link price to float64
 
 
 EdgeDB supports all of the GraphQL syntactical constructs

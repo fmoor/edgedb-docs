@@ -80,7 +80,7 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
 
     def test_eql_type_1(self):
         src = '''
-        .. eql:type:: int
+        .. eql:type:: int64
 
             descr
         '''
@@ -91,14 +91,14 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
         self.assertEqual(
             x.xpath('''
                 //desc_signature
-                    [@eql-fullname="std::int"] /
+                    [@eql-fullname="std::int64"] /
                     desc_name / text()
             '''),
-            ['int'])
+            ['int64'])
 
     def test_eql_type_2(self):
         src = '''
-        .. eql:type:: std::int
+        .. eql:type:: std::int64
         '''
 
         with self.assert_fails('the directive must include a description'):
@@ -106,7 +106,7 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
 
     def test_eql_type_3(self):
         src = '''
-        .. eql:type:: std::int
+        .. eql:type:: std::int64
 
             aaa
 
@@ -119,20 +119,20 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
 
     def test_eql_type_4(self):
         src = '''
-        .. eql:type:: std::int
+        .. eql:type:: std::int64
 
             aaa
 
-        Testing refs :eql:type:`int`
+        Testing refs :eql:type:`int64`
         '''
 
         self.assertRegex(
             self.build(src),
-            r'(?x).*<a .* href="#std::int".*')
+            r'(?x).*<a .* href="#std::int64".*')
 
     def test_eql_type_5(self):
         src = '''
-        .. eql:type:: std::int
+        .. eql:type:: std::int64
 
             long text long text long text long text long text long text
             long text long text long text long text long text long text
@@ -145,7 +145,7 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
 
     def test_eql_type_6(self):
         src = '''
-        .. eql:type:: std::int
+        .. eql:type:: std::int64
 
             An integer.
 
@@ -153,10 +153,10 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
 
             Array.
 
-        Testing :eql:type:`XXX <array<int>>` ref.
-        Testing :eql:type:`array\<int\>` ref.
-        Testing :eql:type:`array\<int64\> <array<int>>` ref.
-        Testing :eql:type:`array\<array\<int\>\>` ref.
+        Testing :eql:type:`XXX <array<int64>>` ref.
+        Testing :eql:type:`array\<int64\>` ref.
+        Testing :eql:type:`array\<int64\> <array<int64>>` ref.
+        Testing :eql:type:`array\<array\<int64\>\>` ref.
         '''
 
         out = self.build(src, format='xml')
@@ -168,18 +168,18 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
                 reference[@eql-type="type"] /
                 literal / text()
             '''),
-            ['XXX', 'array<int>', 'array<int64>', 'array<array<int>>'])
+            ['XXX', 'array<int64>', 'array<int64>', 'array<array<int64>>'])
 
     def test_eql_type_7(self):
         src = '''
-        .. eql:type:: int
+        .. eql:type:: int64
 
             An integer.
 
-        Testing :eql:type:`OPTIONAL  int` ref.
-        Testing :eql:type:`OPTIONAL int` ref.
-        Testing :eql:type:`SET  OF  int` ref.
-        Testing :eql:type:`SET OF int` ref.
+        Testing :eql:type:`OPTIONAL  int64` ref.
+        Testing :eql:type:`OPTIONAL int64` ref.
+        Testing :eql:type:`SET  OF  int64` ref.
+        Testing :eql:type:`SET OF int64` ref.
         '''
 
         out = self.build(src, format='xml')
@@ -191,7 +191,7 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
                 reference[@eql-type="type"] /
                 literal / text()
             '''),
-            ['OPTIONAL  int', 'OPTIONAL int', 'SET  OF  int', 'SET OF int'])
+            ['OPTIONAL  int64', 'OPTIONAL int64', 'SET  OF  int64', 'SET OF int64'])
 
     def test_eql_type_8(self):
         src = '''
@@ -219,7 +219,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
 
     def test_eql_func_1(self):
         src = '''
-        .. eql:type:: std::int
+        .. eql:type:: std::int64
 
             An integer.
 
@@ -230,7 +230,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
         .. eql:function:: std::test(any) -> any
 
             :param $0: param
-            :paramtype $0: int
+            :paramtype $0: int64
 
             :return: something
             :returntype: any
@@ -256,7 +256,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
         self.assertEqual(
             param.attrs,
             {'eql-name': 'parameter', 'eql-paramname': '$0',
-             'eql-paramtype': 'int'})
+             'eql-paramtype': 'int64'})
 
         self.assertEqual(
             ret.attrs,
@@ -265,10 +265,10 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
 
         self.assertEqual(
             param.xpath('''
-                //reference[@eql-type="type" and @refid="type::std::int"] /
+                //reference[@eql-type="type" and @refid="type::std::int64"] /
                     literal_emphasis/text()
             '''),
-            ['int'])
+            ['int64'])
 
         self.assertEqual(
             x.xpath('''
@@ -306,7 +306,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
         .. eql:function:: std::test(any) -> any
 
             :param $0: aaaa
-            :type $0: int
+            :type $0: int64
 
             blah
         '''
@@ -324,7 +324,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
         .. eql:function:: std::test(any) -> any
 
             :param $0: aaaa
-            :paramtype: int
+            :paramtype: int64
 
             blah
         '''
@@ -342,7 +342,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
         .. eql:function:: std::test(any) -> any
 
             :param $0: aaaa
-            :paramtype $0: int
+            :paramtype $0: int64
 
         blah
         '''
@@ -357,7 +357,7 @@ class TestEqlFunction(unittest.TestCase, BaseDomainTest):
             blah
 
             :param $0: aaaa
-            :paramtype $0: int
+            :paramtype $0: int64
 
             blah
         '''
@@ -395,7 +395,7 @@ class TestEqlConstraint(unittest.TestCase, BaseDomainTest):
 
     def test_eql_constr_1(self):
         src = '''
-        .. eql:type:: std::int
+        .. eql:type:: std::int64
 
             An integer.
 
@@ -473,9 +473,9 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 
     def test_eql_op_1(self):
         src = '''
-        .. eql:type:: int
+        .. eql:type:: int64
 
-            int
+            int64
 
         .. eql:type:: str
 
@@ -483,9 +483,9 @@ class TestEqlOperator(unittest.TestCase, BaseDomainTest):
 
         .. eql:operator:: PLUS: A + B
 
-            :optype A: int or str
-            :optype B: int or str
-            :resulttype: int or str
+            :optype A: int64 or str
+            :optype B: int64 or str
+            :resulttype: int64 or str
 
             Arithmetic addition.
 

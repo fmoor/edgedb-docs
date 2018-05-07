@@ -21,7 +21,7 @@ Additionally, any scalar value may be represented as a casted string literal:
 
 .. code-block:: edgeql
 
-    <float>'1.23'
+    <float64>'1.23'
 
 
 .. _ref_eql_expr_index_setref:
@@ -178,7 +178,7 @@ it must be used together with a type cast:
     db> SELECT {};
     EdgeQLError: could not determine the type of empty set
 
-    db> SELECT <int>{};
+    db> SELECT <int64>{};
     {}
 
 

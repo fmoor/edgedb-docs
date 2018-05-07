@@ -1,394 +1,258 @@
+========
 Tutorial
 ========
 
-This tutorial covers the setup and a few use case for an issue
-management platform.
+Starting the Server
+===================
 
-Setup the database
-------------------
+To begin, start the EdgeDB server and open an interactive shell to it.
 
-Install. Run the server.
+If you are using a Docker image, run:
 
-Once the EdgeDB server is up and running the first thing to do is to
-add a schema that we will be using. To do that, let's consider which
-objects we will need in our system. Obviously we want a ``User`` and
-an ``Issue``. We probably want a ``Status``, too. In order to provide
-feedback on issues a ``Comment`` type seems like a good idea. So
-let's start with defining the schema with these 4 types. Later on,
-if we need more, we can amend the schema.
+.. code-block:: bash
 
-The original schema would be something like this:
+    $ docker run -it --rm -v edgedb_data:/data \
+        edgedb/edgedb-preview
 
-.. code-block:: eschema
+If you've installed EdgeDB on your system directly, run:
 
-    type User:
-        required property name -> str
+.. code-block:: bash
 
-    type Issue:
-        required property text -> str
-        required link status -> Status
-        required link owner -> User
+    $ edgedb --start-server
 
-    type Status:
-        required property name -> str:
-            # the status names should be unique
-            constraint unique
+Once the EdgeDB server is up, an interactive shell session will open,
+connected to the default database:
 
-    type Comment:
-        required property text -> str
-        # It makes more sense to link comments to issues rather than
-        # vice-versa, since that makes their coupling in the schema
-        # less tight. This is a good practice for relationships that
-        # don't represent inherent properties.
-        required link issue -> Issue:
-            cardinality := '*1'
-        property timestamp -> datetime:
-            default := SELECT datetime::current_datetime()
-            # the timestap will be automatically set to the current
-            # time if it is not specified at the point of comment
-            # creation
+.. code-block:: edgedb-repl
 
-The schema can be applied either via a migration tool or directly
-using ``CREATE MIGRATION`` and ``COMMIT MIGRATION`` commands. Let's do it in
-the interactive console via the low level EdgeQL commands.
+    edgedb>
 
-.. eql:migration:: d1
+
+Defining the Schema
+===================
+
+For the purpose of this tutorial let's imagine we are building a
+platform for collaborative development.
+
+To manipulate and query data in EdgeDB we must first define a schema.
+We will be working with three object types: ``User``, ``PullRequest``,
+and ``Comment``.  Let's define the initial schema with a migration:
+
+.. eql:migration:: m1
 
     type User:
-        required property name -> str
+      required property login -> str:
+        constraint unique
+      required property firstname -> str
+      required property lastname -> str
 
-    type Issue:
-        required property text -> str
-        required link status -> Status
-        required link owner -> User
-
-    type Status:
-        required property name -> str:
-            # the status names should be unique
-            constraint unique
+    type PullRequest:
+      required property number -> int64:
+        constraint unique
+      required property title -> str
+      required property body -> str
+      required property status -> str
+      required property created_on -> datetime
+      required link author -> User
+      link assignees -> User:
+        cardinality := '**'
+      link comments -> Comment:
+        cardinality := '1*'
 
     type Comment:
-        required property text -> str
-        # It makes more sense to link comments to issues rather than
-        # vice-versa, since that makes their coupling in the schema
-        # less tight. This is a good practice for relationships that
-        # don't represent inherent properties.
-        required link issue -> Issue:
-            cardinality := '*1'
-        property timestamp -> datetime:
-            default := SELECT datetime::current_datetime()
-            # the timestap will be automatically set to the current
-            # time if it is not specified at the point of comment
-            # creation
+      required property body -> str
+      required link author -> User
+      required property created_on -> datetime
 
-Now we can start populating the DB with actual objects. For
-consistency with examples in other parts of the documentation let's
-name the module "example".
+With the above snippet we defined and applied a migration to a schema
+described using the :ref:`declarative schema language <ref_eschema>`.
+We created the three main object types, each with a number of properties
+and links to other objects.
 
-Let's start with a few users and status objects:
+Notice how the ``PullRequest`` and the ``Comment`` types have
+common properties: ``body`` and ``created_on`` as well as the ``author``
+link.  Let's remove this duplication by declaring an abstract parent type
+``AuthoredText`` and :ref:`extending <ref_datamodel_inheritance>`
+``Comment`` and ``PullRequest`` from it:
 
-.. code-block:: edgeql
-
-    INSERT example::User {
-        name := 'Alice Smith'
-    };
-
-    INSERT example::User {
-        name := 'Bob Johnson'
-    };
-
-    INSERT example::Status {
-        name := 'Open'
-    };
-
-    INSERT example::Status {
-        name := 'Closed'
-    };
-
-Note that alternatively, the users and statuses could have been created using
-:ref:`GraphQL queries <ref_graphql_overview>`.
-
-Now that we have the basics set up, we can log the first issue:
-
-.. code-block:: edgeql
-
-    WITH MODULE example
-    INSERT Issue {
-        text :=
-            'The issue system needs more status values and maybe priority.',
-        status := (SELECT Status FILTER Status.name = 'Open'),
-        owner := (SELECT User FILTER User.name = 'Bob Johnson')
-    };
-
-Let's add priority to the schema, first. We'll have one new
-``type`` and a change to the existing ``Issue``:
-
-.. code-block:: eschema
+.. eql:migration:: m2
 
     type User:
-        required property name -> str
+      required property login -> str:
+        constraint unique
+      required property firstname -> str
+      required property lastname -> str
 
-    type Status:
-        required property name -> str:
-            # the status names should be unique
-            constraint unique
+    # <new>
+    abstract type AuthoredText:
+      required property body -> str
+      required link author -> User
+      required property created_on -> datetime
+    # </new>
 
-    type Comment:
-        required property text -> str
-        # It makes more sense to link comments to issues rather than
-        # vice-versa, since that makes their coupling in the schema
-        # less tight. This is a good practice for relationships that
-        # don't represent inherent properties.
-        required link issue -> Issue:
-            cardinality := '*1'
-        property timestamp -> datetime:
-            default := SELECT datetime::current_datetime()
-            # the timestap will be automatically set to the current
-            # time if it is not specified at the point of comment
-            # creation
+    # <changed>
+    type PullRequest extending AuthoredText:
+    # </changed>
+      required property title -> str
+      required property status -> str
+      link assignees -> User:
+        cardinality := '**'
+      link comments -> Comment:
+        cardinality := '1*'
 
-    #
-    # no changes to the above types
-    #
+    type Comment extending AuthoredText
 
-    type Issue:
-        required property text -> str
-        required link status -> Status
-        required link owner -> User
-        link priority -> Priority
-        # let's make priority optional
 
-    type Priority:
-        required property name -> str:
-            constraint unique
+Inserting Data
+==============
+
+Now that we've defined the schema, let's create some users:
 
 .. code-block:: edgeql
 
-    CREATE MIGRATION example::d2
-    FROM example::d1
-    TO eschema $$
-        # ... new schema goes here
-    $$;
+    INSERT User {
+      login := 'alice',
+      firstname := 'Alice',
+      lastname := 'Liddell',
+    };
 
-    COMMIT MIGRATION example::d2;
+    INSERT User {
+      login := 'bob',
+      firstname := 'Bob',
+      lastname := 'Sponge',
+    };
 
-Given the new schema we can use the migration tools to apply the
-changes to our existing EdgeDB data. After that we can create
-``Status`` and ``Priority`` objects.
+    INSERT User {
+      login := 'carol',
+      firstname := 'Carol',
+      lastname := 'Danvers',
+    };
+
+    INSERT User {
+      login := 'dave',
+      firstname := 'Dave',
+      lastname := 'Bowman',
+    };
+
+
+Then, a ``PullRequest`` object:
 
 .. code-block:: edgeql
 
-    INSERT example::Priority {
-        name := 'High'
+    WITH
+      Alice := (SELECT User FILTER .login = "alice"),
+      Bob := (SELECT User FILTER .login = "bob")
+    INSERT PullRequest {
+      number := 1,
+      title := "Avoid attaching multiple scopes at once",
+      status := "Merged",
+      author := Alice,
+      assignees := Bob,
+      body := "Sublime Text and Atom handles multiple " +
+              "scopes differently.",
+      created_on := <datetime>"Feb 1, 2016, 5:29PM",
     };
 
-    INSERT example::Priority {
-        name := 'Low'
-    };
-
-    INSERT example::Status {
-        name := 'New'
-    };
-
-    INSERT example::Status {
-        name := 'Rejected'
-    };
-
-With the priority objects all set up we can now update the ``Issue``
-to have "High" priority.
+"PR #1" has been commented on, let's update it with ``Comment`` objects:
 
 .. code-block:: edgeql
 
-    WITH MODULE example
-    UPDATE Issue
-    FILTER Issue.id = 'd54f6472-8f07-44d9-909e-22864dc6f811'
+    WITH
+      Alice := (SELECT User FILTER .login = 'alice'),
+      Bob := (SELECT User FILTER .login = 'bob')
+    UPDATE PullRequest
+    FILTER PullRequest.number = 1
     SET {
-        priority := (SELECT Priority FILTER Priority.name = 'High')
+      comments := {
+        (INSERT Comment {
+          author := Alice,
+          body :=
+            "Sublime Text handles whitespace-" +
+            "separated scope list, but Atom would " +
+            "fail to do that.",
+          created_on :=
+            <datetime>'Feb 1, 2016, 5:31 PM UTC',
+        }),
+        (INSERT Comment {
+          author := Bob,
+          body := "Thanks for catching that.",
+          created_on :=
+            <datetime>'Feb 2, 2016, 12:47 PM UTC',
+        }),
+        (INSERT Comment {
+          author := Alice,
+          body := "You're welcome. Thanks for the " +
+                  "awesome package!",
+          created_on :=
+            <datetime>'Feb 2, 2016, 12:48 PM UTC',
+        }),
+      }
     };
 
-    # The id used above is something that would have been returned by
-    # the 'INSERT Issue ...' query or we could simply query it
-    # separately.
 
-It seems though that the issue has actually been resolved, so let's
-make a comment about that and close the issue.
+Let's create another PR, together with the corresponding comments:
 
 .. code-block:: edgeql
 
-    WITH MODULE example
-    INSERT Comment {
-        issue := (
-            SELECT Issue
-            FILTER Issue.id = 'd54f6472-8f07-44d9-909e-22864dc6f811'
-        ),
-        text := "I've added more statuses and created priorities."
+    WITH
+      Bob := (SELECT User FILTER .login = 'bob'),
+      Carol := (SELECT User FILTER .login = 'carol'),
+      Dave := (SELECT User FILTER .login = 'dave')
+    INSERT PullRequest {
+      number := 2,
+      title := 'Pyhton -> Python',
+      status := 'Open',
+      author := Carol,
+      assignees := {Bob, Dave},
+      body := "Several typos fixed.",
+      created_on :=
+        <datetime>'Apr 25, 2016, 6:57 PM UTC',
+      comments := {
+        (INSERT Comment {
+          author := Carol,
+          body := "Couple of typos are fixed. " +
+                  "Updated VS count.",
+          created_on :=
+            <datetime>'Apr 25, 2016, 6:58 PM UTC',
+        }),
+        (INSERT Comment {
+          author := Bob,
+          body := "Thanks for catching the typo.",
+          created_on :=
+           <datetime>'Apr 25, 2016, 7:11 PM UTC',
+        }),
+        (INSERT Comment {
+          author := Dave,
+          body := "Thanks!",
+            created_on :=
+              <datetime>'Apr 25, 2016, 7:22 PM UTC',
+        }),
+      }
     };
 
-    WITH MODULE example
-    UPDATE Issue
-    SET {
-        status := (SELECT Status FILTER Status.name = 'Closed')
-    };
 
-At this point we may have realized that ``Issue`` and ``Comment`` have
-some underlying similarity, they are both pieces of text written by
-some user. Moreover, we could envision that as the system grows we
-could have other types that are owned by users as well as other
-kinds of text objects that record messages and such. While we're at
-it, we might as well also create an abstract type for things with a
-``name``. So let's update the schema again, this time mostly
-refactoring.
+Querying Data
+=============
 
-.. code-block:: eschema
+Now that we inserted some data, let’s run some queries!
 
-    abstract type Named:
-        required property name -> str
-
-    # Dictionary is a NamedObject variant, that enforces
-    # name uniqueness across all instances if its subclass.
-    abstract type Dictionary extending Named:
-        required property name -> str:
-            delegated constraint unique
-
-    abstract type Text:
-        # This is an abstract object containing text.
-        required property text -> str:
-            # let's limit the maximum length of text to 10000
-            # characters.
-            constraint maxlength(10000)
-
-    abstract type Owned:
-        # don't make the link owner required so that we can first
-        # assign an owner to Comment objects already in the DB
-        link owner -> User:
-            cardinality := '*1'
-
-    type User extending Named
-    # no need to specify 'link name' here anymore as it's inherited
-
-    type Issue extending Text, Owned:
-        required link status -> Status
-        link priority -> Priority
-        required link owner -> User:
-            cardinality := '*1'
-        # because we override the link owner to be required,
-        # we need to keep this definition
-
-    type Priority extending Dictionary
-
-    type Status extending Dictionary
-
-    type Comment extending Text, Owned:
-        required link issue -> Issue:
-            cardinality := '*1'
-        property timestamp -> datetime:
-            default := SELECT datetime::current_datetime()
-            # the timestap will be automatically set to the current
-            # time if it is not specified at the point of comment
-            # creation
+Get all "Open" pull requests, their authors, and who they are
+assigned to, in reverse chronological order:
 
 .. code-block:: edgeql
 
-    CREATE MIGRATION example::d3
-    FROM example::d2 TO eschema $$
-        # ... new schema goes here
-    $$;
-    COMMIT MIGRATION example::d3;
-
-After the migration we still need to fix all comments in our system to
-have some owner. In the example so far there was only comment but
-let's treat it as if we have several comments made by the same person.
-
-.. code-block:: edgeql
-
-    WITH MODULE example
-    UPDATE Comment
-    SET {
-        owner := (SELECT User FILTER User.name = 'Alice Smith')
-    };
-
-Now that all of the comments have an owner we can further update the
-schema to make owner a required field for all ``Owned`` objects.
-
-.. code-block:: eschema
-
-    abstract type Named:
-        required property name -> str
-
-    # Dictionary is a NamedObject variant, that enforces
-    # name uniqueness across all instances if its subclass.
-    abstract type Dictionary extending Named:
-        required property name -> str:
-            delegated constraint unique
-
-    abstract type Text:
-        # This is an abstract object containing text.
-        required property text -> str:
-            # let's limit the maximum length of text to 10000
-            # characters.
-            constraint maxlength(10000)
-
-    type User extending Named
-    # no need to specify 'link name' here anymore as it's inherited
-
-    type Priority extending Dictionary
-
-    type Status extending Dictionary
-
-    type Comment extending Text, Owned:
-        required link issue -> Issue:
-            cardinality := '*1'
-        property timestamp -> datetime:
-            default := SELECT datetime::current_datetime()
-            # the timestap will be automatically set to the current
-            # time if it is not specified at the point of comment
-            # creation
-
-    #
-    # just as before, no changes to the above types
-    #
-
-    abstract type Owned:
-        # don't make the link owner required so that we can first
-        # assign an owner to Comment objects already in the DB
-        required link owner -> User:
-            cardinality := '*1'
-
-    type Issue extending Text, Owned:
-        required link status -> Status
-        link priority -> Priority
-        # notice we no longer need to override the owner link
-
-.. code-block:: edgeql
-
-    CREATE MIGRATION example::d4
-    FROM example::d3
-    TO eschema $$
-        # ... new schema goes here
-    $$;
-    COMMIT MIGRATION example::d4;
-
-After several schema migrations and even a data migration we have
-arrived at a state with reasonable amount of features for our issue
-tracker EdgeDB backend. Now let's log a few more issues and run some
-queries to analyze them.
-
-
-Use cases
----------
-
-Let's consider some of the possible interactions with the issue
-tracker system, using both EdgeQL and GraphQL.
-
-.. todo::
-
-    needs more content
-
-Analytics
----------
-
-For running complex queries native EdgeQL is better suited than GraphQL.
-
-.. todo::
-
-    needs more content
+    SELECT
+      PullRequest {
+        title,
+        created_on,
+        author: {
+          login
+        },
+        assignees: {
+          fullname
+        }
+      }
+    FILTER
+      .status = "Open"
+    ORDER BY
+      .created_on DESC;

@@ -49,6 +49,8 @@ There are several kinds of schema items:
 * :ref:`function definitions <ref_datamodel_functions>`
 
 
+.. _ref_datamodel_inheritance:
+
 Inheritance
 ===========
 

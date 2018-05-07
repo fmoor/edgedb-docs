@@ -34,5 +34,5 @@ having elements in it:
     db> SELECT [];
     EdgeQLError: could not determine the type of empty array
 
-    db> SELECT <array<int>>[];
+    db> SELECT <array<int64>>[];
     {[]}
