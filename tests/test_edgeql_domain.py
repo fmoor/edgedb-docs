@@ -191,7 +191,8 @@ class TestEqlType(unittest.TestCase, BaseDomainTest):
                 reference[@eql-type="type"] /
                 literal / text()
             '''),
-            ['OPTIONAL  int64', 'OPTIONAL int64', 'SET  OF  int64', 'SET OF int64'])
+            ['OPTIONAL  int64', 'OPTIONAL int64',
+             'SET  OF  int64', 'SET OF int64'])
 
     def test_eql_type_8(self):
         src = '''
@@ -838,5 +839,5 @@ class TestEQLMigration(unittest.TestCase, BaseDomainTest):
             [
                 'CREATE MIGRATION foobar TO eschema $$\n\n',
                 'type User:\n    property name -> str',
-                '\n\n$$;\nCOMMIT MIGRATION foobar;'
+                '\n$$;\nCOMMIT MIGRATION foobar;'
             ])

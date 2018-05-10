@@ -24,7 +24,7 @@ For example, the following computes the length of a string ``'foo'``:
 
 .. code-block:: edgeql
 
-    len('foo')
+    SELECT len('foo');
 
 Many built-in and user-defined functions operate on elements,
 so they are element-wise operations. This implies that if any of the

@@ -100,14 +100,14 @@ as an equivalent set reference
 
 .. code-block:: edgeql
 
-    SELECT (User.friends.first_name, User.friends.last_name)
+    SELECT (User.friends.first_name, User.friends.last_name);
 
 The canonical form of the above query is:
 
 .. code-block:: edgeql
 
     WITH UserFriends := User.friends
-    SELECT (UserFriends.first_name, UserFriends.last_name)
+    SELECT (UserFriends.first_name, UserFriends.last_name);
 
 
 See :ref:`ref_eql_expr_paths` for more information on path syntax and

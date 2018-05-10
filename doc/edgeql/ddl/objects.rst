@@ -229,5 +229,4 @@ Remove the ``User`` object type:
 
 .. code-block:: edgeql
 
-    [ WITH <with-item> [, ...] ]
     DROP TYPE User;

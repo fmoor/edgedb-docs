@@ -53,9 +53,9 @@ Create an object type ``User`` with an indexed ``title`` property:
     CREATE TYPE User {
         CREATE PROPERTY title -> std::str {
             SET default := '';
-        }
+        };
 
-        CREATE INDEX title_name ON __self__.title;
+        CREATE INDEX title_name ON __subject__.title;
     };
 
 

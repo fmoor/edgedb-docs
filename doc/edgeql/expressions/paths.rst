@@ -54,20 +54,20 @@ of all ``User`` objects in the database.
 
 .. code-block:: edgeql
 
-    User.friends.name
+    SELECT User.friends.name;
 
 And this represents all users who are owners of at least one ``Issue``:
 
 .. code-block:: edgeql
 
-    Issue.<owners[IS User]
+    SELECT Issue.<owners[IS User];
 
 And this represents a set of all dates on which users became friends,
 if ``since`` is defined as a link property on the ``User.friends`` link:
 
 .. code-block:: edgeql
 
-    User.friends@since
+    SELECT User.friends@since;
 
 .. note::
 

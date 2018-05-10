@@ -80,7 +80,7 @@ Drop the attribute ``extrainfo``:
 
 .. code-block:: edgeql
 
-    DROP ATTRIBUTE extrainfo;
+    DROP ABSTRACT ATTRIBUTE extrainfo;
 
 
 SET ATTRIBUTE

@@ -252,7 +252,7 @@ Define a new string link ``interests`` on the ``User`` object type:
 .. code-block:: edgeql
 
     ALTER TYPE User {
-        CREATE LINK interests TO str;
+        CREATE LINK interests -> str;
     };
 
 Define a new computable link ``followers_count`` on the
@@ -261,7 +261,7 @@ Define a new computable link ``followers_count`` on the
 .. code-block:: edgeql
 
     ALTER TYPE User {
-        CREATE LINK friends_count := count(__self__.friends);
+        CREATE LINK friends_count := count(__source__.friends);
     };
 
 

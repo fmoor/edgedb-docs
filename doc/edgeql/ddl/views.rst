@@ -70,7 +70,7 @@ Create a new view:
 .. code-block:: edgeql
 
     CREATE VIEW Superusers := (
-        SELECT User FILTER User.group.name = 'Superusers'
+        SELECT User FILTER User.groups.name = 'Superusers'
     );
 
 

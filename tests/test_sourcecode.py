@@ -7,6 +7,7 @@
 
 
 import collections
+import json
 import os
 import subprocess
 import sys
@@ -190,6 +191,12 @@ class TestDocSnippets(unittest.TestCase):
                 pass
             elif block.lang == 'graphql':
                 graphql_parser.parse(block.code)
+            elif block.lang == 'json':
+                json.loads(block.code)
+            elif block.lang == 'edgeql-repl':
+                pass
+            elif block.lang == 'bash':
+                pass
             else:
                 raise LookupError(f'unknown code-block lang {block.lang}')
         except Exception as ex:

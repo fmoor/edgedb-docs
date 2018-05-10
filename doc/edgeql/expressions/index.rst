@@ -21,7 +21,7 @@ Additionally, any scalar value may be represented as a casted string literal:
 
 .. code-block:: edgeql
 
-    <float64>'1.23'
+    SELECT <float64>'1.23';
 
 
 .. _ref_eql_expr_index_setref:
@@ -72,7 +72,7 @@ statements and function definitions.  The form of a parameter reference is:
 
 .. code-block:: edgeql
 
-    $name
+    SELECT $name;
 
 
 For example, in the following function definition, ``$n`` references the
@@ -249,7 +249,7 @@ are required around the statement to disambiguate:
 
 .. code-block:: edgeql
 
-    1 + (SELECT len(User.name))
+    SELECT 1 + (SELECT len(User.name));
 
 See :ref:`ref_eql_statements` for more information.
 

@@ -23,8 +23,9 @@ For example:
     type User:
         required property firstname -> str
         required property lastname -> str
-        property fullname := (__self__.firstname + ' ' +
-                              __self__.lastname)
+        property fullname :=
+            (__source__.firstname + ' ' +
+             __source__.lastname)
 
 Here we define the ``User`` type to contain the ``fullname`` computable
 property that is derived from user's first and last name.

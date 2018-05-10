@@ -28,7 +28,7 @@ If you are using a Docker image, run:
 Once the EdgeDB server is up, an interactive shell session will open,
 connected to the default database:
 
-.. code-block:: edgedb-repl
+.. code-block:: edgeql-repl
 
     edgedb>
 
