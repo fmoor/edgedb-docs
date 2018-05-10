@@ -14,7 +14,7 @@ Welcome to the EdgeDB |version| documentation.
     :includehidden:
 
     intro
-    tutorial/basic
+    quickstart
     datamodel/__toc__
     edgeql/__toc__
     graphql/index
