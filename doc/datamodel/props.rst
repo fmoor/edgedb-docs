@@ -5,7 +5,7 @@ Properties
 ==========
 
 :ref:`Object types <ref_datamodel_object_types>` and
-:ref:`links <ref_datamodel_links>` contain *properties*: a name-value
+:ref:`links <ref_datamodel_links>` can contain *properties*: a name-value
 collection of primitive data associated with the given object or link
 instance.
 

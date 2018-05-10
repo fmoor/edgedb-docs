@@ -31,7 +31,7 @@ types in EdgeDB extend ``std::Object`` directly or indirectly.
 
     .. code-block:: eschema
 
-        type Object:
+        abstract type Object:
             # Universally unique object identifier
             required readonly property id -> std::uuid
 

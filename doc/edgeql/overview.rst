@@ -159,7 +159,8 @@ An implicit ``SELECT`` subquery is assumed in the following situations:
 
 - the majority of statement clauses;
 
-- in a :ref:`set constructor <ref_eql_expr_index_set_ctor>` expression.
+- any set returning function or operator (e.g. a :ref:`set constructor
+  <ref_eql_expr_index_set_ctor>`).
 
 .. _ref_eql_fundamentals_eval_algo:
 
@@ -169,9 +170,11 @@ A query is evaluated recursively using the following procedure:
    with equivalent set references.
 
 2. Make a cartesian product of all unique set references appearing
-   directly in the query (not in the subqueries).
-   The result of the product is a set of *input tuples*.
-   See :ref:`ref_eql_emptyset` on what happens when the product is empty.
+   directly in the query (not in the subqueries). The result of the
+   product is a set of *input tuples*. If there are no set references
+   appearing directly in the main query, take the input set to contain
+   a single empty tuple. See :ref:`ref_eql_emptyset` on what happens
+   when the product is empty.
 
 3. Iterate over the input tuple set, and on every iteration:
 
@@ -206,7 +209,7 @@ empty set.  In this situation there are two possible scenarios:
 
 2. If *any* of the functions in the query have arguments declared as
    ``OPTIONAL``, these functions are called as usual, with arguments
-   passwed as empty sets.
+   passed as empty sets.
 
 For example, the following query returns an empty set:
 
