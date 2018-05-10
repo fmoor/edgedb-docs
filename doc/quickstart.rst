@@ -330,12 +330,13 @@ Suppose we need to remove all content authored by Carol:
 .. code-block:: edgeql
 
     DELETE (
-        SELECT AuthoredText
-        FILTER .author.login = 'carol'
+      SELECT AuthoredText
+      FILTER .author.login = 'carol'
     );
 
-Since we have two objects authored by carol: a pull request, and a comment,
-the result is:
+In the above query we used the fact that all authored objects can
+be selected by referring to the ``AuthoredText`` type.  Since we have
+two objects authored by carol--a pull request, and a comment--the result is:
 
 .. code-block:: edgeql-repl
 
