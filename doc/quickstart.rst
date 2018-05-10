@@ -2,6 +2,17 @@
 Quickstart
 ==========
 
+Getting EdgeDB
+==============
+
+While EdgeDB is in the technology preview phase, the easiest way to
+get it is to download a docker image:
+
+.. code-block:: bash
+
+    $ docker pull edgedb/edgedb-preview
+
+
 Starting the Server
 ===================
 
@@ -13,12 +24,6 @@ If you are using a Docker image, run:
 
     $ docker run -it --rm -v edgedb_data:/data \
         edgedb/edgedb-preview
-
-If you've installed EdgeDB on your system directly, run:
-
-.. code-block:: bash
-
-    $ edgedb --start-server
 
 Once the EdgeDB server is up, an interactive shell session will open,
 connected to the default database:
@@ -93,6 +98,8 @@ link.  Let's remove this duplication by declaring an abstract parent type
     # <changed>
     type PullRequest extending AuthoredText:
     # </changed>
+      required property number -> int64:
+        constraint unique
       required property title -> str
       required property status -> str
       link assignees -> User:
@@ -100,7 +107,9 @@ link.  Let's remove this duplication by declaring an abstract parent type
       link comments -> Comment:
         cardinality := '1*'
 
+    # <changed>
     type Comment extending AuthoredText
+    # </changed>
 
 
 Inserting Data
@@ -249,10 +258,85 @@ assigned to, in reverse chronological order:
           login
         },
         assignees: {
-          fullname
+          login
         }
       }
     FILTER
       .status = "Open"
     ORDER BY
       .created_on DESC;
+
+Result:
+
+.. code-block:: edgeql-repl
+
+    {
+      {
+        title: 'Pyhton -> Python',
+        author: {
+          login: 'carol'
+        },
+        assignees: [
+          {login: 'bob'},
+          {login: 'dave'}
+        ],
+        created_on: '2016-04-25T14:57:00-04:00'
+      }
+    }
+
+
+Now, let's see which PRs a particular user has authored or commented on,
+and let's also return the count of comments for each returned PR:
+
+.. code-block:: edgeql
+
+    WITH
+      name := 'bob'
+    SELECT
+      PullRequest {
+        title,
+        created_on,
+        num_comments := count(PullRequest.comments)
+      }
+    FILTER
+      .author.login = name OR
+      .comments.author.login = name
+    ORDER BY
+      .created_on DESC;
+
+Result:
+
+.. code-block:: edgeql-repl
+
+    {
+      {
+        title: 'Pyhton -> Python',
+        created_on: '2016-04-25T14:57:00-04:00',
+        num_comments: 3
+      },
+      {
+        title: 'Avoid attaching multiple scopes at once',
+        created_on: '2016-02-01T17:29:00-05:00',
+        num_comments: 3
+      }
+    }
+
+
+Deleting Data
+=============
+
+Suppose we need to remove all content authored by Carol:
+
+.. code-block:: edgeql
+
+    DELETE (
+        SELECT AuthoredText
+        FILTER .author.login = 'carol'
+    );
+
+Since we have two objects authored by carol: a pull request, and a comment,
+the result is:
+
+.. code-block:: edgeql-repl
+
+    {2}
