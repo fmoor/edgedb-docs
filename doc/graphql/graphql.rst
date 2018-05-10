@@ -22,7 +22,7 @@ containing the following schema:
         property isbn -> str:
             constraint maxlength(10)
 
-From the schema above EdgeDB will expose:
+From the schema above EdgeDB will expose to GraphQL:
 
 * Object types: ``Author`` and ``Book``
 * scalars ``String`` and ``ID``
