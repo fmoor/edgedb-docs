@@ -159,43 +159,25 @@ Then, a ``PullRequest`` object:
       assignees := Bob,
       body := "Sublime Text and Atom handles multiple " +
               "scopes differently.",
-      created_on := <datetime>"Feb 1, 2016, 5:29PM",
+      created_on := <datetime>"Feb 1, 2016, 5:29PM UTC",
     };
 
-"PR #1" has been commented on, let's update it with ``Comment`` objects:
+"PR #1" has been commented on, let's update it with a new ``Comment`` object:
 
 .. code-block:: edgeql
 
     WITH
-      Alice := (SELECT User FILTER .login = 'alice'),
-      Bob := (SELECT User FILTER .login = 'bob')
+      Bob := (SELECT User FILTER .login = 'bob'),
+      NewComment := (INSERT Comment {
+        author := Bob,
+        body := "Thanks for catching that.",
+        created_on :=
+          <datetime>'Feb 2, 2016, 12:47 PM UTC',
+      })
     UPDATE PullRequest
     FILTER PullRequest.number = 1
     SET {
-      comments := {
-        (INSERT Comment {
-          author := Alice,
-          body :=
-            "Sublime Text handles whitespace-" +
-            "separated scope list, but Atom would " +
-            "fail to do that.",
-          created_on :=
-            <datetime>'Feb 1, 2016, 5:31 PM UTC',
-        }),
-        (INSERT Comment {
-          author := Bob,
-          body := "Thanks for catching that.",
-          created_on :=
-            <datetime>'Feb 2, 2016, 12:47 PM UTC',
-        }),
-        (INSERT Comment {
-          author := Alice,
-          body := "You're welcome. Thanks for the " +
-                  "awesome package!",
-          created_on :=
-            <datetime>'Feb 2, 2016, 12:48 PM UTC',
-        }),
-      }
+      comments := NewComment
     };
 
 
@@ -317,7 +299,7 @@ Result:
       {
         title: 'Avoid attaching multiple scopes at once',
         created_on: '2016-02-01T17:29:00-05:00',
-        num_comments: 3
+        num_comments: 1
       }
     }
 
@@ -325,7 +307,36 @@ Result:
 Deleting Data
 =============
 
-Suppose we need to remove all content authored by Carol:
+Suppose we need to remove all content authored by Carol.  First, let's
+see which entries are by Carol:
+
+.. code-block:: edgeql
+
+    SELECT AuthoredText {
+        body,
+        __type__: {
+            name
+        }
+    }
+    FILTER .author.login = 'carol';
+
+In the above query we used the fact that all authored objects can
+be selected by referring to the ``AuthoredText`` type.  Since we have
+two objects authored by Carol--a pull request, and a comment--the result is:
+
+.. code-block:: edgeql-repl
+
+    {
+        {
+            body: 'Several typos fixed.',
+            __type__: {name: 'default::PullRequest'}},
+        {
+            body: 'Couple of typos are fixed. Updated VS count.',
+            __type__: {name: 'default::Comment'}
+        }
+    }
+
+Let's delete them now:
 
 .. code-block:: edgeql
 
@@ -334,9 +345,7 @@ Suppose we need to remove all content authored by Carol:
       FILTER .author.login = 'carol'
     );
 
-In the above query we used the fact that all authored objects can
-be selected by referring to the ``AuthoredText`` type.  Since we have
-two objects authored by carol--a pull request, and a comment--the result is:
+Result:
 
 .. code-block:: edgeql-repl
 
