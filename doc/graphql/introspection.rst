@@ -5,10 +5,10 @@ Introspection
 =============
 
 GraphQL introspection can be used to explore the exposed EdgeDB Types
-and Views. Note that there are certain types like ``tuple`` or ``map``
-that cannot be expressed in terms of GraphQL type system (a ``tuple``
-can be like a heterogeneous "List" and a ``map`` may have arbitrary
-"fields").
+and Views. Note that there are certain types like :eql:type:`tuple` or
+:eql:type:`map` that cannot be expressed in terms of GraphQL type system (
+a ``tuple`` can be like a heterogeneous "List" and a ``map`` may have
+arbitrary "fields").
 
 Consider the following GraphQL introspection query:
 

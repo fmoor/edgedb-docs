@@ -36,21 +36,24 @@ Queries
 
 Consider this example:
 
-+----------------------------------+--------------------------------+
-| GraphQL                          | EdgeQL equivalent              |
-+==================================+================================+
-| .. code-block:: graphql          | .. code-block:: eql            |
-|                                  |                                |
-|     {                            |     SELECT                     |
-|         Book {                   |         Book {                 |
-|             title                |             title,             |
-|             synopsis             |             synopsis,          |
-|             author {             |             author: {          |
-|                 name             |                 name           |
-|             }                    |             }                  |
-|         }                        |         };                     |
-|     }                            |                                |
-+----------------------------------+--------------------------------+
+.. table::
+    :class: codeblocks
+
+    +----------------------------------+--------------------------------+
+    | GraphQL                          | EdgeQL equivalent              |
+    +==================================+================================+
+    | .. code-block:: graphql          | .. code-block:: edgeql         |
+    |                                  |                                |
+    |     {                            |     SELECT                     |
+    |         Book {                   |         Book {                 |
+    |             title                |             title,             |
+    |             synopsis             |             synopsis,          |
+    |             author {             |             author: {          |
+    |                 name             |                 name           |
+    |             }                    |             }                  |
+    |         }                        |         };                     |
+    |     }                            |                                |
+    +----------------------------------+--------------------------------+
 
 The top-level field of the GraphQL query must be a valid
 ``ObjectType`` or a ``View``. Nested fields must be valid links or
@@ -65,19 +68,22 @@ queries are treated. Filtering the retrieved data is done by
 specifying ``arguments`` for the GraphQL query. Consider the following
 document:
 
-+---------------------------------+---------------------------------+
-| GraphQL                         | EdgeQL equivalent               |
-+=================================+=================================+
-| .. code-block:: graphql         | .. code-block:: eql             |
-|                                 |                                 |
-|     {                           |     SELECT                      |
-|         Book(title: "Spam") {   |         Book {                  |
-|             title               |             title,              |
-|             synopsis            |             synopsis,           |
-|         }                       |         }                       |
-|     }                           |     FILTER                      |
-|                                 |         Book.title = 'Spam';    |
-+---------------------------------+---------------------------------+
+.. table::
+    :class: codeblocks
+
+    +---------------------------------+---------------------------------+
+    | GraphQL                         | EdgeQL equivalent               |
+    +=================================+=================================+
+    | .. code-block:: graphql         | .. code-block:: edgeql          |
+    |                                 |                                 |
+    |     {                           |     SELECT                      |
+    |         Book(title: "Spam") {   |         Book {                  |
+    |             title               |             title,              |
+    |             synopsis            |             synopsis,           |
+    |         }                       |         }                       |
+    |     }                           |     FILTER                      |
+    |                                 |         Book.title = 'Spam';    |
+    +---------------------------------+---------------------------------+
 
 Any of the scalar fields of the return type are also valid arguments.
 All of the arguments are optional.
@@ -88,19 +94,22 @@ Variables
 It is possible to use variables within GraphQL queries. They are
 mapped to variables in EdgeQL.
 
-+---------------------------------+---------------------------------+
-| GraphQL                         | EdgeQL equivalent               |
-+=================================+=================================+
-| .. code-block:: graphql         | .. code-block:: eql             |
-|                                 |                                 |
-|     query ($title: String!) {   |     SELECT                      |
-|         Book(title: $title) {   |         Book {                  |
-|             title               |             title,              |
-|             synopsis            |             synopsis,           |
-|         }                       |         }                       |
-|     }                           |     FILTER                      |
-|                                 |         Book.title = $title;    |
-+---------------------------------+---------------------------------+
+.. table::
+    :class: codeblocks
+
+    +---------------------------------+---------------------------------+
+    | GraphQL                         | EdgeQL equivalent               |
+    +=================================+=================================+
+    | .. code-block:: graphql         | .. code-block:: edgeql          |
+    |                                 |                                 |
+    |     query ($title: String!) {   |     SELECT                      |
+    |         Book(title: $title) {   |         Book {                  |
+    |             title               |             title,              |
+    |             synopsis            |             synopsis,           |
+    |         }                       |         }                       |
+    |     }                           |     FILTER                      |
+    |                                 |         Book.title = $title;    |
+    +---------------------------------+---------------------------------+
 
 
 Mutations
